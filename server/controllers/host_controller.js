@@ -1,0 +1,36 @@
+const Hotel = require("../models/Hotel");
+
+module.exports.addHotel = async (req, res) => {
+  const hotelDetail = req.body;
+  const hotel = new Hotel(hotelDetail);
+
+  try {
+    const hotelAdded = await hotel.save();
+    return res.status(200).json(hotelAdded.data);
+  } catch (Error) {
+    return res.status(401).json(`can't Add Hotel: ${Error}`);
+  }
+};
+
+module.exports.getHotel = async (req, res) => {
+  const hotelId = req.params.id;
+
+  try {
+    const hotel = await Hotel.findById(hotelId);
+    return res.status(200).json(hotel);
+  } catch (Error) {
+    return res.status(401).json(`can't Get Hotel: ${Error}`);
+  }
+};
+
+module.exports.updateHotel = async (req, res) => {
+  const data = req.body;
+  const hotelId = req.params.id;
+
+  try {
+    const hotel = await Hotel.findByIdAndUpdate(hotelId, data, { new: true });
+    return res.status(200).json(hotel);
+  } catch (Error) {
+    return res.status(401).json(`can't update Hotel: ${Error}`);
+  }
+};
