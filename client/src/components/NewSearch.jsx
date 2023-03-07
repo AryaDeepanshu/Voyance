@@ -3,6 +3,7 @@ import styled from "styled-components";
 import { desktop } from "../responsive";
 import React, { useRef, useState } from "react";
 import DatePicker from "react-date-picker";
+import { useNavigate } from "react-router-dom";
 
 const Wrapper = styled.div`
   width: 100%;
@@ -59,15 +60,23 @@ const SearchButton = styled.button`
 `;
 
 const NewSearch = () => {
-  //   const [value, onChange] = useState(new Date());
+  const [location, setLocation] = useState("");
 
-  //   const ref = useRef(null);
+  const navigate = useNavigate();
+  const handleSearch = () => {
+    navigate(`/search?location=${location}`);
+  };
+
   return (
     <Wrapper>
       <Container>
         <InputWrapper>
           <Label>Location</Label>
-          <Input placeholder="Where are you going?" />
+          <Input
+            placeholder="Where are you going?"
+            value={location}
+            onChange={(event) => setLocation(event.target.value)}
+          />
         </InputWrapper>
 
         <InputWrapper>
@@ -87,7 +96,10 @@ const NewSearch = () => {
           <Input placeholder="Add Guest" type="guest" />
         </InputWrapper>
         <SearchButton>
-          <Search style={{ color: "white", transform: "scale(1.5)" }} />
+          <Search
+            style={{ color: "white", transform: "scale(1.5)" }}
+            onClick={handleSearch}
+          />
         </SearchButton>
       </Container>
     </Wrapper>

@@ -9,10 +9,10 @@ const Container = styled.div`
   margin: 2% 3% 0% 3%;
 `;
 
-const HotelList = () => {
+const HotelList = ({ hotel_data }) => {
   return (
     <Container>
-      {HotelListData.map((hotel, index) => (
+      {hotel_data.map((hotel, index) => (
         <HotelCard hotelInfo={hotel} key={index} />
       ))}
     </Container>

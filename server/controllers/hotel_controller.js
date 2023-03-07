@@ -1,11 +1,11 @@
 const Hotel = require("../models/Hotel");
 
 module.exports.featured_hotel = async (req, res) => {
-  // console.log(req.query.category);
   try {
-    const hotel = await Hotel.find({}).sort({ updatedAt: -1 }).limit(4);
+    const query =
+      req.query.category !== "" ? { propertyType: req.query.category } : {};
+    const hotel = await Hotel.find(query).sort({ updatedAt: -1 }).limit(4);
 
-    // console.log(hotel);
     return res.status(200).json(hotel);
   } catch (Err) {
     console.log(`Error in fetching Featured Hotel : ${Err}`);
@@ -21,5 +21,30 @@ module.exports.info = async (req, res) => {
   } catch (Err) {
     console.log(`Error fetching individual hotel detail : ${Err}`);
     return res.status(400).json(Err);
+  }
+};
+
+module.exports.search = async (req, res) => {
+  const query = req.query;
+  console.log(query);
+
+  try {
+    const filter = {
+      ...((query.max || query.min) && {
+        cost: {
+          ...(query.min && { $gt: query.min }),
+          ...(query.max && { $lt: query.max }),
+        },
+      }),
+      ...(query.location && {
+        location: { $regex: query.location, $options: "i" },
+      }),
+    };
+    console.log(filter);
+    const hotels = await Hotel.find(filter);
+    return res.status(200).json(hotels);
+  } catch (Err) {
+    console.log(`Error fetching hotel : ${Err}`);
+    return res.status(500).json(Err);
   }
 };

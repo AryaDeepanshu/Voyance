@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useState } from "react";
 import styled from "styled-components";
 import CategorySlider from "./CategorySlider";
@@ -223,19 +223,26 @@ const ApplyFilterButton = styled.button`
   border: none;
 `;
 
-const Filter = () => {
+const Filter = ({
+  room,
+  setRoom,
+  property,
+  SetProperty,
+  rating,
+  SetRating,
+  minimumPrice,
+  setMinimumPrice,
+  maximumPrice,
+  setMaximumPrice,
+  essentials,
+  setEssentials,
+  meals,
+  setMeals,
+}) => {
   const search = useSelector((state) => state.search);
 
   const [filter, setFilter] = useState(0);
   const [focus, setFocus] = useState(0);
-  const [room, SetRoom] = useState(0);
-  const [property, SetProperty] = useState(0);
-  const [rating, SetRating] = useState(0);
-
-  const [minimumPrice, setMinimumPrice] = useState();
-  const [maximumPrice, setMaximumPrice] = useState();
-  const [essentials, setEssentials] = useState([]);
-  const [meals, setMeals] = useState([]);
 
   const propertyArray = [
     "Any",
@@ -270,25 +277,8 @@ const Filter = () => {
     }
   };
 
-  // payload:
-  // {
-  //   minPrice: minimumPrice,
-  //   maxPrice: maximumPrice,
-  //   room: room,
-  //   propertyType: propertyArray[property],
-  //   essentials: essentials,
-  //   mealsIncluded: meals,
-  //   rating: rating
-  // }
-
-  // console.log(`maxPrice: ${minimumPrice} - minPrice: ${maximumPrice}`);
-  // console.log(`room: ${room}`);
-  // console.log(`propertyType: ${propertyArray[property]}`);
-  // console.log(`essentials: ${essentials}`);
-  // console.log(`mealIncluded: ${meals}`);
-  // console.log(`rating: ${rating}`);
-
   const dispatch = useDispatch();
+
   const handleSearch = () => {
     searchHotel(dispatch, {
       minPrice: minimumPrice,
@@ -364,22 +354,22 @@ const Filter = () => {
                 <FilterHeading>Rooms Available</FilterHeading>
 
                 <SelectContainer type={"room"}>
-                  <SelectButton room={room} onClick={() => SetRoom(0)}>
+                  <SelectButton room={room} onClick={() => setRoom(0)}>
                     Any
                   </SelectButton>
-                  <SelectButton room={room} onClick={() => SetRoom(1)}>
+                  <SelectButton room={room} onClick={() => setRoom(1)}>
                     1
                   </SelectButton>
-                  <SelectButton room={room} onClick={() => SetRoom(2)}>
+                  <SelectButton room={room} onClick={() => setRoom(2)}>
                     2
                   </SelectButton>
-                  <SelectButton room={room} onClick={() => SetRoom(3)}>
+                  <SelectButton room={room} onClick={() => setRoom(3)}>
                     3
                   </SelectButton>
-                  <SelectButton room={room} onClick={() => SetRoom(4)}>
+                  <SelectButton room={room} onClick={() => setRoom(4)}>
                     4
                   </SelectButton>
-                  <SelectButton room={room} onClick={() => SetRoom(5)}>
+                  <SelectButton room={room} onClick={() => setRoom(5)}>
                     5+
                   </SelectButton>
                 </SelectContainer>
