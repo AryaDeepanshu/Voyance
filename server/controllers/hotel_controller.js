@@ -47,7 +47,12 @@ module.exports.search = async (req, res) => {
           quertObject.location = { $regex: location, $options: "i" };
       }
       if(amenities){
+        if(amenities.includes(",")){
+          let amenitiesFilter = amenities.split(",");
+          quertObject.amenities = {$all: amenitiesFilter};
+        }else{
           quertObject.amenities = amenities;
+        }
       }
       if(guest){
           quertObject.guest = guest;
