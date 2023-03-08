@@ -15,7 +15,7 @@ const SearchHotel = async (req, res) => {
         quertObject.cost = cost;
     }
     if(location){
-        quertObject.location = location;
+        quertObject.location = { $regex: location, $options: "i" };
     }
     if(amenities){
         quertObject.amenities = amenities;
