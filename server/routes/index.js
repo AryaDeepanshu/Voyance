@@ -9,6 +9,4 @@ router.use("/user", require("./user"));
 router.use("/host", require("./host"));
 router.use("/hotel", require("./hotel"));
 
-
-
 module.exports = router;

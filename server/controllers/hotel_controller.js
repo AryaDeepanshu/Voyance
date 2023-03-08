@@ -1,11 +1,11 @@
 const Hotel = require("../models/Hotel");
 
 module.exports.featured_hotel = async (req, res) => {
-  // console.log(req.query.category);
   try {
-    const hotel = await Hotel.find({}).sort({ updatedAt: -1 }).limit(4);
+    const query =
+      req.query.category !== "" ? { propertyType: req.query.category } : {};
+    const hotel = await Hotel.find(query).sort({ updatedAt: -1 }).limit(4);
 
-    // console.log(hotel);
     return res.status(200).json(hotel);
   } catch (Err) {
     console.log(`Error in fetching Featured Hotel : ${Err}`);
@@ -26,7 +26,8 @@ module.exports.info = async (req, res) => {
 
 module.exports.search = async (req, res) => {
   const query = req.query;
-
+  console.log(query);
+    
   try {
     const { name, totalStars, starNumber, cost, location, amenities, guest, bedrooms, beds, bathrooms, propertyType, mealIncluded, reviews, sort, max, min } = req.query; 
     const quertObject = {};
@@ -64,7 +65,12 @@ module.exports.search = async (req, res) => {
           quertObject.propertyType = propertyType;
       }
       if(mealIncluded){
+        if(mealIncluded.includes(",")){
+          let mealFilter = mealIncluded.split(",");
+          quertObject.mealIncluded = {$all: mealFilter};
+        }else{
           quertObject.mealIncluded = mealIncluded;
+        }
       }
       if(reviews){
           quertObject.reviews = reviews;
@@ -76,7 +82,9 @@ module.exports.search = async (req, res) => {
           apiData = apiData.sort(sortFix);
       }
       if(min && max){
+        if(typeof(min) == "object"){
           apiData = apiData.where("cost").gte(min[0]).lte(max[0]);
+        }
       }
       const myData = await apiData;
     return res.status(200).json(myData);
@@ -85,3 +93,4 @@ module.exports.search = async (req, res) => {
     return res.status(500).json(Err);
   }
 };
+

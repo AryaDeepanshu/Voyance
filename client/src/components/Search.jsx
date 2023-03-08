@@ -5,7 +5,7 @@ import { desktop, largeMobile, mobile, tablet } from "../responsive";
 import Navbar from "./Navbar";
 import NewSearch from "./NewSearch";
 import SearchInputSm from "./SearchInputSm";
-// https://res.cloudinary.com/additya/image/upload/v1677857909/Voyance/ltl9e3mr5hsxmnpewpam.jpg
+
 const Container = styled.div`
   width: 100vw;
   aspect-ratio: 1.6;
