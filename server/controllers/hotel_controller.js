@@ -67,7 +67,12 @@ module.exports.search = async (req, res) => {
           quertObject.bathrooms = bathrooms;
       }
       if(propertyType){
+        if(propertyType.includes(",")){
+          let propertyFilter = propertyType.split(",");
+          quertObject.propertyType = {$all: propertyFilter};
+        }else{
           quertObject.propertyType = propertyType;
+        }
       }
       if(mealIncluded){
         if(mealIncluded.includes(",")){
