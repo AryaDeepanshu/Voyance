@@ -26,7 +26,6 @@ module.exports.info = async (req, res) => {
 
 module.exports.search = async (req, res) => {
   const query = req.query;
-  console.log(query);
 
   try {
     const filter = {
@@ -39,8 +38,21 @@ module.exports.search = async (req, res) => {
       ...(query.location && {
         location: { $regex: query.location, $options: "i" },
       }),
+      ...(query.propertyType && {
+        propertyType: query.propertyType,
+      }),
+      /* rating is a revied property: */
+      // ...(query.rating && {
+      // rating: { $gt: query.rating },
+      // }),
+      ...(query.mealIncluded && {
+        mealIncluded: { $all: query.mealIncluded.split(",") },
+      }),
+      ...(query.amenities && {
+        amenities: { $all: query.amenities.split(",") },
+      }),
     };
-    console.log(filter);
+
     const hotels = await Hotel.find(filter);
     return res.status(200).json(hotels);
   } catch (Err) {

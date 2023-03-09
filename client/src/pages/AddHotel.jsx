@@ -4,6 +4,7 @@ import Footer from "../components/Footer";
 import HostIntroduction from "../components/HostIntroduction";
 import HotelForm from "../components/HotelForm";
 import Navbar from "../components/Navbar";
+import useWindowDimensions from "../hooks/useWindowDimensions";
 
 const OuterWrapper = styled.div`
   position: relative;
@@ -15,13 +16,13 @@ const Wrapper = styled.div`
 `;
 
 const AddHotel = () => {
+  const { width } = useWindowDimensions();
   return (
     <>
       {/* <OuterWrapper> */}
       <Navbar />
       <Wrapper>
-        <HostIntroduction />
-        <HotelForm />
+        {width > 768 && <HostIntroduction />} <HotelForm />
       </Wrapper>
       {/* </OuterWrapper> */}
       <Footer />

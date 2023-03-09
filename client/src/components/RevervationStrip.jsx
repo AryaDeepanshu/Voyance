@@ -24,23 +24,23 @@ const DataContainer = styled.div`
   margin-left: 10px;
 `;
 
-const CostContainer = styled.p`
+const CostContainer = styled.div`
   display: flex;
   align-items: center;
 `;
 
-const Cost = styled.p`
+const Cost = styled.div`
   font-size: 18px;
   font-weight: bold;
 `;
 
-const Duration = styled.p`
+const Duration = styled.div`
   font-size: 14px;
   color: gray;
   padding-left: 7px;
 `;
 
-const Date = styled.p`
+const Date = styled.div`
   padding-left: 7px;
   font-size: 18px;
   font-weight: bold;
@@ -49,8 +49,6 @@ const Date = styled.p`
 const Button = styled.button`
   padding: 15px 30px;
   margin-right: 20px;
-  /* padding: 15px; */
-  /* margin: 10px 0px; */
   border-radius: 10px;
   border: none;
   background-color: #4ee2ec;
@@ -67,8 +65,8 @@ const Button = styled.button`
 `;
 
 const ReservationStrip = ({ setModal }) => {
-  const search = useSelector((state) => state.search);
-  console.log(search);
+  const searchInfo = useSelector((store) => store.filterAndSearch);
+
   return (
     <Container>
       <DataContainer>
@@ -77,7 +75,7 @@ const ReservationStrip = ({ setModal }) => {
           <Cost>1,10,039</Cost>
           <Duration>night</Duration>
         </CostContainer>
-        <Date>{`${search.startDate} - ${search.endDate}`}</Date>
+        <Date>{`${searchInfo?.startDate} - ${searchInfo?.endDate}`}</Date>
       </DataContainer>
       <Button onClick={() => setModal(1)}>Reverse</Button>
     </Container>

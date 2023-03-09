@@ -11,7 +11,8 @@
 
 import { combineReducers, configureStore } from "@reduxjs/toolkit";
 import userReducer from "./userSlice";
-import searchReducer from "./SearchSlice";
+import filterAndSearchReducer from "./filterAndSearchSlice";
+
 import {
   persistStore,
   persistReducer,
@@ -32,7 +33,7 @@ const persistConfig = {
 
 const rootReducer = combineReducers({
   user: userReducer,
-  search: searchReducer,
+  filterAndSearch: filterAndSearchReducer,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

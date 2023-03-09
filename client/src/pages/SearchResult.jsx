@@ -1,63 +1,43 @@
-import React, { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
+import axios from "axios";
 import Filter from "../components/Filter";
 import Footer from "../components/Footer";
 import Navbar from "../components/Navbar";
-import SearchHotelList from "../components/SearchHotelList";
+import { useSelector } from "react-redux";
 import { useQuery } from "@tanstack/react-query";
-import axios from "axios";
+import React, { useEffect, useState } from "react";
+import SearchHotelList from "../components/SearchHotelList";
 
 const SearchResult = () => {
-  const location = useLocation();
+  const searchInfo = useSelector((store) => store.filterAndSearch);
 
-  const [room, setRoom] = useState(0);
-  const [property, setProperty] = useState(0);
-  const [rating, setRating] = useState(0);
+  /* we need filter and category state in this component to basically handle the refetch() operation: */
+  const [filter, setFilter] = useState(false);
+  const [category, setCategory] = useState("");
+  const { location, minPrice, maxPrice, rating, essentials, mealIncluded } =
+    searchInfo;
 
-  const [minimumPrice, setMinimumPrice] = useState(0);
-  const [maximumPrice, setMaximumPrice] = useState(25000);
-  const [essentials, setEssentials] = useState([]);
-  const [meals, setMeals] = useState([]);
-
-  const { isLoading, error, data, refetch } = useQuery([location.search], () =>
+  const { isLoading, error, data, refetch } = useQuery([location], () =>
     axios
-      // .get(`http://localhost:5000/hotel/search${location.search}`)
       .get(
-        `http://localhost:5000/hotel/search${location.search}&min=${minimumPrice}&max=${maximumPrice}`
+        `http://localhost:5000/hotel/search?location=${location}&propertyType=${category}&min=${minPrice}&max=${maxPrice}&amenities=${essentials}&mealIncluded=${mealIncluded}&rating=${rating} `
       )
       .then((hotels) => {
         return hotels.data;
       })
   );
-  console.log(data);
-  // console.log(`room: ${room}`);
-  // console.log(`propertyType: ${propertyArray[property]}`);
-  // console.log(`essentials: ${essentials}`);
-  // console.log(`mealIncluded: ${meals}`);
-  // console.log(`rating: ${rating}`);
 
   useEffect(() => {
     refetch();
-  }, [minimumPrice, maximumPrice]);
+  }, [filter, category, refetch]);
 
   return (
     <>
       <Navbar />
       <Filter
-        room={room}
-        setRoom={setRoom}
-        property={property}
-        setProperty={setProperty}
-        rating={rating}
-        setRating={setRating}
-        minimumPrice={minimumPrice}
-        setMinimumPrice={setMinimumPrice}
-        maximumPrice={maximumPrice}
-        setMaximumPrice={setMaximumPrice}
-        essentials={essentials}
-        setEssentials={setEssentials}
-        meals={meals}
-        setMeals={setMeals}
+        category={category}
+        setCategory={setCategory}
+        filter={filter}
+        setFilter={setFilter}
       />
       {isLoading ? <>Loading...</> : <SearchHotelList hotel_data={data} />}
       <Footer />

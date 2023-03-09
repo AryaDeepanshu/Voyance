@@ -1,11 +1,11 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import { useState } from "react";
 import styled from "styled-components";
 import CategorySlider from "./CategorySlider";
 import { Close, CurrencyRupee, Tune } from "@mui/icons-material";
 import { desktop, largeMobile, mobile, tablet } from "../responsive";
 import { useDispatch, useSelector } from "react-redux";
-import { searchHotel } from "../redux/searchHotel";
+import { clear, clearFilters, search } from "../redux/filterAndSearchSlice";
 
 const Container = styled.div`
   display: flex;
@@ -128,11 +128,13 @@ const PriceInput = styled.div`
 `;
 
 const Input = styled.input`
+  width: 100%;
+  height: 100%;
   border: none;
   outline: none;
   font-size: 16px;
-  height: 100%;
-  width: 100%;
+  font-weight: 500;
+  font-family: "Roboto", sans-serif;
 `;
 
 const CheckBoxWrapper = styled.div`
@@ -213,7 +215,7 @@ const ButtonContainer = styled.div`
   justify-content: flex-end;
 `;
 
-const ApplyFilterButton = styled.button`
+const Button = styled.button`
   padding: 15px;
   margin: 5px 10px;
   color: white;
@@ -223,42 +225,25 @@ const ApplyFilterButton = styled.button`
   border: none;
 `;
 
-const Filter = ({
-  room,
-  setRoom,
-  property,
-  SetProperty,
-  rating,
-  SetRating,
-  minimumPrice,
-  setMinimumPrice,
-  maximumPrice,
-  setMaximumPrice,
-  essentials,
-  setEssentials,
-  meals,
-  setMeals,
-}) => {
-  const search = useSelector((state) => state.search);
+const Filter = ({ category, setCategory, filter, setFilter }) => {
+  const searchInfo = useSelector((store) => store.filterAndSearch);
+  const { minPrice, maxPrice, rating, essentials, mealIncluded } = searchInfo;
 
-  const [filter, setFilter] = useState(0);
+  const [meals, setMeals] = useState(mealIncluded);
+  const [hotelRating, setHotelRating] = useState(rating);
+  const [amentities, setAmentities] = useState(essentials);
+  const [minimumPrice, setMinimumPrice] = useState(minPrice);
+  const [maximumPrice, setMaximumPrice] = useState(maxPrice);
+
+  // const [filter, setFilter] = useState(0);
   const [focus, setFocus] = useState(0);
 
-  const propertyArray = [
-    "Any",
-    "House",
-    "Flat",
-    "Guest House",
-    "Apartment",
-    "Hotel",
-  ];
-
-  const handleCheckEssential = (event) => {
+  const handleCheckAmenity = (event) => {
     if (event.target.checked) {
-      setEssentials([...essentials, event.target.value]);
+      setAmentities([...amentities, event.target.value]);
     } else {
-      setEssentials(
-        essentials.filter((essential) => {
+      setAmentities(
+        amentities.filter((essential) => {
           if (essential != event.target.value) return essential;
         })
       );
@@ -279,17 +264,73 @@ const Filter = ({
 
   const dispatch = useDispatch();
 
-  const handleSearch = () => {
-    searchHotel(dispatch, {
-      minPrice: minimumPrice,
-      maxPrice: maximumPrice,
-      room: room,
-      propertyType: propertyArray[property],
-      essentials: essentials,
-      mealsIncluded: meals,
-      rating: rating,
-    });
+  const handleFilter = () => {
+    dispatch(
+      search({
+        minPrice: minimumPrice,
+        maxPrice: maximumPrice,
+        essentials: amentities,
+        mealIncluded: meals,
+        rating: hotelRating,
+      })
+    );
+    setFilter(0);
   };
+
+  const handleClear = () => {
+    dispatch(clearFilters());
+    setMinimumPrice(1000);
+    setMaximumPrice(25000);
+    setAmentities([]);
+    setMeals([]);
+    setHotelRating(0);
+    setFilter(0);
+  };
+
+  const amenitiesOptions = [
+    "Wifi",
+    "Kitchen",
+    "Washing Machine",
+    "Dryer",
+    "Heating",
+    "Parking",
+  ];
+
+  const mealOptions = ["Breakfast", "Lunch", "Dinner"];
+
+  // Logic for handling mulitple refs: -> amenities
+  const amenityRefs = useRef([]);
+  amenityRefs.current = [];
+
+  const addToAmenities = (el) => {
+    if (el && !amenityRefs.current.includes(el)) {
+      amenityRefs.current.push(el);
+    }
+  };
+
+  // Logic for handling mulitple refs: -> meals
+  const mealRefs = useRef([]);
+  mealRefs.current = [];
+
+  const addToMeals = (el) => {
+    if (el && !mealRefs.current.includes(el)) {
+      mealRefs.current.push(el);
+    }
+  };
+
+  useEffect(() => {
+    if (filter === true) {
+      amentities.map((amentiy) => {
+        const index = amenitiesOptions.indexOf(amentiy);
+        amenityRefs.current[index].checked = true;
+      });
+
+      meals.map((meal) => {
+        const index = mealOptions.indexOf(meal);
+        mealRefs.current[index].checked = true;
+      });
+    }
+  }, [filter]);
 
   return (
     <>
@@ -323,7 +364,7 @@ const Filter = ({
                         onChange={(event) =>
                           setMinimumPrice(event.target.value)
                         }
-                        placeholder="1000"
+                        value={minimumPrice}
                       />
                     </PriceInput>
                   </PriceContainer>
@@ -340,7 +381,7 @@ const Filter = ({
                         onChange={(event) =>
                           setMaximumPrice(event.target.value)
                         }
-                        placeholder="25000"
+                        value={maximumPrice}
                       />
                     </PriceInput>
                   </PriceContainer>
@@ -349,133 +390,21 @@ const Filter = ({
 
               <Hr />
 
-              {/* Rooms Available Component: */}
+              {/* Amenity Component */}
               <FilterContainer>
-                <FilterHeading>Rooms Available</FilterHeading>
-
-                <SelectContainer type={"room"}>
-                  <SelectButton room={room} onClick={() => setRoom(0)}>
-                    Any
-                  </SelectButton>
-                  <SelectButton room={room} onClick={() => setRoom(1)}>
-                    1
-                  </SelectButton>
-                  <SelectButton room={room} onClick={() => setRoom(2)}>
-                    2
-                  </SelectButton>
-                  <SelectButton room={room} onClick={() => setRoom(3)}>
-                    3
-                  </SelectButton>
-                  <SelectButton room={room} onClick={() => setRoom(4)}>
-                    4
-                  </SelectButton>
-                  <SelectButton room={room} onClick={() => setRoom(5)}>
-                    5+
-                  </SelectButton>
-                </SelectContainer>
-              </FilterContainer>
-
-              <Hr />
-
-              {/* Property Type Component: */}
-              <FilterContainer>
-                <FilterHeading>Property Type</FilterHeading>
-                <SelectContainer type={"property"}>
-                  <SelectButton
-                    property={property}
-                    onClick={() => SetProperty(0)}>
-                    Any
-                  </SelectButton>
-                  <SelectButton
-                    property={property}
-                    onClick={() => SetProperty(1)}>
-                    House
-                  </SelectButton>
-                  <SelectButton
-                    property={property}
-                    onClick={() => SetProperty(2)}>
-                    Flat
-                  </SelectButton>
-                  <SelectButton
-                    property={property}
-                    onClick={() => SetProperty(3)}>
-                    Guest House
-                  </SelectButton>
-                  <SelectButton
-                    property={property}
-                    onClick={() => SetProperty(4)}>
-                    Apartment
-                  </SelectButton>
-                  <SelectButton
-                    property={property}
-                    onClick={() => SetProperty(5)}>
-                    Hotel
-                  </SelectButton>
-                </SelectContainer>
-              </FilterContainer>
-
-              <Hr />
-
-              {/* Essentials Component */}
-              <FilterContainer>
-                <FilterHeading>Essentials</FilterHeading>
+                <FilterHeading>Amenities</FilterHeading>
                 <CheckBoxWrapper>
-                  <CheckBoxContainer>
-                    <CheckBox
-                      type="checkbox"
-                      value="Wifi"
-                      onClick={handleCheckEssential}
-                    />
-                    <Text>Wifi</Text>
-                  </CheckBoxContainer>
-                  <CheckBoxContainer>
-                    <CheckBox
-                      type="checkbox"
-                      value="Kitchen"
-                      onClick={handleCheckEssential}
-                    />
-                    <Text>Kitchen</Text>
-                  </CheckBoxContainer>
-                  <CheckBoxContainer>
-                    <CheckBox
-                      type="checkbox"
-                      value="Washing Machine"
-                      onClick={handleCheckEssential}
-                    />
-                    <Text>Washing Machine</Text>
-                  </CheckBoxContainer>
-                  <CheckBoxContainer>
-                    <CheckBox
-                      type="checkbox"
-                      value="Dryer"
-                      onClick={handleCheckEssential}
-                    />
-                    <Text>Dryer</Text>
-                  </CheckBoxContainer>
-                  <CheckBoxContainer>
-                    <CheckBox
-                      type="checkbox"
-                      value="Air Conditioning"
-                      onClick={handleCheckEssential}
-                    />
-                    <Text>Air Conditioning</Text>
-                  </CheckBoxContainer>
-                  <CheckBoxContainer>
-                    <CheckBox
-                      type="checkbox"
-                      value="Heating"
-                      onClick={handleCheckEssential}
-                    />
-                    <Text>Heating</Text>
-                  </CheckBoxContainer>
-                  <CheckBoxContainer>
-                    <CheckBox
-                      type="checkbox"
-                      value="Parking"
-                      onClick={handleCheckEssential}
-                    />
-                    <Text>Parking</Text>
-                  </CheckBoxContainer>
+                  {amenitiesOptions.map((amenity) => (
+                    <CheckBoxContainer key={amenity}>
+                      <CheckBox
+                        type="checkbox"
+                        value={amenity}
+                        onClick={handleCheckAmenity}
+                        ref={addToAmenities}
+                      />
+                      <Text>{amenity}</Text>
+                    </CheckBoxContainer>
+                  ))}
                 </CheckBoxWrapper>
               </FilterContainer>
 
@@ -485,30 +414,17 @@ const Filter = ({
               <FilterContainer>
                 <FilterHeading>Meals Included</FilterHeading>
                 <CheckBoxWrapper>
-                  <CheckBoxContainer>
-                    <CheckBox
-                      type="checkbox"
-                      value="Breakfast"
-                      onClick={handleCheckMeal}
-                    />
-                    <Text>Breakfast</Text>
-                  </CheckBoxContainer>
-                  <CheckBoxContainer>
-                    <CheckBox
-                      type="checkbox"
-                      value="Lunch"
-                      onClick={handleCheckMeal}
-                    />
-                    <Text>Lunch</Text>
-                  </CheckBoxContainer>
-                  <CheckBoxContainer>
-                    <CheckBox
-                      type="checkbox"
-                      value="Dinner"
-                      onClick={handleCheckMeal}
-                    />
-                    <Text>Dinner</Text>
-                  </CheckBoxContainer>
+                  {mealOptions.map((meal) => (
+                    <CheckBoxContainer key={meal}>
+                      <CheckBox
+                        type="checkbox"
+                        value={meal}
+                        onClick={handleCheckMeal}
+                        ref={addToMeals}
+                      />
+                      <Text>{meal}</Text>
+                    </CheckBoxContainer>
+                  ))}
                 </CheckBoxWrapper>
               </FilterContainer>
 
@@ -519,32 +435,43 @@ const Filter = ({
                 <FilterHeading>Rating </FilterHeading>
 
                 <SelectContainer type={"rating"}>
-                  <SelectButton room={rating} onClick={() => SetRating(0)}>
+                  <SelectButton
+                    room={hotelRating}
+                    onClick={() => setHotelRating(0)}>
                     Any
                   </SelectButton>
-                  <SelectButton rating={rating} onClick={() => SetRating(1)}>
+                  <SelectButton
+                    rating={hotelRating}
+                    onClick={() => setHotelRating(1)}>
                     1
                   </SelectButton>
-                  <SelectButton rating={rating} onClick={() => SetRating(2)}>
+                  <SelectButton
+                    rating={hotelRating}
+                    onClick={() => setHotelRating(2)}>
                     2
                   </SelectButton>
-                  <SelectButton rating={rating} onClick={() => SetRating(3)}>
+                  <SelectButton
+                    rating={hotelRating}
+                    onClick={() => setHotelRating(3)}>
                     3
                   </SelectButton>
-                  <SelectButton rating={rating} onClick={() => SetRating(4)}>
+                  <SelectButton
+                    rating={hotelRating}
+                    onClick={() => setHotelRating(4)}>
                     4
                   </SelectButton>
-                  <SelectButton rating={rating} onClick={() => SetRating(5)}>
-                    5+
+                  <SelectButton
+                    rating={hotelRating}
+                    onClick={() => setHotelRating(5)}>
+                    5
                   </SelectButton>
                 </SelectContainer>
               </FilterContainer>
             </LightBox>
 
             <ButtonContainer>
-              <ApplyFilterButton onClick={handleSearch}>
-                Apply Filter
-              </ApplyFilterButton>
+              <Button onClick={handleClear}>Clear Filter</Button>
+              <Button onClick={handleFilter}>Apply Filter</Button>
             </ButtonContainer>
           </LightBoxWrapper>
         </LightBoxContainer>
@@ -552,7 +479,7 @@ const Filter = ({
         <></>
       )}
       <Container>
-        <CategorySlider />
+        <CategorySlider category={category} setCategory={setCategory} />
         <FilterButton onClick={() => setFilter(true)}>
           <Tune style={{ paddingRight: "5px", transform: "scale(0.9)" }} />
           Filters

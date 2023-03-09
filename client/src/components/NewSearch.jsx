@@ -4,6 +4,8 @@ import { desktop } from "../responsive";
 import React, { useRef, useState } from "react";
 import DatePicker from "react-date-picker";
 import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { search } from "../redux/filterAndSearchSlice";
 
 const Wrapper = styled.div`
   width: 100%;
@@ -60,10 +62,20 @@ const SearchButton = styled.button`
 `;
 
 const NewSearch = () => {
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const [guest, setGuest] = useState("");
   const [location, setLocation] = useState("");
 
-  const navigate = useNavigate();
   const handleSearch = () => {
+    dispatch(
+      search({
+        location: location,
+        beginDate: "date",
+        endDate: "date",
+        guest: guest,
+      })
+    );
     navigate(`/search?location=${location}`);
   };
 
@@ -93,7 +105,11 @@ const NewSearch = () => {
         </InputWrapper>
         <InputWrapper>
           <Label>Guest</Label>
-          <Input placeholder="Add Guest" type="guest" />
+          <Input
+            placeholder="Add Guest"
+            type="guest"
+            onChange={(event) => setGuest(event.target.value)}
+          />
         </InputWrapper>
         <SearchButton>
           <Search

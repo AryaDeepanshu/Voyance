@@ -8,7 +8,7 @@ const Container = styled.div`
 `;
 
 const Header = styled.p`
-  padding-top: 35px;
+  padding-top: 10px;
   font-family: "Montserrat", sans-serif;
   font-size: 36px;
   font-weight: bold;

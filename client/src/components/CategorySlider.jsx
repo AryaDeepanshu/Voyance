@@ -24,6 +24,7 @@ import {
 } from "@mui/icons-material";
 import { useRef, useLayoutEffect, useState } from "react";
 import useWindowDimensions from "../hooks/useWindowDimensions";
+import { propertyList } from "../data/propertyList";
 
 const Container = styled.div`
   width: 100%;
@@ -109,133 +110,11 @@ const CategoryHeading = styled.div`
 `;
 
 const CategorySlider = ({ category, setCategory }) => {
-  const menuItems = [
-    {
-      label: "National parks",
-      icon: <ParkOutlined style={{ transform: "scale(1.5)", color: "gray" }} />,
-    },
-    {
-      label: "Cottage",
-      icon: (
-        <CottageOutlined style={{ transform: "scale(1.3)", color: "gray" }} />
-      ),
-    },
-    {
-      label: "Amazing views",
-      icon: (
-        <PhotoFilterOutlined
-          style={{ transform: "scale(1.5)", color: "gray" }}
-        />
-      ),
-    },
-    {
-      label: "Tiny houses",
-      icon: <GiteOutlined style={{ transform: "scale(1.5)", color: "gray" }} />,
-    },
-    {
-      label: "Beaches",
-      icon: (
-        <BeachAccessOutlined
-          style={{ transform: "scale(1.5)", color: "gray" }}
-        />
-      ),
-    },
-    {
-      label: "Houseboats",
-      icon: (
-        <HouseboatOutlined style={{ transform: "scale(1.5)", color: "gray" }} />
-      ),
-    },
-    {
-      label: "Cabin",
-      icon: (
-        <CabinOutlined style={{ transform: "scale(1.5)", color: "gray" }} />
-      ),
-    },
-    {
-      label: "Beach front",
-      icon: (
-        <VillaOutlined style={{ transform: "scale(1.5)", color: "gray" }} />
-      ),
-    },
-    {
-      label: "Iconic cities",
-      icon: (
-        <DiamondOutlined style={{ transform: "scale(1.5)", color: "gray" }} />
-      ),
-    },
-    {
-      label: "Shared Houses",
-      icon: (
-        <WarehouseOutlined style={{ transform: "scale(1.5)", color: "gray" }} />
-      ),
-    },
-    {
-      label: "Golfing",
-      icon: (
-        <SportsGolfOutlined
-          style={{ transform: "scale(1.5)", color: "gray" }}
-        />
-      ),
-    },
-    {
-      label: "Surfing",
-      icon: (
-        <SurfingOutlined style={{ transform: "scale(1.5)", color: "gray" }} />
-      ),
-    },
-    {
-      label: "Boats",
-      icon: (
-        <DirectionsBoatFilledOutlined
-          style={{ transform: "scale(1.5)", color: "gray" }}
-        />
-      ),
-    },
-    {
-      label: "Camping",
-      icon: (
-        <FoundationOutlined
-          style={{ transform: "scale(1.5)", color: "gray" }}
-        />
-      ),
-    },
-    {
-      label: "Farm",
-      icon: (
-        <AgricultureOutlined
-          style={{ transform: "scale(1.5)", color: "gray" }}
-        />
-      ),
-    },
-    {
-      label: "Trulli",
-      icon: (
-        <OtherHousesOutlined
-          style={{ transform: "scale(1.5)", color: "gray" }}
-        />
-      ),
-    },
-    {
-      label: "Apartment",
-      icon: (
-        <ApartmentOutlined style={{ transform: "scale(1.5)", color: "gray" }} />
-      ),
-    },
-    {
-      label: "Raids",
-      icon: (
-        <CastleOutlined style={{ transform: "scale(1.5)", color: "gray" }} />
-      ),
-    },
-  ];
-
   // useRef hook;
   const ref = useRef(null);
 
   // complete screen dimensions:
   const dimensions = useWindowDimensions();
-
   const [width, setWidth] = useState(500);
   const [translate, setTranslate] = useState(0);
   const [scrollWidth, setScrollWidth] = useState(0);
@@ -276,7 +155,7 @@ const CategorySlider = ({ category, setCategory }) => {
         </Button>
       </ButtonContainer>
       <Wrapper ref={ref} translate={translate}>
-        {menuItems.map(({ label, icon }) => {
+        {propertyList.map(({ label, icon }) => {
           return (
             <CategoryContainer key={label} selected={label === category}>
               <CategoryIcon selected={label === category}>{icon}</CategoryIcon>

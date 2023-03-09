@@ -215,8 +215,8 @@ const ReservationCard = ({ data, setModal }) => {
   const { width } = useWindowDimensions();
   const [guest, setGuest] = useState(1);
 
-  /* get the search data from redux toolkit */
-  const search = useSelector((state) => state.search);
+  /* get the searchInfo data from redux toolkit */
+  const searchInfo = useSelector((store) => store.filterAndSearch);
 
   return (
     <Container>
@@ -256,11 +256,11 @@ const ReservationCard = ({ data, setModal }) => {
         <TripDetails>
           <InputContainer width="half" type="left">
             <Label>CHECK-IN</Label>
-            <Input placeholder={search.startDate} />
+            <Input placeholder={searchInfo?.startDate} />
           </InputContainer>
           <InputContainer width="half" type="right">
             <Label>CHECK-OUT</Label>
-            <Input placeholder={search.endDate} />
+            <Input placeholder={searchInfo?.endDate} />
           </InputContainer>
           <InputContainer type="guest">
             <GuestContainer>
@@ -275,7 +275,7 @@ const ReservationCard = ({ data, setModal }) => {
                   cursor: "pointer",
                 }}
                 onClick={() => {
-                  setGuest(guest == 1 ? guest : guest - 1);
+                  setGuest(guest === 1 ? guest : guest - 1);
                 }}
               />
               <AddCircleOutline
@@ -285,7 +285,7 @@ const ReservationCard = ({ data, setModal }) => {
                   cursor: "pointer",
                 }}
                 onClick={() => {
-                  setGuest(guest == 10 ? guest : guest + 1);
+                  setGuest(guest === 10 ? guest : guest + 1);
                 }}
               />
             </GuestValueContainer>
