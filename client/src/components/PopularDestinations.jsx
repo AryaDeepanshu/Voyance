@@ -3,7 +3,7 @@ import styled from "styled-components";
 import { largeMobile, desktop, mobile, tablet } from "../responsive";
 
 const Container = styled.div`
-  width: 100vw;
+  width: 100%;
   overflow: hidden;
   display: flex;
   align-items: center;

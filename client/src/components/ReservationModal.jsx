@@ -12,10 +12,11 @@ const Container = styled.div`
   position: relative;
 `;
 
-const ReservationModal = ({ setModal }) => {
+// delete this component not required now
+const ReservationModal = ({ data, setModal }) => {
   return (
     <Container>
-      <ReservationCard setModal={setModal} />
+      <ReservationCard data={data} setModal={setModal} />
     </Container>
   );
 };

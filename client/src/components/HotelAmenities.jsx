@@ -1,25 +1,8 @@
-import {
-  Kitchen,
-  Wifi,
-  ChairAlt,
-  LocalParking,
-  Pets,
-  SmokeFree,
-  FireExtinguisher,
-  LocalHospital,
-} from "@mui/icons-material";
 import { useEffect, useState } from "react";
 import styled from "styled-components";
-import { mobile } from "../responsive";
+import { desktop, mobile } from "../responsive";
 
 import { amenityList } from "../data/amenityList";
-
-const Container = styled.div`
-  display: flex;
-  width: 100%;
-  flex-direction: column;
-  justify-content: flex-start;
-`;
 
 const Heading = styled.p`
   font-size: 36px;
@@ -32,29 +15,34 @@ const Heading = styled.p`
   })}
 `;
 
-const AmenitiesWrapper = styled.div`
+const Wrapper = styled.div`
   width: 100%;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 15px;
-`;
+  gap: 20px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
 
-const AmenityConatiner = styled.div`
-  display: flex;
-  width: max-content;
-  padding: 10px 0px;
-`;
-
-const AmenityTitle = styled.p`
-  padding-left: 15px;
-  color: #2a2a2a;
-  font-size: 17px;
-  display: flex;
-  align-items: center;
-  font-family: "Montserrat", sans-serif;
-  ${mobile({
-    fontSize: "14px",
+  ${desktop({
+    width: "90%",
   })}
+`;
+
+const Container = styled.div`
+  gap: 10px;
+  width: 80%;
+  display: flex;
+  padding: 20px;
+  box-shadow: rgba(0, 0, 0, 0.02) 0px 1px 3px 0px,
+    rgba(27, 31, 35, 0.15) 0px 0px 0px 1px;
+  flex-direction: column;
+  border-radius: 10px;
+  cursor: pointer;
+`;
+
+const Icon = styled.div``;
+
+const Label = styled.p`
+  font-size: 16px;
+  font-family: "Roboto", sans-serif;
 `;
 
 const HotelAmenities = ({ data }) => {
@@ -72,17 +60,18 @@ const HotelAmenities = ({ data }) => {
   }, []);
 
   return (
-    <Container>
+    <>
       <Heading>What this place offers:</Heading>
-      <AmenitiesWrapper>
+
+      <Wrapper>
         {hotelAmenities.map((item, index) => (
-          <AmenityConatiner key={index}>
-            {item.icon}
-            <AmenityTitle>{item.label}</AmenityTitle>
-          </AmenityConatiner>
+          <Container key={index}>
+            <Icon>{item.icon}</Icon>
+            <Label>{item.label}</Label>
+          </Container>
         ))}
-      </AmenitiesWrapper>
-    </Container>
+      </Wrapper>
+    </>
   );
 };
 

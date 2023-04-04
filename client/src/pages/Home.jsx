@@ -8,10 +8,6 @@ import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { clear } from "../redux/filterAndSearchSlice";
 
-const Wrapper = styled.div`
-  position: relative;
-`;
-
 function Home() {
   const dispatch = useDispatch();
 
@@ -20,13 +16,13 @@ function Home() {
   }, [dispatch]);
 
   return (
-    <Wrapper>
+    <>
       <Search />
       <OurServices />
       <PopularDestinations />
       <FeaturedProperties />
       <Footer />
-    </Wrapper>
+    </>
   );
 }
 

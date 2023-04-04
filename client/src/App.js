@@ -11,6 +11,7 @@ import SearchResult from "./pages/SearchResult";
 import HotelInformation from "./pages/HotelInformation";
 
 import Practice from "./components/Practice";
+import Wishlist from "./pages/Wishlist";
 
 export default function App() {
   const queryClient = new QueryClient();
@@ -30,7 +31,7 @@ export default function App() {
           <Route path="/edit-hotel/:id" element={<EditHotel />} />
           <Route path="/become-host" element={<>host</>} />
           <Route path="/orders/:id" element={<>order</>} />
-          <Route path="/wishlist/:id" element={<>wishlist</>} />
+          <Route path="/wishlist" element={<Wishlist />} />
         </Routes>
       </BrowserRouter>
     </QueryClientProvider>

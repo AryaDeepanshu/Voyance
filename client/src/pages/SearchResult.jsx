@@ -11,7 +11,7 @@ const SearchResult = () => {
   const searchInfo = useSelector((store) => store.filterAndSearch);
 
   /* we need filter and category state in this component to basically handle the refetch() operation: */
-  const [filter, setFilter] = useState(false);
+  const [modal, setModal] = useState(false);
   const [category, setCategory] = useState("");
   const { location, minPrice, maxPrice, rating, essentials, mealIncluded } =
     searchInfo;
@@ -28,7 +28,7 @@ const SearchResult = () => {
 
   useEffect(() => {
     refetch();
-  }, [filter, category, refetch]);
+  }, [modal, category, refetch]);
 
   return (
     <>
@@ -36,8 +36,8 @@ const SearchResult = () => {
       <Filter
         category={category}
         setCategory={setCategory}
-        filter={filter}
-        setFilter={setFilter}
+        modal={modal}
+        setModal={setModal}
       />
       {isLoading ? <>Loading...</> : <SearchHotelList hotel_data={data} />}
       <Footer />

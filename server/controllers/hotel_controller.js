@@ -16,7 +16,9 @@ module.exports.featured_hotel = async (req, res) => {
 module.exports.info = async (req, res) => {
   try {
     const id = req.params.id;
-    const hotel = await Hotel.findById(id);
+    const hotel = await Hotel.findById(id)
+      .populate("reviews")
+      .populate("hostId");
     return res.status(200).json(hotel);
   } catch (Err) {
     console.log(`Error fetching individual hotel detail : ${Err}`);

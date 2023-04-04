@@ -66,7 +66,7 @@ const HotelSchema = new mongoose.Schema(
     },
     hostId: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Host",
+      ref: "User",
       required: true,
     },
   },

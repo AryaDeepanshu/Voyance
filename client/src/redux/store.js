@@ -11,6 +11,8 @@
 
 import { combineReducers, configureStore } from "@reduxjs/toolkit";
 import userReducer from "./userSlice";
+import wishlistReducer from "./wishlistSlice";
+
 import filterAndSearchReducer from "./filterAndSearchSlice";
 
 import {
@@ -33,6 +35,7 @@ const persistConfig = {
 
 const rootReducer = combineReducers({
   user: userReducer,
+  wishlist: wishlistReducer,
   filterAndSearch: filterAndSearchReducer,
 });
 

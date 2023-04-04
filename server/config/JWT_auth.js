@@ -2,7 +2,7 @@ const jwt = require("jsonwebtoken");
 
 /* Method to Generate Access Token */
 module.exports.generateAccessToken = (user) => {
-  return jwt.sign({ id: user.id, host: user.host }, process.env.JWT_SECRET);
+  return jwt.sign({ id: user._id, host: user.host }, process.env.JWT_SECRET);
 };
 
 /* if user is Logged-in -> assign payload to response object */

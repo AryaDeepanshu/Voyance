@@ -14,14 +14,16 @@ import HotelReview from "../components/HotelReview";
 import { useLocation } from "react-router-dom";
 import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
+import Modal from "../components/Modal";
 
 const Container = styled.div`
   width: calc(100vw - 10%);
-  padding: 0% 5%;
+  margin: 0% 5%;
   position: relative;
 `;
 
 const BottomContainer = styled.div`
+  gap: 25px;
   display: flex;
   position: relative;
 `;
@@ -54,11 +56,9 @@ const HotelInformation = () => {
     <>
       {isLoading ? (
         <>loading</>
-      ) : error ? (
-        <> Something went wrong </>
       ) : (
         <>
-          {!lightBox && !modal && <Navbar />}
+          <Navbar />
           {lightBox ? (
             <LightBox
               hotelImages={data.images}
@@ -69,29 +69,32 @@ const HotelInformation = () => {
           ) : (
             <>
               {modal ? (
-                <ReservationModal data={data} setModal={setModal} />
+                <Modal>
+                  <ReservationCard data={data} setModal={setModal} />
+                </Modal>
               ) : (
-                <Container>
-                  <HotelHeading data={data} />
-                  <HotelImageSlider
-                    thumbnail={data.images[0]}
-                    displayImages={data.images.slice(1)}
-                    setIndex={setIndex}
-                    toggleLightBox={toggleLightBox}
-                  />
-                  <BottomContainer>
-                    <HotelDetails data={data} />
-                    {width > 768 ? (
-                      <ReservationCard data={data} setModal={setModal} />
-                    ) : (
-                      <></>
-                    )}
-                  </BottomContainer>
-                  <HotelReview />
-                </Container>
+                <></>
               )}
-              {!lightBox && !modal && <Footer type="hotelInfo" />}
-              {width <= 768 ? <ReservationStrip setModal={setModal} /> : <></>}
+
+              <Container>
+                <HotelHeading data={data} />
+                <HotelImageSlider
+                  thumbnail={data.images[0]}
+                  displayImages={data.images.slice(1)}
+                  setIndex={setIndex}
+                  toggleLightBox={toggleLightBox}
+                />
+                <BottomContainer>
+                  <HotelDetails data={data} />
+                  {width > 768 && (
+                    <ReservationCard data={data} setModal={setModal} />
+                  )}
+                </BottomContainer>
+                <HotelReview />
+              </Container>
+
+              <Footer type="hotelInfo" />
+              {width <= 768 && <ReservationStrip setModal={setModal} />}
             </>
           )}
         </>

@@ -27,18 +27,18 @@ import useWindowDimensions from "../hooks/useWindowDimensions";
 import { propertyList } from "../data/propertyList";
 
 const Container = styled.div`
-  width: 100%;
+  width: 95%;
   position: relative;
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   height: 80px;
   overflow: hidden;
   flex: 11; // defined wrt SearchResult --> Filter Component.
 `;
 
 const Wrapper = styled.div`
-  width: 88%;
+  width: 92%;
   translate: -0px;
   height: max-content;
   display: flex;

@@ -17,6 +17,26 @@ module.exports.updateInfo = async (req, res) => {
     return res.status(201).json(updatedInfo);
   } catch (Err) {
     console.log(`Error updating user information: ${Err}`);
-    return res.status(400).json(Err);
+    return res.status(500).json(Err);
+  }
+};
+
+module.exports.saveWishlist = async (req, res) => {
+  try {
+    const user = await User.findByIdAndUpdate(
+      req.payload.id,
+      {
+        $set: {
+          wishlist: req.body.wishlist,
+        },
+      },
+      {
+        new: true,
+      }
+    );
+    return res.status(200).json(user);
+  } catch (Err) {
+    console.log(`Error getting wishlist: ${Err}`);
+    return res.status(500).json(Err);
   }
 };

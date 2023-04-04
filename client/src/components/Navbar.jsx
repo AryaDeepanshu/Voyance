@@ -2,13 +2,16 @@ import styled from "styled-components";
 import { Link } from "react-router-dom";
 import ProfileDashboard from "./ProfileDashboard";
 import useWindowDimensions from "../hooks/useWindowDimensions";
+import { useSelector } from "react-redux";
+import { useState } from "react";
+import SignIn from "./SignIn";
 
+import Modal from "./Modal";
+import SignUp from "./SignUp";
 const Container = styled.div`
   width: 100%;
   height: 80px;
   display: flex;
-  /* position: sticky; */
-  /* top: 0px; */
 `;
 
 const LogoContainer = styled.div`
@@ -48,41 +51,84 @@ const ProfileContainer = styled.div`
   justify-content: flex-end;
 `;
 
+const Button = styled.div`
+  width: max-content;
+  height: max-content;
+  padding: 15px 20px;
+  background-color: #ff4b2b;
+  color: white;
+  margin: 10px;
+  font-size: 14px;
+  font-family: "Noto Serif", serif;
+  cursor: pointer;
+  border-radius: 10px;
+`;
+
 function Navbar() {
   const { width } = useWindowDimensions();
+  const { currentUser: user } = useSelector((store) => store.user);
+
+  const [showLoginModal, setShowLoginModal] = useState(false);
+  const [showRegisterModal, setShowRegisterModal] = useState(false);
 
   return (
     <>
-      {/* Logo */}
-      <Container>
-        {width > 480 ? (
-          <LogoContainer>
-            <Link to="/" style={{ textDecoration: "none", color: "inherit" }}>
-              <LogoImgContainer>
-                <Img
-                  alt="voyance"
-                  src="https://res.cloudinary.com/additya/image/upload/v1678127598/Voyance/r9udien7vaenzecl8mmk.png"
-                />
-              </LogoImgContainer>
-            </Link>
+      {showLoginModal && (
+        <Modal>
+          <SignIn
+            setShowLoginModal={setShowLoginModal}
+            setShowRegisterModal={setShowRegisterModal}
+          />
+        </Modal>
+      )}
 
-            {width > 660 ? (
+      {showRegisterModal && (
+        <Modal>
+          <SignUp
+            setShowLoginModal={setShowLoginModal}
+            setShowRegisterModal={setShowRegisterModal}
+          />
+        </Modal>
+      )}
+
+      <>
+        {/* Logo */}
+        <Container>
+          {width > 480 ? (
+            <LogoContainer>
               <Link to="/" style={{ textDecoration: "none", color: "inherit" }}>
-                <LogoHeading> Voyance </LogoHeading>
+                <LogoImgContainer>
+                  <Img
+                    alt="voyance"
+                    src="https://res.cloudinary.com/additya/image/upload/v1678127598/Voyance/r9udien7vaenzecl8mmk.png"
+                  />
+                </LogoImgContainer>
               </Link>
-            ) : (
-              <></>
-            )}
-          </LogoContainer>
-        ) : (
-          <></>
-        )}
 
-        {/* Profile */}
-        <ProfileContainer>
-          <ProfileDashboard />
-        </ProfileContainer>
-      </Container>
+              {width > 660 ? (
+                <Link
+                  to="/"
+                  style={{ textDecoration: "none", color: "inherit" }}>
+                  <LogoHeading> Voyance </LogoHeading>
+                </Link>
+              ) : (
+                <></>
+              )}
+            </LogoContainer>
+          ) : (
+            <></>
+          )}
+
+          {/* Profile */}
+          {user ? (
+            <ProfileContainer>
+              <ProfileDashboard />
+            </ProfileContainer>
+          ) : (
+            <Button onClick={() => setShowRegisterModal(true)}>sign-up</Button>
+          )}
+        </Container>
+      </>
     </>
   );
 }

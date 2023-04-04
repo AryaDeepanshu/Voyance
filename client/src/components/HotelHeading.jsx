@@ -1,4 +1,4 @@
-import { Star } from "@mui/icons-material";
+import { Grade, Star } from "@mui/icons-material";
 import styled from "styled-components";
 import { desktop, largeMobile, mobile, tablet } from "../responsive";
 
@@ -39,8 +39,9 @@ const RatingContainer = styled.div`
 `;
 
 const Rating = styled.p`
-  font-family: "Montserrat", sans-serif;
+  font-size: 20px;
   font-weight: bold;
+  font-family: "Roboto", sans-serif;
 `;
 
 const Data = styled.p`
@@ -56,12 +57,12 @@ const HotelHeading = ({ data }) => {
       <Header>{data.name}</Header>
       <DataWrapper>
         <RatingContainer>
-          <Star style={{ transform: "scale(0.8)" }} />
+          {/* <Star style={{ transform: "scale(0.8)" }} /> */}
+          <Grade style={{ fontSize: "24px", color: "#E6B325" }} />
           <Rating>
             {data.starNumber === 0 ? 0 : data.totalStars / data.starNumber}
           </Rating>
         </RatingContainer>
-        <Data>--- reviews</Data>
         <Data>{data.location}</Data>
       </DataWrapper>
     </Container>

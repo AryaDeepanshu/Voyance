@@ -1,9 +1,12 @@
 import { FavoriteBorder } from "@mui/icons-material";
+import { useMutation } from "@tanstack/react-query";
+import axios from "axios";
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { logout } from "../redux/userSlice";
+import { clearWishlist } from "../redux/wishlistSlice";
 
 const Container = styled.div`
   margin-right: 20px;
@@ -78,9 +81,27 @@ const ProfileDashboard = () => {
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const { wishlist } = useSelector((store) => store.wishlist);
+
+  const mutation = useMutation({
+    mutationFn: (wishlist) => {
+      return axios.post(
+        `http://localhost:5000/user/saveWishlist`,
+        { wishlist: wishlist },
+        {
+          withCredentials: true,
+        }
+      );
+    },
+  });
+
   const handleLogout = () => {
+    /* Save the wishlist from redux-store to the mongodb: */
+    mutation.mutate(wishlist);
+    dispatch(clearWishlist());
     dispatch(logout());
     navigate("/");
+    window.location.reload(true); // -> to make sure that data is flushed when person logout.
   };
 
   return (
@@ -88,9 +109,6 @@ const ProfileDashboard = () => {
       <BecomeHost>Become Host</BecomeHost>
 
       <DetailWrapper>
-        <Favorite>
-          <FavoriteBorder style={{ transform: "scale(1.3)", color: "black" }} />
-        </Favorite>
         <AvatarWrapper onClick={() => setOption(!option)}>
           <Avatar
             src={
@@ -111,7 +129,7 @@ const ProfileDashboard = () => {
                   </Link>
                   <Link
                     style={{ textDecoration: "none", color: "inherit" }}
-                    to={`/wishlist/${user._id}`}>
+                    to={`/wishlist`}>
                     <Option>Wishlist</Option>
                   </Link>
                   <Link

@@ -6,10 +6,11 @@ import CategorySlider from "./CategorySlider";
 import { useQuery } from "@tanstack/react-query";
 import useWindowDimensions from "../hooks/useWindowDimensions";
 import { useEffect } from "react";
+import { useSelector } from "react-redux";
 
 const Container = styled.div`
   height: max-content;
-  width: 100vw;
+  width: 100%;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -25,7 +26,6 @@ const Heading = styled.h1`
 const Wrapper = styled.div`
   width: 95%;
   display: grid;
-  grid-gap: 1rem;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   padding-bottom: 20px;
 `;
@@ -38,8 +38,13 @@ function FeaturedProperties() {
   // category -> cantain the type of property to be fetched from DB.
   const [category, setCategory] = useState("");
 
-  /* Fetching Data using React Query: */
-  const { isLoading, error, data, refetch } = useQuery(["featured-hotel"], () =>
+  /* Fetching Hotel Information using React Query: */
+  const {
+    isLoading: hotelLoading,
+    error: hotelError,
+    data: hotelData,
+    refetch,
+  } = useQuery(["featured-hotel"], () =>
     axios
       .get(`http://localhost:5000/hotel/featured-hotel?category=${category}`)
       .then((featured_hotel) => {
@@ -47,24 +52,44 @@ function FeaturedProperties() {
       })
   );
 
+  /* Fetching user wishlist using Redux: */
+  const { wishlist } = useSelector((store) => store.wishlist);
+
   useEffect(() => {
     refetch();
   }, [category]);
 
+  const colorHandler = (_id) => {
+    const index = wishlist.indexOf(_id);
+    return index === -1 ? "white" : "red";
+  };
+
   return (
     <Container>
-      <Heading>Featured Properties</Heading>
+      <></>
+      {/* <Heading>Featured Properties</Heading> */}
       <CategorySlider category={category} setCategory={setCategory} />
+
       <Wrapper>
         {!visible &&
-          data?.map((hotelInfo, index) => (
-            <HotelCard key={index} hotelInfo={hotelInfo} />
+          hotelData?.map((hotelInfo, index) => (
+            <HotelCard
+              key={index}
+              hotelInfo={hotelInfo}
+              color={colorHandler(hotelInfo._id)}
+            />
           ))}
 
         {visible &&
-          data?.map(
+          hotelData?.map(
             (hotelInfo, index) =>
-              index !== 3 && <HotelCard key={index} hotelInfo={hotelInfo} />
+              index !== 3 && (
+                <HotelCard
+                  key={index}
+                  hotelInfo={hotelInfo}
+                  color={colorHandler(hotelInfo._id)}
+                />
+              )
           )}
       </Wrapper>
     </Container>

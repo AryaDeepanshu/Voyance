@@ -1,11 +1,19 @@
 import React from "react";
 import styled from "styled-components";
 import Search from "../components/Search";
+import DaySchedule from "./DaySchedule";
 
-const Container = styled.div``;
+import ReactMarkdown from "react-markdown";
+
+// const Container = styled.textarea``;
 
 const Practice = () => {
-  return <Search />;
+  let str =
+    "\n\n##Day 1\n\nOn the first day of the trip, we will explore the city of Vizag. We will start by visiting the Kailasagiri Hill Park, which offers stunning views of the city and the Bay of Bengal. After that, we will explore the INS Kurusura Submarine Museum, which is the first of its kind in South Asia. We will also visit the Borra Caves, which are limestone caves situated amidst lush green forests. For dinner, we will visit the popular restaurant, Paradise Spice, which serves some of the best seafood dishes in the city. \n\n##Day 2\n\nOn the second day of the trip, we will visit the Rishikonda Beach, which is known for its golden sands and crystal clear waters. After that, we will explore the Araku Valley, which is a popular hill station situated in the Eastern Ghats. We will also visit the Borra Caves and the Tribal Museum. For dinner, we will visit the popular restaurant, Paradise Spice, which serves some of the best seafood dishes in the city.\n\n##Day 3\n\nOn the third day of the trip, we will visit the Submarine Museum and explore the various exhibits. After that, we will visit the Kambalakonda Wildlife Sanctuary, which is home to a variety of wild animals and birds. We will also visit the Visakhapatnam Zoo, which is home to a variety of exotic animals and birds. For dinner, we will visit the popular restaurant, Paradise Spice, which serves some of the best seafood dishes in the city.\n\n##Day 4\n\nOn the fourth day of the trip, we will visit the Matsyadarshini Aquarium, which houses a variety of marine life. After that, we will visit the Kailasagiri Hill Park, which offers stunning views of the city and the Bay of Bengal. We will also visit the Indira Gandhi Zoological Park, which is home to a variety of wild animals and birds. For dinner, we will visit the popular restaurant, Paradise Spice, which serves some of the best seafood dishes in the city.\n\n##Day 5\n\nOn the fifth and final day of the trip, we will visit the Ramakrishna Beach, which is known for its beautiful sunsets. After that, we will visit the Visakhapatnam War Memorial, which is a tribute to the soldiers who lost their lives in World War II. We will also visit the Ross Hill Church, which is a popular tourist destination in the city. For dinner, we will visit the popular restaurant, Paradise Spice, which serves some of the best seafood dishes in the city.";
+  // "\n\n# 7-Day Kurukshetra Trip Itinerary for 5 People (5000 INR Budget)\n\n## Day 1\n\n**Activity:** Visit the Brahma Sarovar\n\n**Cost:** Free\n\n**Dining Option:** Punjabi Rasoi\n\n**Cost:** Rs. 600 per person\n\n## Day 2\n\n**Activity:** Visit the Sannihit Sarovar\n\n**Cost:** Free\n\n**Dining Option:** Amritsari Kulfi\n\n**Cost:** Rs. 500 per person\n\n## Day 3\n\n**Activity:** Visit the Jyotisar\n\n**Cost:** Free\n\n**Dining Option:** Gulati's\n\n**Cost:** Rs. 700 per person\n\n## Day 4\n\n**Activity:** Visit the Bhishma Kund\n\n**Cost:** Free\n\n**Dining Option:** Khandani Pakoda\n\n**Cost:** Rs. 400 per person\n\n## Day 5\n\n**Activity:** Visit the Sthaneshwar Mahadev Temple\n\n**Cost:** Free\n\n**Dining Option:** Raj Mahal\n\n**Cost:** Rs. 800 per person\n\n## Day 6\n\n**Activity:** Visit the Sheikh Chilli's Tomb\n\n**Cost:** Free\n\n**Dining Option:** Dosa King\n\n**Cost:** Rs. 500 per person\n\n## Day 7\n\n**Activity:** Visit the Sheikpura Lake\n\n**Cost:** Free\n\n**Dining Option:** KFC\n\n**Cost:** Rs. 600 per person\n\n## Prominent Places in Kurukshetra\n\n1. Sannihit Sarovar\n2. Brahma Sarovar\n3. Jyotisar\n4. Bhishma Kund\n5. Sthaneshwar Mahadev Temple\n6. Sheikh Chilli's Tomb\n7. Sheikpura Lake";
+
+  console.log(str);
+  return <ReactMarkdown children={str} />;
 };
 
 export default Practice;
