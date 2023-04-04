@@ -209,8 +209,10 @@ const CloseButton = styled.div`
   cursor: pointer;
 `;
 
+
+
 // just handle below 661 px rest all set.
-const ReservationCard = ({ data, setModal }) => {
+const ReservationCard = ({ data, setModal, checkoutHandler }) => {
   // Width of window:
   const { width } = useWindowDimensions();
   const [guest, setGuest] = useState(1);
@@ -292,7 +294,7 @@ const ReservationCard = ({ data, setModal }) => {
           </InputContainer>
         </TripDetails>
 
-        <Button>Reserve</Button>
+        <Button onClick={()=>checkoutHandler(data.cost)}>Reserve</Button>
 
         <DataContainer>
           <DataWrapper>

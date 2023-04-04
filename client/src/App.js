@@ -9,6 +9,7 @@ import SignUp from "./components/SignUp";
 import EditHotel from "./components/EditHotel";
 import SearchResult from "./pages/SearchResult";
 import HotelInformation from "./pages/HotelInformation";
+import PaymentSuccess from "./pages/PaymentSuccess";
 
 import Practice from "./components/Practice";
 
@@ -31,6 +32,7 @@ export default function App() {
           <Route path="/become-host" element={<>host</>} />
           <Route path="/orders/:id" element={<>order</>} />
           <Route path="/wishlist/:id" element={<>wishlist</>} />
+          <Route path="/paymentsuccess" element={<PaymentSuccess/>} />
         </Routes>
       </BrowserRouter>
     </QueryClientProvider>

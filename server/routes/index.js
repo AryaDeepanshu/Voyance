@@ -8,5 +8,5 @@ router.use("/auth", require("./auth"));
 router.use("/user", require("./user"));
 router.use("/host", require("./host"));
 router.use("/hotel", require("./hotel"));
-
+router.use("/payment", require("./payment"));
 module.exports = router;

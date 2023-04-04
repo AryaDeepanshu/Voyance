@@ -15,6 +15,7 @@ import { useLocation } from "react-router-dom";
 import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
 
+
 const Container = styled.div`
   width: calc(100vw - 10%);
   padding: 0% 5%;
@@ -50,6 +51,36 @@ const HotelInformation = () => {
   /* Width of window: */
   const { width } = useWindowDimensions();
 
+  const checkoutHandler = async (amount) => {
+    const {data:{key}} = await axios.get("http://localhost:4000/payment/getkey")
+    const {data:{order}} = await axios.post("http://localhost:4000/payment/pay", {
+      amount
+    })
+    const options = {
+      key, // Enter the Key ID generated from the Dashboard
+      amount: order.amount, // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
+      currency: "INR",
+      name: "Voyance",
+      description: "Test Transaction",
+      image: "https://res.cloudinary.com/additya/image/upload/v1678127598/Voyance/r9udien7vaenzecl8mmk.png",
+      order_id: order.id, //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
+      callback_url: "http://localhost:4000/payment/paymentVerification",
+      prefill: {
+          name: "Deepanshu Arya",
+          email: "deepanshu@example.com",
+          contact: "1234567890"
+      },
+      notes: {
+          address: "Puri duniya apni h"
+      },
+      theme: {
+          color: "#008080"
+      }
+    };
+  const razor  = new window.Razorpay(options);
+  razor.open();
+  }
+
   return (
     <>
       {isLoading ? (
@@ -82,7 +113,7 @@ const HotelInformation = () => {
                   <BottomContainer>
                     <HotelDetails data={data} />
                     {width > 768 ? (
-                      <ReservationCard data={data} setModal={setModal} />
+                      <ReservationCard data={data} setModal={setModal} checkoutHandler={checkoutHandler} />
                     ) : (
                       <></>
                     )}
