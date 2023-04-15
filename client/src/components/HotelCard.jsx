@@ -33,9 +33,8 @@ const Button = styled.button`
 
 const Container = styled.div`
   height: max-content;
-  width: 90%;
-  padding: 20px 10px; // // need to make some changes for margin on smaller screen size
-
+  width: calc(100% - 20px);
+  padding: 20px 10px;
   &:hover ${Button} {
     transition: ease-in 0.5s;
     opacity: 1;
@@ -245,7 +244,7 @@ const HotelCard = ({ hotelInfo, color }) => {
               <Rating>
                 {hotelInfo.starNumber === 0
                   ? 0
-                  : hotelInfo.totalStars / hotelInfo.starNumber}
+                  : (hotelInfo.starNumber / hotelInfo.totalStars).toFixed(1)}
               </Rating>
             </RatingContainer>
           </HeaderContainer>

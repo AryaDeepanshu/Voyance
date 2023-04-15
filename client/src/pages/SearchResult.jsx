@@ -6,6 +6,13 @@ import { useSelector } from "react-redux";
 import { useQuery } from "@tanstack/react-query";
 import React, { useEffect, useState } from "react";
 import SearchHotelList from "../components/SearchHotelList";
+import styled from "styled-components";
+import SearchHotelListLoader from "../components/Loaders/SearchHotelListLoader";
+
+const Wrapper = styled.div`
+  width: calc(100vw - 10%);
+  margin: 0% 5%;
+`;
 
 const SearchResult = () => {
   const searchInfo = useSelector((store) => store.filterAndSearch);
@@ -30,16 +37,28 @@ const SearchResult = () => {
     refetch();
   }, [modal, category, refetch]);
 
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   return (
     <>
-      <Navbar />
-      <Filter
-        category={category}
-        setCategory={setCategory}
-        modal={modal}
-        setModal={setModal}
-      />
-      {isLoading ? <>Loading...</> : <SearchHotelList hotel_data={data} />}
+      <Wrapper>
+        <Navbar scrollPosition={80} />
+        <Filter
+          category={category}
+          setCategory={setCategory}
+          modal={modal}
+          setModal={setModal}
+        />
+        {isLoading ? (
+          <SearchHotelListLoader />
+        ) : (
+          // <SearchHotelListLoader />
+
+          <SearchHotelList hotel_data={data} />
+        )}
+      </Wrapper>
       <Footer />
     </>
   );

@@ -2,12 +2,25 @@ import React from "react";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import ProfileInformation from "../components/ProfileInformation";
+import styled from "styled-components";
+import { useEffect } from "react";
+
+const Wrapper = styled.div`
+  width: calc(100vw - 10%);
+  margin: 0% 5%;
+`;
 
 const Profile = () => {
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   return (
     <>
-      <Navbar />
-      <ProfileInformation />
+      <Wrapper>
+        <Navbar scrollPosition={80} />
+        <ProfileInformation />
+      </Wrapper>
       <Footer />
     </>
   );

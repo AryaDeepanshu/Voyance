@@ -4,7 +4,6 @@ import { setWishlist } from "./wishlistSlice";
 
 /* Email and Password Authentication (Register): */
 export const auth_Register = async (Navigate, dispatch, data) => {
-  console.log(data);
   dispatch(loginStart());
 
   const { name, email, password } = data;
@@ -23,6 +22,8 @@ export const auth_Register = async (Navigate, dispatch, data) => {
     dispatch(setWishlist(user.data.wishlist));
     Navigate("");
   } catch (Error) {
+    // Failed Login Message:
+
     dispatch(loginFailure());
     console.log(`Register Failure Error: ${Error}`);
   }

@@ -14,6 +14,7 @@ const Container = styled.div`
   padding: 80px 0px;
   flex-wrap: wrap;
   align-items: flex-start;
+  background-color: ${(props) => (props.home === true ? "white" : "#f5f5f5")};
 
   ${mobile({
     gap: "20px",
@@ -62,13 +63,13 @@ const Heading = styled.h2`
   display: flex;
   align-items: center;
   font-size: 20px;
-  font-family: "Montserrat", sans-serif;
+  font-family: "Bree Serif", serif;
 `;
 
 const Address = styled.p`
   color: gray;
   font-size: 13px;
-  font-family: "Montserrat", sans-serif;
+  font-family: "Noto Serif", serif;
 
   ${desktop({
     fontSize: "16px",
@@ -87,9 +88,6 @@ const MiddleWrapper = styled.div`
   display: flex;
   min-width: 345px;
   max-width: 600px;
-  /* ${mobile({
-    order: "2",
-  })} */
 
   ${largeMobile({
     order: "2",
@@ -122,14 +120,14 @@ const LinkContainer = styled.div`
 
 const SubHeader = styled.h2`
   font-size: 20px;
-  font-family: "Montserrat", sans-serif;
+  font-family: "Bree Serif", serif;
 `;
 
 const LinkDesc = styled.p`
   cursor: pointer;
   font-size: 13px;
   color: gray;
-  font-family: "Montserrat", sans-serif;
+  font-family: "Noto Serif", serif;
 
   ${desktop({
     fontSize: "14px",
@@ -169,7 +167,7 @@ const NewsletterContainer = styled.div`
 const Title = styled.p`
   color: gray;
   font-size: 13px;
-  font-family: "Montserrat", sans-serif;
+  font-family: "Noto Serif", serif;
 
   ${desktop({
     fontSize: "16px",
@@ -194,31 +192,29 @@ const Input = styled.input`
   border: none;
   outline: none;
   width: 100%;
+  background-color: ${(props) => (props.home === true ? "white" : "#f5f5f5")};
+  font-family: "Noto Serif", serif;
+
   ::placeholder {
     color: gray;
+    font-family: "Noto Serif", serif;
   }
 `;
 
 // Pending Task : handle the responsiveness of this element below 480px i.e for mobile view and for above 1024px i.e desktop view. --> only if time permits
-const Footer = () => {
+const Footer = ({ home }) => {
   return (
-    <Container type="hotelInfo">
+    <Container type="hotelInfo" home={home}>
       <LeftWrapper>
         <AddressContainer>
           <HeadingContainer>
             <Heading>Voyance</Heading>
           </HeadingContainer>
-          {/* <Address>4517, Washington Ave, Manchester Kentucky, 39495</Address> */}
           <Address>
             The website ends here, but your journey to the Amazing destinations
             begins with Zostel. Explore with our social hostels, homestays, and
             luxury stays on your next holiday.
           </Address>
-          {/* <SocialIconsContainer>
-            <Facebook style={{ cursor: "pointer", color: "#4ee2ec" }} />
-            <Instagram style={{ cursor: "pointer", color: "#4ee2ec" }} />
-            <Twitter style={{ cursor: "pointer", color: "#4ee2ec" }} />
-          </SocialIconsContainer> */}
         </AddressContainer>
       </LeftWrapper>
 

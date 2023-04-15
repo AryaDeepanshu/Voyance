@@ -168,6 +168,8 @@ const SignIn = ({ setShowLoginModal, setShowRegisterModal }) => {
 
   const auth = (event) => {
     event.preventDefault();
+    if (email === "" || password === "") return;
+
     auth_Login(navigate, dispatch, { email, password });
     setShowLoginModal(false);
     setShowRegisterModal(false);

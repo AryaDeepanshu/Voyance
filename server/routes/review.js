@@ -7,4 +7,8 @@ router.get("/:id", review_controller.getReviewById);
 
 router.post("/add", verifyToken, review_controller.addReview);
 
+router.post("/update", verifyToken, review_controller.updateReview);
+
+router.post("/delete", verifyToken, review_controller.deleteReview);
+
 module.exports = router;

@@ -1,28 +1,47 @@
-// import React from "react";
-// import { useState } from "react";
-// import { Calendar } from "react-date-range";
-// import styled from "styled-components";
+import * as React from "react";
+import dayjs from "dayjs";
+// import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import { TextField } from "@mui/material";
+import styled from "styled-components";
 
-// const Container = styled.div`
-//   position: absolute;
-//   left: 0px;
-//   top: 65px;
-//   z-index: 999;
-//   box-shadow: rgba(0, 0, 0, 0.15) 0px 2px 8px;
-// `;
+const Wrapper = styled.div`
+  z-index: 100;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
 
-// const DatePickerComponent = () => {
-//   const [date, setDate] = useState(null);
+const DatePickerComponent = ({ date, setDate, width }) => {
+  return (
+    <Wrapper>
+      <LocalizationProvider dateAdapter={AdapterDayjs}>
+        <DatePicker
+          disablePast
+          value={date}
+          onChange={(newDate) => {
+            setDate(newDate);
+          }}
+          renderInput={(startProps) => (
+            <>
+              <TextField
+                {...startProps}
+                style={{
+                  width: width,
+                  zIndex: 999999,
+                  paddingTop: 0,
+                  backgroundColor: "white",
+                }}
+              />
+            </>
+          )}
+        />
+      </LocalizationProvider>
+    </Wrapper>
+  );
+};
 
-//   return (
-//     <Container>
-//       <Calendar
-//         onChange={(event) => setDate(event)}
-//         date={date}
-//         minDate={new Date()}
-//       />
-//     </Container>
-//   );
-// };
-
-// export default DatePickerComponent;
+export default DatePickerComponent;

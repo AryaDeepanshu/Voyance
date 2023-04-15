@@ -11,6 +11,8 @@ import { useSelector } from "react-redux";
 import styled from "styled-components";
 import useWindowDimensions from "../hooks/useWindowDimensions";
 import { tablet, desktop } from "../responsive";
+import DatePickerComponent from "./DatePickerComponent";
+import DatePickerMobileComponent from "./DatePickerMobileComponent";
 
 const Container = styled.div`
   flex: 1;
@@ -20,7 +22,7 @@ const Container = styled.div`
   width: 100%;
   height: max-content;
   position: sticky;
-  top: 10px;
+  top: 90px;
   right: 0px;
   box-shadow: rgba(0, 0, 0, 0.15) 0px 2px 8px;
   max-width: 350px;
@@ -180,15 +182,24 @@ const CloseButton = styled.div`
   cursor: pointer;
 `;
 
-const ReservationCard = ({ data, setModal }) => {
+const ReservationCard = ({
+  data,
+  setModal,
+  beginDate,
+  setBeginDate,
+  endDate,
+  setEndDate,
+  stay,
+  guest,
+  setGuest,
+}) => {
   /* Width of window: */
   const { width } = useWindowDimensions();
 
-  /* State to maintain count of guest: */
-  const [guest, setGuest] = useState(1);
-
-  /* get the searchInfo data from redux toolkit */
-  const searchInfo = useSelector((store) => store.filterAndSearch);
+  const date = new Date();
+  const day = String(date.getDate()).padStart(2, "0");
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const today = date.getFullYear() + "-" + month + "-" + day;
 
   return (
     <Container>
@@ -209,18 +220,39 @@ const ReservationCard = ({ data, setModal }) => {
         </TopContainer>
 
         <TripDetails>
+          {/* Check-IN: */}
           <InputContainer>
             <Label>CHECK-IN</Label>
-            <Input placeholder={searchInfo?.startDate} />
+            {width <= 768 ? (
+              <Input
+                type="date"
+                value={beginDate}
+                min={today}
+                onChange={(event) => setBeginDate(event.target.value)}
+              />
+            ) : (
+              <DatePickerComponent date={beginDate} setDate={setBeginDate} />
+            )}
           </InputContainer>
+
+          {/* Check-OUT: */}
           <InputContainer>
             <Label>CHECK-OUT</Label>
-            <Input placeholder={searchInfo?.endDate} />
+            {width <= 768 ? (
+              <Input
+                type="date"
+                value={endDate}
+                min={beginDate}
+                onChange={(event) => setEndDate(event.target.value)}
+              />
+            ) : (
+              <DatePickerComponent date={endDate} setDate={setEndDate} />
+            )}
           </InputContainer>
           <InputContainer type="guest">
             <GuestContainer>
               <Label>GUESTS</Label>
-              <Input placeholder={guest} type="number" />
+              <Input placeholder={guest} disabled />
             </GuestContainer>
             <GuestValueContainer>
               <RemoveCircleOutline
@@ -250,12 +282,12 @@ const ReservationCard = ({ data, setModal }) => {
         <Hr />
 
         <DataWrapper>
-          <Data>2800 x 2 nights</Data>
+          <Data>{`${data.cost} x ${stay} nights`}</Data>
           <PriceContainer>
             <CurrencyRupee
               style={{ fontSize: "18px", padding: "2px", color: "#7f8487" }}
             />
-            <Price type="cost">2240</Price>
+            <Price type="cost">{data.cost * stay}</Price>
           </PriceContainer>
         </DataWrapper>
 

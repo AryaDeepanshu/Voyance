@@ -57,10 +57,11 @@ const HotelHeading = ({ data }) => {
       <Header>{data.name}</Header>
       <DataWrapper>
         <RatingContainer>
-          {/* <Star style={{ transform: "scale(0.8)" }} /> */}
           <Grade style={{ fontSize: "24px", color: "#E6B325" }} />
           <Rating>
-            {data.starNumber === 0 ? 0 : data.totalStars / data.starNumber}
+            {data.starNumber === 0
+              ? 0
+              : (data.starNumber / data.totalStars).toFixed(1)}
           </Rating>
         </RatingContainer>
         <Data>{data.location}</Data>

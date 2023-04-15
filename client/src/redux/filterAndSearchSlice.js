@@ -5,6 +5,7 @@ const filterAndSearchSlice = createSlice({
   initialState: {
     beginDate: null,
     endDate: null,
+    stay: 1,
     location: "",
     guest: null,
     minPrice: 1000,
@@ -36,6 +37,7 @@ const filterAndSearchSlice = createSlice({
         ? action.payload.mealIncluded
         : [];
       state.rating = action.payload.rating ? action.payload.rating : 0;
+      state.stay = action.payload.stay ? action.payload.stay : 0;
     },
     clear: (state) => {
       state.beginDate = null;

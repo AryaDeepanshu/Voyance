@@ -1,4 +1,11 @@
-import { CalendarMonth, Close, PersonAdd, Search } from "@mui/icons-material";
+import {
+  Add,
+  CalendarMonth,
+  Close,
+  PersonAdd,
+  Remove,
+  Search,
+} from "@mui/icons-material";
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
@@ -6,8 +13,9 @@ import { largeMobile, mobile, tablet } from "../responsive";
 import DatePickerComponent from "./DatePickerComponent";
 import { search } from "../redux/filterAndSearchSlice";
 import { useNavigate } from "react-router-dom";
+import dayjs from "dayjs";
 
-const Container = styled.div`
+const Wrapper = styled.div`
   height: max-content;
   display: flex;
   align-items: center;
@@ -26,19 +34,27 @@ const Container = styled.div`
   })};
 `;
 
+const Container = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+`;
+
 const InputContainer = styled.div`
   display: flex;
-  padding: 15px 10px;
-  border: 1px solid lightgray;
+  align-items: center;
+  border: 1px solid #b2b2b2;
   width: 80%;
-  border-radius: 10px;
-  margin: 10px 0px;
+  border-radius: 3px;
   background-color: white;
   position: relative;
 `;
 
 const Input = styled.input`
   width: 100%;
+  padding: 20px 10px;
   border: none;
   outline: none;
   font-family: "Montserrat", sans-serif;
@@ -54,68 +70,164 @@ const CloseButton = styled.div`
 `;
 
 const SearchButton = styled.button`
-  padding: 15px 0px;
+  padding: 16px 0px;
   color: white;
   background-color: black;
-  margin: 10px 0px;
+  margin: 15px 0px;
   cursor: pointer;
-  width: 85%;
+  width: 80%;
   border: none;
+  font-family: "Noto Serif", serif;
+`;
+
+const ButtonWrapper = styled.div`
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  padding-right: 12px;
 `;
 
 const SearchInputModal = ({ setModal }) => {
-  const [guest, setGuest] = useState("");
+  // today's Date:
+  const date = new Date();
+  const day = String(date.getDate()).padStart(2, "0");
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const today = date.getFullYear() + "-" + month + "-" + day;
+
+  // tomorrow's Date:
+  var nextDate = new Date();
+  nextDate.setDate(nextDate.getDate() + 1);
+  const tomorrowDay = String(nextDate.getDate()).padStart(2, "0");
+  const tomorrowMonth = String(nextDate.getMonth() + 1).padStart(2, "0");
+  const tomorrow =
+    nextDate.getFullYear() + "-" + tomorrowMonth + "-" + tomorrowDay;
+
+  const [guest, setGuest] = useState(1);
   const [location, setLocation] = useState("");
+  const [beginDate, setBeginDate] = useState(today);
+  const [endDate, setEndDate] = useState(tomorrow);
+
+  /* Calculate difference b/w date in case of "string" format: */
+  function datediff(first, second) {
+    return Math.round((second - first) / (1000 * 60 * 60 * 24));
+  }
+
+  function parseDate(str) {
+    var ydm = str.split("-");
+    return new Date(Number(ydm[0]), Number(ydm[1]) - 1, Number(ydm[2])); // year month day
+  }
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
+  const decode = (date) => {
+    const ymd = date.split("-");
+    return `${ymd[1]}/${ymd[2]}/${ymd[0]} `;
+  };
+
   const handleSearch = () => {
+    if (location === "") return;
+    console.log(location);
+
     dispatch(
       search({
         location: location,
-        beginDate: "date",
-        endDate: "date",
+        beginDate: decode(beginDate),
+        endDate: decode(endDate),
+        stay: datediff(parseDate(beginDate), parseDate(endDate)),
         guest: guest,
       })
     );
     navigate(`/search?location=${location}`);
+
+    // if (location === "") return;
+    // dispatch(
+    //   search({
+    //     location: location,
+    //     beginDate: beginDate,
+    //     endDate: endDate,
+    //     stay: datediff(parseDate(beginDate), parseDate(endDate)),
+    //     guest: guest,
+    //   })
+    // );
+    // navigate(`/search?location=${location}`);
+  };
+
+  const handleGuest = (operation) => {
+    if (operation === "increase" && guest < 10) {
+      setGuest(guest + 1);
+    } else if (operation === "decrease" && guest > 1) {
+      setGuest(guest - 1);
+    }
   };
 
   return (
-    <Container>
+    <Wrapper>
       <CloseButton onClick={() => setModal(false)}>
         <Close style={{ transform: "scale(1.2)" }} />
       </CloseButton>
 
-      <InputContainer>
-        <Search />
-        <Input
-          placeholder={"Search Destination"}
-          onChange={(event) => setLocation(event.target.value)}
-        />
-      </InputContainer>
+      <Container>
+        <InputContainer>
+          <Input
+            placeholder={"Search Destination"}
+            onChange={(event) => setLocation(event.target.value)}
+          />
+          <Search
+            style={{
+              transform: "scale(1.3)",
+              paddingRight: "10px",
+              color: "#73777B",
+            }}
+          />
+        </InputContainer>
 
-      <InputContainer>
-        <CalendarMonth />
-        <Input placeholder={"Begin date"} />
-      </InputContainer>
+        <InputContainer>
+          <Input
+            type="date"
+            value={beginDate}
+            min={today}
+            onChange={(event) => setBeginDate(event.target.value)}
+          />
+        </InputContainer>
 
-      <InputContainer>
-        <CalendarMonth />
-        <Input placeholder={"End date"} />
-      </InputContainer>
+        <InputContainer>
+          <Input
+            type="date"
+            value={endDate}
+            min={beginDate}
+            onChange={(event) => setEndDate(event.target.value)}
+          />
+        </InputContainer>
 
-      <InputContainer>
-        <PersonAdd />
-        <Input
-          placeholder={"Add Guest"}
-          onChange={(event) => setGuest(event.target.value)}
-        />
-      </InputContainer>
+        <InputContainer>
+          <Input placeholder={"Add Guest"} value={guest} />
+
+          <ButtonWrapper>
+            <Remove
+              onClick={() => handleGuest("decrease")}
+              style={{
+                border: "1px solid #b2b2b2",
+                borderRadius: "100%",
+                cursor: "pointer",
+                padding: "4px",
+              }}
+            />
+            <Add
+              onClick={() => handleGuest("increase")}
+              style={{
+                border: "1px solid #b2b2b2",
+                borderRadius: "100%",
+                cursor: "pointer",
+                padding: "4px",
+              }}
+            />
+          </ButtonWrapper>
+        </InputContainer>
+      </Container>
 
       <SearchButton onClick={handleSearch}>Search</SearchButton>
-    </Container>
+    </Wrapper>
   );
 };
 

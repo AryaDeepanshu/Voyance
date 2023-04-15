@@ -37,13 +37,7 @@ const Cost = styled.div`
 const Duration = styled.div`
   font-size: 14px;
   color: gray;
-  padding-left: 7px;
-`;
-
-const Date = styled.div`
-  padding-left: 7px;
-  font-size: 18px;
-  font-weight: bold;
+  padding-left: 5px;
 `;
 
 const Button = styled.button`
@@ -64,7 +58,7 @@ const Button = styled.button`
   }
 `;
 
-const ReservationStrip = ({ setModal }) => {
+const ReservationStrip = ({ setModal, data, stay }) => {
   const searchInfo = useSelector((store) => store.filterAndSearch);
 
   return (
@@ -72,10 +66,9 @@ const ReservationStrip = ({ setModal }) => {
       <DataContainer>
         <CostContainer>
           <CurrencyRupee style={{ transform: "scale(0.7)" }} />{" "}
-          <Cost>1,10,039</Cost>
+          <Cost>{data.cost}</Cost>
           <Duration>night</Duration>
         </CostContainer>
-        <Date>{`${searchInfo?.startDate} - ${searchInfo?.endDate}`}</Date>
       </DataContainer>
       <Button onClick={() => setModal(1)}>Reverse</Button>
     </Container>

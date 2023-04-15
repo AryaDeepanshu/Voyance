@@ -15,11 +15,16 @@ module.exports.getReviewById = async (req, res) => {
 };
 
 module.exports.addReview = async (req, res) => {
-  if (req.payload.host) return res.status(403).json("Host cannot add review");
+  if (!req.payload) return res.status(401).json("You are not authenticated.");
+  if (req.payload.host) return res.status(403).json("Host cannot add review.");
 
-  const existingReview = await Review.find({ userId: req.payload.id });
+  const existingReview = await Review.find({
+    userId: req.payload.id,
+    hotelId: req.body.hotelId,
+  });
+
   if (existingReview.length !== 0)
-    return res.status(406).json("review already exist");
+    return res.status(406).json("review already exist.");
 
   const review = new Review({
     ...req.body,
@@ -34,13 +39,94 @@ module.exports.addReview = async (req, res) => {
     });
 
     await Hotel.findByIdAndUpdate(req.body.hotelId, {
-      $inc: { totalStars: 5, starNumber: req.body.star },
+      $inc: { totalStars: 1, starNumber: req.body.star },
       $push: { reviews: savedReview._id },
     });
 
     return res.status(200).json("Successfully added the review");
   } catch (Err) {
     console.log(`Can't add review: ${Err}`);
+    return res.status(500).json(Err);
+  }
+};
+
+module.exports.updateReview = async (req, res) => {
+  if (!req.payload) return res.status(401).json("You are not authenticated.");
+  if (req.payload.host)
+    return res.status(403).json("Host cannot update review.");
+
+  const existingReview = await Review.find({
+    userId: req.payload.id,
+    hotelId: req.body.hotelId,
+  });
+
+  if (existingReview.length === 0)
+    return res.status(406).json("No Existing review found.");
+
+  try {
+    await Hotel.findByIdAndUpdate(req.body.hotelId, {
+      $set: {
+        starNumber: req.body.star,
+      },
+    });
+
+    await Review.findByIdAndUpdate(
+      existingReview[0]._id,
+      {
+        $set: {
+          star: req.body.star,
+          review: req.body.review,
+        },
+      },
+      { new: true }
+    );
+
+    return res.status(200).json("Successfully updated the review");
+  } catch (Err) {
+    console.log(`Can't update review: ${Err}`);
+    return res.status(500).json(Err);
+  }
+};
+
+module.exports.deleteReview = async (req, res) => {
+  if (!req.payload) return res.status(401).json("You are not authenticated.");
+  if (req.payload.host)
+    return res.status(403).json("Host cannot delete review.");
+
+  const existingReview = await Review.find({
+    userId: req.payload.id,
+    hotelId: req.body.hotelId,
+  });
+
+  if (existingReview.length === 0)
+    return res.status(406).json("No Existing review found.");
+
+  try {
+    await User.findByIdAndUpdate(
+      req.payload.id,
+      {
+        $pull: {
+          reviews: existingReview[0]._id,
+        },
+      },
+      { new: true }
+    );
+
+    await Hotel.findByIdAndUpdate(
+      req.body.hotelId,
+      {
+        $inc: { totalStars: -1, starNumber: -existingReview[0].star },
+        $pull: {
+          reviews: existingReview[0]._id,
+        },
+      },
+      { new: true }
+    );
+
+    await Review.findByIdAndDelete(existingReview[0]._id);
+    return res.status(200).json("Review Deleted");
+  } catch (Err) {
+    console.log(`Can't delete review: ${Err}`);
     return res.status(500).json(Err);
   }
 };

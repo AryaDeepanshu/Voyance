@@ -247,9 +247,11 @@ const FilterProperties = ({ modal, setModal }) => {
   const amenitiesOptions = [
     "Wifi",
     "Kitchen",
-    "Washing Machine",
-    "Dryer",
-    "Heating",
+    "Workspace",
+    "Pets Allowed",
+    "Smoke Alarm",
+    "Fire Extinguisher",
+    "First Aid kit",
     "Parking",
   ];
 

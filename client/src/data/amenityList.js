@@ -23,7 +23,7 @@ export const amenityList = [
     icon: <ChairAlt style={{ transform: "scale(1.5)", color: "gray" }} />,
   },
   {
-    label: "Free Parking",
+    label: "Parking",
     icon: <LocalParking style={{ transform: "scale(1.5)", color: "gray" }} />,
   },
   {

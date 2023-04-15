@@ -41,7 +41,7 @@ const Container = styled.div`
   })}
 `;
 
-const Search = () => {
+const Search = ({ scrollPosition }) => {
   const { width } = useWindowDimensions();
   const [modal, setModal] = useState(false);
 
@@ -53,7 +53,7 @@ const Search = () => {
         </Modal>
       )}
 
-      <Navbar />
+      {scrollPosition < 80 && <Navbar isHome={true} />}
       {width > 850 ? (
         <NewSearch />
       ) : (

@@ -6,10 +6,19 @@ import styled from "styled-components";
 import { largeMobile, mobile } from "../responsive";
 
 import HotelCard from "./HotelCard";
+import SearchHotelListLoader from "./Loaders/SearchHotelListLoader";
+
+const Container = styled.div``;
+
+const Wrapper = styled.div`
+  display: grid;
+  grid-gap: 1rem;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+`;
 
 const Heading = styled.div`
   font-size: 48px;
-  margin: 1% 0% 0% 4%;
+  margin-left: 10px;
   font-family: "Bree Serif", serif;
 
   ${mobile({
@@ -23,18 +32,13 @@ const Heading = styled.div`
   })}
 `;
 
-const Wrapper = styled.div`
-  display: grid;
-  grid-gap: 1rem;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  margin: 0% 3% 0% 3%;
-`;
-
 const WishlistContainer = () => {
   const [hotelList, setHotelList] = useState([]);
   const { wishlist } = useSelector((store) => store.wishlist);
   const wishlisted = [...wishlist];
 
+  // IsLoading with promise.all;
+  const [isLoading, setIsLoading] = useState(true);
   useEffect(() => {
     const getWishList = async () => {
       const data = await Promise.all(
@@ -47,22 +51,25 @@ const WishlistContainer = () => {
       );
 
       setHotelList(data);
+      setIsLoading(false);
     };
 
     getWishList();
   }, []);
 
   return (
-    <>
+    <Container>
       <Heading>Your Wishlist:</Heading>
-      {
+      {isLoading ? (
+        <SearchHotelListLoader />
+      ) : (
         <Wrapper>
           {hotelList.map((hotelInfo) => (
             <HotelCard key={hotelInfo._id} hotelInfo={hotelInfo} color="red" />
           ))}
         </Wrapper>
-      }
-    </>
+      )}
+    </Container>
   );
 };
 

@@ -28,8 +28,10 @@ const UserSchema = new mongoose.Schema(
     },
     avatar: {
       type: String,
-      default:
-        "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460__340.png",
+      default: "default_avatar",
+    },
+    bio: {
+      type: String,
     },
     wishlist: {
       type: [mongoose.Schema.Types.ObjectId],

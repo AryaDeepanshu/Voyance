@@ -7,7 +7,6 @@ const HotelSchema = new mongoose.Schema(
       required: true,
       unique: true,
     },
-    // may be a better Rating mechanism:
     totalStars: {
       type: Number,
       default: 0,

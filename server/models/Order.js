@@ -7,12 +7,15 @@ const OrderSchema = new mongoose.Schema(
       ref: "Hotel",
       required: true,
     },
-    date: {
-      // check how to store date in mongodb:
+    beginDate: {
       type: String,
       required: true,
     },
-    totalCost: {
+    endDate: {
+      type: String,
+      required: true,
+    },
+    cost: {
       type: Number,
       required: true,
     },
@@ -26,14 +29,9 @@ const OrderSchema = new mongoose.Schema(
       ref: "User",
       required: true,
     },
-    tripCompleted: {
-      type: Boolean,
-      default: false,
-    },
-    img: {
-      // take any one photo to display -> not there in current setup check if is required:
-      type: String,
-      required: false,
+    guest: {
+      type: Number,
+      required: true,
     },
   },
   {

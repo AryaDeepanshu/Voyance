@@ -170,8 +170,13 @@ const SignUp = ({ setShowLoginModal, setShowRegisterModal }) => {
     },
   });
 
+  // Email-Password Authentication:
   const auth = (event) => {
     event.preventDefault();
+    if (name === "" || email === "" || password === "") {
+      return;
+    }
+
     auth_Register(navigate, dispatch, { name, email, password });
     setShowLoginModal(false);
     setShowRegisterModal(false);
@@ -194,6 +199,7 @@ const SignUp = ({ setShowLoginModal, setShowRegisterModal }) => {
           />
           <Input
             placeholder="Email"
+            type="email"
             onChange={(event) => setEmail(event.target.value)}
           />
           <Input
@@ -202,6 +208,7 @@ const SignUp = ({ setShowLoginModal, setShowRegisterModal }) => {
             onChange={(event) => setPassword(event.target.value)}
           />
           <Button onClick={auth}>Continue</Button>
+
           <ExistingAccount>
             Already Have an Account?{" "}
             <Login
@@ -209,8 +216,7 @@ const SignUp = ({ setShowLoginModal, setShowRegisterModal }) => {
                 setShowLoginModal(true);
                 setShowRegisterModal(false);
               }}>
-              {" "}
-              Log in{" "}
+              Log in
             </Login>
           </ExistingAccount>
         </Form>

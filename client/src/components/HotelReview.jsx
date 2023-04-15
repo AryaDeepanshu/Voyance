@@ -3,10 +3,11 @@ import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import { useLocation } from "react-router-dom";
 import styled from "styled-components";
-import { desktop, largeMobile, mobile } from "../responsive";
+import { desktop, largeMobile, mobile, tablet } from "../responsive";
 import HoverRating from "./StarRating";
 import axios from "axios";
-
+import { Edit, Delete, Close } from "@mui/icons-material";
+import Modal from "./Modal";
 const Container = styled.div`
   display: grid;
   grid-gap: 2rem;
@@ -31,6 +32,7 @@ const ReviewContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: flex-start;
+  position: relative;
 `;
 
 const AuthorDetails = styled.div`
@@ -77,9 +79,11 @@ const Date = styled.p`
 
 const AuthorReview = styled.p`
   padding: 10px 0px;
+  width: 98%;
   font-family: "Montserrat", sans-serif;
   font-size: 16px;
   color: gray;
+  resize: none;
 
   ${mobile({
     fontSize: "14px",
@@ -91,6 +95,9 @@ const TakeReviewContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: flex-start;
+  background-color: ${(props) => (props.type === "modal" ? "white" : "")};
+  padding: ${(props) => (props.type === "modal" ? "30px" : "")};
+  position: relative;
 `;
 
 const Heading = styled.div`
@@ -118,7 +125,7 @@ const Label = styled.p`
 `;
 
 const InputReview = styled.textarea`
-  width: 98%;
+  width: ${(props) => (props.type === "modal" ? "94%" : "98%")};
   resize: none;
   padding: 20px 10px;
 
@@ -131,14 +138,48 @@ const InputReview = styled.textarea`
   })}
 `;
 
-const Button = styled.button`
-  font-size: 16px;
+const OptionWrapper = styled.div`
+  top: 5px;
+  right: 5px;
+  position: absolute;
+  display: flex;
+  gap: 5px;
+`;
+
+const OptionContainer = styled.div`
+  padding: 7px;
+  border-radius: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   cursor: pointer;
-  padding: 15px 30px;
-  background-color: #ff0b55;
+  &:hover {
+    box-shadow: 0px 0px 3px 0px rgba(0, 0, 0, 1);
+  }
+`;
+
+const ButtonWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  margin-top: 10px;
+`;
+
+const Button = styled.button`
   font-family: "Roboto", sans-serif;
+  font-size: 16px;
+  width: 150px;
+  padding: 10px 0px;
+  cursor: pointer;
   color: white;
   border: none;
+  border-radius: 5px;
+  background-color: #4ee2ec;
+
+  :hover {
+    opacity: 0.5;
+    transition: 0.5 all;
+  }
 `;
 
 const HotelReview = () => {
@@ -154,6 +195,12 @@ const HotelReview = () => {
   /* State for review input: */
   const [experience, setExperience] = useState("");
 
+  /* State for updated Star Rating Component: */
+  const [updatedValue, setUpdatedValue] = useState(0);
+
+  /* State for updated  review input: */
+  const [updatedExperience, setUpdatedExperience] = useState("");
+
   /* React Query to fetch hotel review: */
   const { isLoading, error, data } = useQuery([`review-${hotelId}`], () =>
     axios
@@ -166,12 +213,45 @@ const HotelReview = () => {
   /* State to display add-review feedback: */
   const [feedback, setFeedback] = useState(null);
 
-  /* React Query for add-review Post Request: */
+  /* queryClient Object: */
   const queryClient = useQueryClient();
 
-  const mutation = useMutation({
+  /* React Query for add-review Post Request: */
+  const addReviewMutation = useMutation({
     mutationFn: (review) => {
       return axios.post(`http://localhost:5000/review/add`, review, {
+        withCredentials: true,
+      });
+    },
+    onSuccess: (message) => {
+      setFeedback(message.data);
+      queryClient.invalidateQueries([`review-${hotelId}`]);
+    },
+    onError: (message) => {
+      setFeedback(message.response.data);
+    },
+  });
+
+  /* React Query for update-review Post Request: */
+  const updateReviewMutation = useMutation({
+    mutationFn: (review) => {
+      return axios.post(`http://localhost:5000/review/update`, review, {
+        withCredentials: true,
+      });
+    },
+    onSuccess: (message) => {
+      setFeedback(message.data);
+      queryClient.invalidateQueries([`review-${hotelId}`]);
+    },
+    onError: (message) => {
+      setFeedback(message.response.data);
+    },
+  });
+
+  /* React Query for delete-review Post Request: */
+  const deleteReviewMutation = useMutation({
+    mutationFn: (hotelId) => {
+      return axios.post(`http://localhost:5000/review/delete`, hotelId, {
         withCredentials: true,
       });
     },
@@ -187,10 +267,11 @@ const HotelReview = () => {
   /* state to disable the add review button */
   const [disable, setDisable] = useState(false);
 
+  /* Add Review Method: */
   const addReview = () => {
     setDisable(true);
 
-    mutation.mutate({
+    addReviewMutation.mutate({
       hotelId: hotelId,
       star: value,
       review: experience,
@@ -198,6 +279,31 @@ const HotelReview = () => {
 
     setDisable(false);
   };
+
+  /* update Review Method: */
+  const updateReview = () => {
+    setDisable(true);
+
+    updateReviewMutation.mutate({
+      hotelId: hotelId,
+      star: updatedValue,
+      review: updatedExperience,
+    });
+
+    setDisable(false);
+    setModal(false);
+  };
+
+  /* delete Review Method: */
+  const deleteReview = () => {
+    deleteReviewMutation.mutate({
+      hotelId: hotelId,
+    });
+  };
+
+  /* State to handle update review: */
+  const [modal, setModal] = useState(false);
+
   return (
     <>
       <Hr />
@@ -216,9 +322,46 @@ const HotelReview = () => {
                   </DetailContainer>
                 </AuthorDetails>
                 <AuthorReview>{data.review}</AuthorReview>
+                {data?.userId?._id === user?._id && (
+                  <OptionWrapper>
+                    <OptionContainer>
+                      <Edit onClick={() => setModal(true)} />
+                    </OptionContainer>
+                    <OptionContainer>
+                      <Delete onClick={deleteReview} />
+                    </OptionContainer>
+                  </OptionWrapper>
+                )}
               </ReviewContainer>
             ))}
       </Container>
+
+      {modal && (
+        <Modal>
+          <TakeReviewContainer type="modal">
+            <Heading> update Review: </Heading>
+            <StarRatingContainer>
+              <Label>Rate our service: </Label>
+              <HoverRating value={updatedValue} setValue={setUpdatedValue} />
+            </StarRatingContainer>
+            <InputReview
+              type="modal"
+              placeholder="share your experience..."
+              rows="4"
+              onChange={(event) => setUpdatedExperience(event.target.value)}
+            />
+            <Button onClick={updateReview} disabled={disable}>
+              update
+            </Button>
+            {feedback && <h4>{feedback}</h4>}
+            <OptionWrapper>
+              <OptionContainer>
+                <Close onClick={() => setModal(false)} />
+              </OptionContainer>
+            </OptionWrapper>
+          </TakeReviewContainer>
+        </Modal>
+      )}
 
       {user && (
         // add constraint in form that star and message is required.

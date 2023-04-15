@@ -10,7 +10,6 @@ const Container = styled.div`
   display: grid;
   grid-gap: 1rem;
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  margin: 2% 3% 0% 3%; // need to make some changes for margin on smaller screen size
 `;
 
 const HotelList = ({ hotel_data }) => {

@@ -4,16 +4,89 @@ import Search from "../components/Search";
 import DaySchedule from "./DaySchedule";
 
 import ReactMarkdown from "react-markdown";
+import { useState } from "react";
+import { useEffect } from "react";
+import axios from "axios";
+import HotelCardLoader from "./Loaders/HotelCardLoader";
+import SearchHotelListLoader from "./Loaders/SearchHotelListLoader";
 
-// const Container = styled.textarea``;
+const Container = styled.div`
+  font-family: Arial, sans-serif;
+  font-size: 16px;
+  line-height: 1.5;
+  padding: 20px;
+  white-space: pre-wrap;
+`;
 
 const Practice = () => {
-  let str =
-    "\n\n##Day 1\n\nOn the first day of the trip, we will explore the city of Vizag. We will start by visiting the Kailasagiri Hill Park, which offers stunning views of the city and the Bay of Bengal. After that, we will explore the INS Kurusura Submarine Museum, which is the first of its kind in South Asia. We will also visit the Borra Caves, which are limestone caves situated amidst lush green forests. For dinner, we will visit the popular restaurant, Paradise Spice, which serves some of the best seafood dishes in the city. \n\n##Day 2\n\nOn the second day of the trip, we will visit the Rishikonda Beach, which is known for its golden sands and crystal clear waters. After that, we will explore the Araku Valley, which is a popular hill station situated in the Eastern Ghats. We will also visit the Borra Caves and the Tribal Museum. For dinner, we will visit the popular restaurant, Paradise Spice, which serves some of the best seafood dishes in the city.\n\n##Day 3\n\nOn the third day of the trip, we will visit the Submarine Museum and explore the various exhibits. After that, we will visit the Kambalakonda Wildlife Sanctuary, which is home to a variety of wild animals and birds. We will also visit the Visakhapatnam Zoo, which is home to a variety of exotic animals and birds. For dinner, we will visit the popular restaurant, Paradise Spice, which serves some of the best seafood dishes in the city.\n\n##Day 4\n\nOn the fourth day of the trip, we will visit the Matsyadarshini Aquarium, which houses a variety of marine life. After that, we will visit the Kailasagiri Hill Park, which offers stunning views of the city and the Bay of Bengal. We will also visit the Indira Gandhi Zoological Park, which is home to a variety of wild animals and birds. For dinner, we will visit the popular restaurant, Paradise Spice, which serves some of the best seafood dishes in the city.\n\n##Day 5\n\nOn the fifth and final day of the trip, we will visit the Ramakrishna Beach, which is known for its beautiful sunsets. After that, we will visit the Visakhapatnam War Memorial, which is a tribute to the soldiers who lost their lives in World War II. We will also visit the Ross Hill Church, which is a popular tourist destination in the city. For dinner, we will visit the popular restaurant, Paradise Spice, which serves some of the best seafood dishes in the city.";
-  // "\n\n# 7-Day Kurukshetra Trip Itinerary for 5 People (5000 INR Budget)\n\n## Day 1\n\n**Activity:** Visit the Brahma Sarovar\n\n**Cost:** Free\n\n**Dining Option:** Punjabi Rasoi\n\n**Cost:** Rs. 600 per person\n\n## Day 2\n\n**Activity:** Visit the Sannihit Sarovar\n\n**Cost:** Free\n\n**Dining Option:** Amritsari Kulfi\n\n**Cost:** Rs. 500 per person\n\n## Day 3\n\n**Activity:** Visit the Jyotisar\n\n**Cost:** Free\n\n**Dining Option:** Gulati's\n\n**Cost:** Rs. 700 per person\n\n## Day 4\n\n**Activity:** Visit the Bhishma Kund\n\n**Cost:** Free\n\n**Dining Option:** Khandani Pakoda\n\n**Cost:** Rs. 400 per person\n\n## Day 5\n\n**Activity:** Visit the Sthaneshwar Mahadev Temple\n\n**Cost:** Free\n\n**Dining Option:** Raj Mahal\n\n**Cost:** Rs. 800 per person\n\n## Day 6\n\n**Activity:** Visit the Sheikh Chilli's Tomb\n\n**Cost:** Free\n\n**Dining Option:** Dosa King\n\n**Cost:** Rs. 500 per person\n\n## Day 7\n\n**Activity:** Visit the Sheikpura Lake\n\n**Cost:** Free\n\n**Dining Option:** KFC\n\n**Cost:** Rs. 600 per person\n\n## Prominent Places in Kurukshetra\n\n1. Sannihit Sarovar\n2. Brahma Sarovar\n3. Jyotisar\n4. Bhishma Kund\n5. Sthaneshwar Mahadev Temple\n6. Sheikh Chilli's Tomb\n7. Sheikpura Lake";
+  // const [response, setResponse] = useState("");
 
-  console.log(str);
-  return <ReactMarkdown children={str} />;
+  // useEffect(() => {
+  //   const fetchData = async (input) => {
+  //     const response = await axios.post(
+  //       "https://api.openai.com/v1/completions",
+  //       {
+  //         prompt: `${input}`,
+  //         model: "text-davinci-003",
+  //         max_tokens: 2048,
+  //       },
+  //       {
+  //         headers: {
+  //           "Content-Type": "application/json",
+  //           Authorization: `Bearer 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`,
+  //         },
+  //       }
+  //     );
+
+  //     setResponse(response);
+  //   };
+
+  //   fetchData(
+  //     "Plan a 6 day trip iternary to Dharamshala, provide the result in the following format" +
+  //       "Day number, popular attractions, plan for morning, afternoon, evening"
+  //   );
+  // }, []);
+
+  // console.log(response.data);
+
+  // return (
+  //   <>
+  //     {response ? (
+  //       <Container>{response && response.data.choices[0].text}</Container>
+  //     ) : (
+  //       <Container>Loading</Container>
+  //     )}
+  //   </>
+  // );
+
+  return <SearchHotelListLoader />;
 };
 
 export default Practice;
+
+/*
+  useEffect(() => {
+    const fetchData = async (input) => {
+      const response = await axios.post(
+        "https://api.openai.com/v1/completions",
+        {
+          prompt: `${input}`,
+          model: "text-davinci-003",
+          max_tokens: 2048,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer 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`,
+          },
+        }
+      );
+
+      setResponse(response);
+    };
+
+    fetchData(
+      "Plan a 4 day detailed trip to agra, provide the major attractions and dining options, also provide us an overall estimated cost."
+    );
+  }, []);
+*/

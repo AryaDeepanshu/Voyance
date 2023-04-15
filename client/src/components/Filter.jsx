@@ -8,7 +8,7 @@ import FilterProperties from "./FilterProperties";
 const Container = styled.div`
   display: flex;
   align-items: center;
-  margin: 2% 3% 0% 3%;
+  margin: 2% 0% 2% 0%;
   position: relative;
 `;
 
