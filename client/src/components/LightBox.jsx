@@ -8,7 +8,7 @@ const Container = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: #000000e2;
+  background-color: #000000;
   position: absolute;
   z-index: 999;
   top: 0;
@@ -77,15 +77,13 @@ const LightBox = ({ hotelImages, index, setIndex, toggleLightBox }) => {
     <Container>
       <CloseButton
         style={{ transform: "scale(1.2)", color: "white" }}
-        onClick={() => toggleLightBox(false)}
-      >
+        onClick={() => toggleLightBox(false)}>
         <Close />
       </CloseButton>
       <Button
         onClick={handleClick}
         type="backward"
-        style={{ transform: "scale(1.2)", color: "white" }}
-      >
+        style={{ transform: "scale(1.2)", color: "white" }}>
         <ArrowBackIosNew />
       </Button>
       <ImgContainer>
@@ -94,8 +92,7 @@ const LightBox = ({ hotelImages, index, setIndex, toggleLightBox }) => {
       <Button
         onClick={handleClick}
         type="forward"
-        style={{ transform: "scale(1.2)", color: "white" }}
-      >
+        style={{ transform: "scale(1.2)", color: "white" }}>
         <ArrowForwardIos />
       </Button>
     </Container>

@@ -1,5 +1,6 @@
 import styled from "styled-components";
-import { largeMobile, mobile } from "../responsive";
+import { desktop, largeMobile, mobile } from "../responsive";
+import HotelHostDetail from "./HotelHostDetail";
 
 const Container = styled.div`
   width: 100%;
@@ -7,6 +8,10 @@ const Container = styled.div`
   flex-direction: column;
   align-items: flex-start;
   height: max-content;
+
+  ${desktop({
+    width: "90%",
+  })}
 `;
 
 const Heading = styled.h1`
@@ -20,7 +25,6 @@ const Heading = styled.h1`
 `;
 
 const Info = styled.p`
-  width: 90%;
   color: #2a2a2a;
   line-height: 22px;
   word-spacing: 1px;

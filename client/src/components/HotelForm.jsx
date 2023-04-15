@@ -1,8 +1,8 @@
 import React, { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
-import AmenityType from "./AmenityType";
 import CostAndSpaces from "./CostAndSpaces";
 import MealType from "./MealType";
+import AmenityType from "./AmenityType";
 import PropertyType from "./PropertyType";
 import fileUpload from "../utils/fileUpload";
 import axios from "axios";
@@ -19,6 +19,7 @@ const Wrapper = styled.div`
 
 const Container = styled.div`
   width: 80%;
+  max-width: ${(props) => (props.edit ? "768px" : "")};
 `;
 
 const SectionHeading = styled.div`
@@ -177,8 +178,6 @@ const HotelForm = () => {
           `http://localhost:5000/host/getHotel/${hotelId}`
         );
 
-        console.log(hotel.data);
-
         const location = hotel.data.location.split(", ");
         setName(hotel.data.name);
         setCity(location[0]);
@@ -313,7 +312,7 @@ const HotelForm = () => {
 
   return (
     <Wrapper>
-      <Container>
+      <Container edit={edit}>
         {/* Listing Basic Infromation: */}
         <SectionHeading>Listing Basic</SectionHeading>
 

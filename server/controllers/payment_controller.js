@@ -7,13 +7,21 @@ const instance = new Razorpay({
     key_secret: process.env.RAZORPAY_API_SECRET,
   });
 
-
 module.exports.checkout = async (req, res) => {
+    const {startDate, finishDate, stay, guest, hotelId, cost, hostId, userId} = req.body.booking_details 
     const options = {
         amount: Number(req.body.amount * 100),  // amount in the smallest currency unit
         currency: "INR",
         notes: {
             Property_name: req.body.property_name,
+            startDate,
+            finishDate,
+            stay,
+            guest,
+            hotelId,
+            cost,
+            hostId,
+            userId,
           }
     }
     const order = await instance.orders.create(options);
@@ -39,7 +47,7 @@ module.exports.paymentVerification = async (req, res) => {
             razorpay_signature,
             order_details,
         });
-        res.redirect(`http://localhost:3000/paymentsuccess?reference=${razorpay_payment_id}`);
+        res.redirect(`http://localhost:3000/order`);
     } 
     else{
         res.status(400).json({

@@ -28,16 +28,22 @@ const UserSchema = new mongoose.Schema(
     },
     avatar: {
       type: String,
-      default:
-        "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460__340.png",
+      default: "default_avatar",
+    },
+    bio: {
+      type: String,
+    },
+    wishlist: {
+      type: [mongoose.Schema.Types.ObjectId],
+      ref: "Hotel",
     },
     reviews: {
-      type: mongoose.Schema.Types.ObjectId,
+      type: [mongoose.Schema.Types.ObjectId],
       ref: "Review",
     },
     orders: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Order",
+      type: [mongoose.Schema.Types.ObjectId],
+      ref: "PaymentModel",
     },
   },
   { timestamps: true }

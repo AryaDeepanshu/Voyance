@@ -8,6 +8,7 @@ router.get("/info/:id", hotel_controller.info);
 // Get featured hotel detail:
 router.get("/featured-hotel", hotel_controller.featured_hotel);
 
+// Get hotel by search:
 router.get("/search", hotel_controller.search);
 
 module.exports = router;

@@ -1,7 +1,6 @@
 import styled from "styled-components";
-
 import { GoogleMap, useLoadScript, Marker } from "@react-google-maps/api";
-import { mobile } from "../responsive";
+import { desktop, mobile } from "../responsive";
 
 const Container = styled.div`
   width: 100%;
@@ -9,6 +8,10 @@ const Container = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: center;
+
+  ${desktop({
+    width: "90%",
+  })}
 `;
 
 const Wrapper = styled.div`

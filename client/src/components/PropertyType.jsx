@@ -18,6 +18,7 @@ const Container = styled.div`
   flex-direction: column;
   border-radius: 10px;
   cursor: pointer;
+  /* outline: ${(props) => (props.isMarked ? "2px solid black" : "none")}; */
 `;
 
 const Icon = styled.div``;
@@ -45,14 +46,17 @@ const PropertyType = ({
   const propertyHandler = (index) => {
     setPropertyTypeListError(false);
 
+    console.log(revealRefs.current[index].style.outline);
     /* Logic for Handling the outline of the selected propertyType: */
     if (
-      revealRefs.current[index].style.outline === "" ||
-      revealRefs.current[index].style.outline === "none"
+      revealRefs.current[index].style.outline === ""
+      // ||
+      // revealRefs.current[index].style.outline === "none"
     ) {
       revealRefs.current[index].style.outline = "2px solid black";
     } else {
-      revealRefs.current[index].style.outline = "none";
+      // revealRefs.current[index].style.outline = "none";
+      revealRefs.current[index].style.outline = "";
     }
 
     /* Get the Property Type*/
@@ -87,11 +91,19 @@ const PropertyType = ({
   //   });
   // }, []);
 
+  // console.log(propertyTypeList);
+  const selected = (property) => {
+    console.log(property);
+    // console.log(propertyTypeList.indexOf(property));
+    // return propertyTypeList.indexOf(property) !== -1 ? true : false;
+  };
+
   return (
     <Wrapper>
       {propertyList.map((property, index) => (
         <Container
           key={index}
+          // isMarked={propertyTypeList.indexOf(property.label) != -1}
           onClick={() => propertyHandler(index)}
           ref={addToRef}>
           <Icon>{property.icon}</Icon>

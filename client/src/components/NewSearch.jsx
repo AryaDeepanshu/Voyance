@@ -1,9 +1,18 @@
-import { Search } from "@mui/icons-material";
+import { Add, Remove, Search } from "@mui/icons-material";
 import styled from "styled-components";
 import { desktop } from "../responsive";
 import React, { useRef, useState } from "react";
 import DatePicker from "react-date-picker";
 import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { search } from "../redux/filterAndSearchSlice";
+import DatePickerComponent from "./DatePickerComponent";
+
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+// import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import TextField from "@mui/material/TextField";
+import dayjs from "dayjs";
 
 const Wrapper = styled.div`
   width: 100%;
@@ -23,7 +32,7 @@ const Container = styled.div`
   padding: 20px;
   display: flex;
   flex-wrap: wrap;
-  align-items: center;
+  align-items: flex-end;
   border-radius: 20px;
   background-color: white;
   justify-content: space-around;
@@ -41,30 +50,66 @@ const Label = styled.p`
 `;
 
 const Input = styled.input`
-  border: none;
+  border: 1px solid #b2b2b2;
+  border-radius: 3px;
+  padding: 17.5px 5px;
   outline: none;
-  width: ${(props) => (props.type === "guest" ? "110px" : "")};
+  width: ${(props) => (props.type === "guest" ? "60px" : "")};
   font-family: "Roboto", sans-serif;
   font-size: 16px;
   ::placeholder {
     font-size: 14px;
     color: darkgray;
   }
+  &:hover {
+    border: 1px solid black;
+  }
 `;
 
 const SearchButton = styled.button`
   border: none;
   padding: 10px;
+  margin-bottom: 4px;
+  margin-left: 10px;
   border-radius: 5px;
   background-color: teal;
+  cursor: pointer;
+`;
+
+const ButtonWrapper = styled.div`
+  display: flex;
+  gap: 5px;
+  align-items: center;
 `;
 
 const NewSearch = () => {
-  const [location, setLocation] = useState("");
-
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const [guest, setGuest] = useState(1);
+  const [location, setLocation] = useState("");
+  const [beginDate, setBeginDate] = useState(dayjs());
+  const [endDate, setEndDate] = useState(dayjs().add(1, "day"));
+
   const handleSearch = () => {
+    if (location === "") return;
+    dispatch(
+      search({
+        location: location,
+        beginDate: beginDate.format("MM/DD/YYYY"),
+        endDate: endDate.format("MM/DD/YYYY"),
+        stay: endDate.diff(beginDate, "day"),
+        guest: guest,
+      })
+    );
     navigate(`/search?location=${location}`);
+  };
+
+  const handleGuest = (operation) => {
+    if (operation === "increase" && guest < 10) {
+      setGuest(guest + 1);
+    } else if (operation === "decrease" && guest > 1) {
+      setGuest(guest - 1);
+    }
   };
 
   return (
@@ -81,19 +126,45 @@ const NewSearch = () => {
 
         <InputWrapper>
           <Label>Check in</Label>
-          <Input placeholder="Add Date" />
-          {/* <DatePicker ref={ref} onChange={onChange} value={value} /> */}
+          <DatePickerComponent
+            date={beginDate}
+            setDate={setBeginDate}
+            width="150px"
+          />
         </InputWrapper>
 
         <InputWrapper>
           <Label>Check out</Label>
-          <Input placeholder="Add Date" />
-          {/* <DatePicker onChange={onChange} value={value} /> */}
-          {/* </Input> */}
+          <DatePickerComponent
+            date={endDate}
+            setDate={setEndDate}
+            width="150px"
+          />
         </InputWrapper>
+
         <InputWrapper>
           <Label>Guest</Label>
-          <Input placeholder="Add Guest" type="guest" />
+          <ButtonWrapper>
+            <Input type="guest" value={guest} />
+            <Remove
+              onClick={() => handleGuest("decrease")}
+              style={{
+                border: "1px solid #b2b2b2",
+                borderRadius: "100%",
+                cursor: "pointer",
+                padding: "4px",
+              }}
+            />
+            <Add
+              onClick={() => handleGuest("increase")}
+              style={{
+                border: "1px solid #b2b2b2",
+                borderRadius: "100%",
+                cursor: "pointer",
+                padding: "4px",
+              }}
+            />
+          </ButtonWrapper>
         </InputWrapper>
         <SearchButton>
           <Search

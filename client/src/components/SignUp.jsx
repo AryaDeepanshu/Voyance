@@ -17,17 +17,11 @@ import GitHubIcon from "@mui/icons-material/GitHub";
 import FacebookOutlinedIcon from "@mui/icons-material/FacebookOutlined";
 
 // Responsive.js:
-import { mobile, tablet } from "../responsive";
+import { largeMobile, mobile, tablet } from "../responsive";
 import { Link, useNavigate } from "react-router-dom";
 import useWindowDimensions from "../hooks/useWindowDimensions";
 
-const Container = styled.div`
-  height: 100vh;
-  width: 100vw;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-`;
+import { Close } from "@mui/icons-material";
 
 const Wrapper = styled.div`
   display: flex;
@@ -35,78 +29,39 @@ const Wrapper = styled.div`
   -webkit-box-shadow: 0px 0px 3px 0px rgba(0, 0, 0, 1);
   -moz-box-shadow: 0px 0px 3px 0px rgba(0, 0, 0, 1);
   box-shadow: 0px 0px 3px 0px rgba(0, 0, 0, 1);
-  flex-direction: row-reverse;
-
-  ${tablet({
-    margin: "20%",
-    flexDirection: "column-reverse",
-  })}
-
-  ${mobile({
-    margin: "10%",
-    flexDirection: "column-reverse",
-  })}
 `;
 
 // Left Card and Its Components:
-const LeftCard = styled.div`
-  height: 27rem;
-  width: 44rem;
-  flex: 1;
+const Card = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 100%;
-  min-width: 250px;
+  background-color: white;
+  width: 400px;
+  position: relative;
 
-  ${tablet({
-    marginBottom: "15px",
+  ${largeMobile({
+    width: "70vw",
   })}
 
   ${mobile({
-    marginBottom: "10px",
+    width: "80vw",
   })}
 `;
 
-const LeftHeading = styled.h1`
-  margin-top: 25px;
+const Heading = styled.h1`
   font-weight: 800;
-  font-family: "Montserrat", sans-serif;
-`;
+  padding: 60px 0px 20px 0px;
+  font-family: "Josefin Sans", sans-serif;
+  font-size: 36px;
 
-const LeftSignInIconContainer = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin: 15px 0px;
-`;
+  ${largeMobile({
+    fontSize: "28px",
+  })}
 
-const LeftSignInIcon = styled.div`
-  height: 30px;
-  width: 30px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 50%;
-  &:nth-child(2) {
-    margin: 0px 10px;
-  }
-  -webkit-box-shadow: 0px 0px 3px 0px rgba(0, 0, 0, 1);
-  -moz-box-shadow: 0px 0px 3px 0px rgba(0, 0, 0, 1);
-  box-shadow: 0px 0px 3px 0px rgba(0, 0, 0, 1);
-  cursor: pointer;
-  &:hover {
-    background-color: #eee;
-  }
-  transition: 0.5s linear;
-  padding: 8px;
-`;
-
-const AlternativeText = styled.p`
-  font-size: 14px;
-  color: black;
-  font-family: "Montserrat", sans-serif;
-  margin-bottom: 15px;
+  ${mobile({
+    fontSize: "28px",
+  })}
 `;
 
 const Form = styled.form`
@@ -119,71 +74,84 @@ const Form = styled.form`
 const Input = styled.input`
   margin-bottom: 1rem;
   border: none;
-  padding: 15px;
+  padding: 15px 12px;
   background-color: #eee;
   width: 80%;
   border-radius: 4px;
+  font-family: "Noto Serif", serif;
 `;
 
 const Button = styled.button`
-  background-color: ${(props) =>
-    props.styled === "filled" ? "#ff4b2b" : "transparent"};
-  border: 1px solid
-    ${(props) => (props.styled === "filled" ? "#ff4b2b" : "white")};
-  border-radius: 1.5rem;
+  background-color: #ff4b2b;
   color: white;
   cursor: pointer;
-  font-size: 12px;
-  font-weight: bold;
-  padding: 12px 45px;
-  letter-spacing: 1px;
-  margin-bottom: 10px;
-  font-family: "Montserrat", sans-serif;
+  font-size: 18px;
+  font-weight: 400;
+  padding: 12px 15px;
+  width: 85%;
+  border: none;
+  font-family: "Noto Serif", serif;
+  margin-top: 5px;
 `;
 
-// Right Card and Its Components:
-const RightCard = styled.div`
-  height: 27rem;
-  width: 44rem;
-  flex: 1;
-  width: 100%;
-  min-height: max-content;
-  color: #ffffff;
-  background: rgb(255, 142, 110);
-  background: linear-gradient(
-    135deg,
-    rgba(255, 142, 110, 1) 29%,
-    rgba(255, 67, 67, 1) 92%
-  );
+const GoogleAuthWrapper = styled.div`
+  cursor: pointer;
+  display: flex;
+  width: 80%;
+  padding: 12px 8px;
+  border: 1px solid lightgray;
+  align-items: center;
+  gap: 15px;
+  margin: 20px 0px 40px 0px;
+`;
+
+const ExistingAccount = styled.p`
+  font-size: 14px;
+  padding: 15px 0px 10px 0px;
+  color: gray;
+  cursor: pointer;
+  text-decoration: none;
+  margin: 10px 0px;
+  font-family: "Noto Serif", serif;
+`;
+
+const GoogleAuthTextField = styled.p`
+  font-size: 18px;
+`;
+
+const CloseButton = styled.div`
+  position: absolute;
+  cursor: pointer;
+  top: 5px;
+  right: 5px;
+`;
+
+const Separator = styled.div`
   display: flex;
   flex-direction: column;
+  position: relative;
+  width: 100%;
   align-items: center;
   justify-content: center;
-  overflow: hidden;
-  min-width: 250px;
-
-  ${tablet({
-    padding: "15px 0px",
-  })}
-
-  ${mobile({
-    padding: "10px 0px",
-  })}
+  height: 30px;
+`;
+const Line = styled.hr`
+  width: 80%;
+  position: absolute;
+  padding: auto;
+`;
+const OR = styled.div`
+  z-index: 1;
+  padding: 7px;
+  font-size: 14px;
+  border-radius: 100%;
+  background-color: white;
+  font-family: "Noto Serif", serif;
 `;
 
-const RightHeading = styled.h1`
-  font-family: "Montserrat", sans-serif;
-`;
+const Login = styled.span``;
 
-const Paragraph = styled.p`
-  font-family: "Montserrat", sans-serif;
-  text-align: center;
-  padding: 20px;
-`;
-
-const SignUp = () => {
-  const { width } = useWindowDimensions();
-
+const SignUp = ({ setShowLoginModal, setShowRegisterModal }) => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -202,62 +170,68 @@ const SignUp = () => {
     },
   });
 
+  // Email-Password Authentication:
   const auth = (event) => {
     event.preventDefault();
+    if (name === "" || email === "" || password === "") {
+      return;
+    }
+
     auth_Register(navigate, dispatch, { name, email, password });
+    setShowLoginModal(false);
+    setShowRegisterModal(false);
   };
 
   return (
-    <Container>
-      <Wrapper>
-        <LeftCard>
-          <LeftHeading>Sign up</LeftHeading>
-          <LeftSignInIconContainer>
-            <LeftSignInIcon>
-              <FacebookOutlinedIcon />
-            </LeftSignInIcon>
-            <LeftSignInIcon>
-              <GoogleIcon onClick={auth_Google} />
-            </LeftSignInIcon>
-            <LeftSignInIcon>
-              <GitHubIcon />
-            </LeftSignInIcon>
-          </LeftSignInIconContainer>
-          <AlternativeText>or use your email for registration</AlternativeText>
+    <Wrapper>
+      <Card>
+        <CloseButton>
+          <Close
+            style={{ transform: "scale(1.2)" }}
+            onClick={() => setShowRegisterModal(false)}
+          />
+        </CloseButton>
+        <Heading>Create your account</Heading>
+        <Form>
+          <Input
+            placeholder="Name"
+            onChange={(event) => setName(event.target.value)}
+          />
+          <Input
+            placeholder="Email"
+            type="email"
+            onChange={(event) => setEmail(event.target.value)}
+          />
+          <Input
+            placeholder="Password"
+            type="password"
+            onChange={(event) => setPassword(event.target.value)}
+          />
+          <Button onClick={auth}>Continue</Button>
 
-          <Form>
-            <Input
-              placeholder="Name"
-              onChange={(event) => setName(event.target.value)}
-            />
-            <Input
-              placeholder="Email"
-              onChange={(event) => setEmail(event.target.value)}
-            />
-            <Input
-              placeholder="Password"
-              onChange={(event) => setPassword(event.target.value)}
-            />
-            <Button styled="filled" onClick={auth}>
-              SIGN UP
-            </Button>
-          </Form>
-        </LeftCard>
-        {width > 480 ? (
-          <RightCard>
-            <RightHeading>Welcome Back!</RightHeading>
-            <Paragraph>
-              To keep connected with us please login with your personal info
-            </Paragraph>
-            <Link to="/sign-in">
-              <Button>SIGN IN</Button>
-            </Link>
-          </RightCard>
-        ) : (
-          <></>
-        )}
-      </Wrapper>
-    </Container>
+          <ExistingAccount>
+            Already Have an Account?{" "}
+            <Login
+              onClick={() => {
+                setShowLoginModal(true);
+                setShowRegisterModal(false);
+              }}>
+              Log in
+            </Login>
+          </ExistingAccount>
+        </Form>
+
+        <Separator>
+          <Line />
+          <OR> OR </OR>
+        </Separator>
+
+        <GoogleAuthWrapper onClick={auth_Google}>
+          <GoogleIcon />
+          <GoogleAuthTextField>Continue with Google</GoogleAuthTextField>
+        </GoogleAuthWrapper>
+      </Card>
+    </Wrapper>
   );
 };
 

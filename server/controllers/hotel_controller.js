@@ -16,7 +16,9 @@ module.exports.featured_hotel = async (req, res) => {
 module.exports.info = async (req, res) => {
   try {
     const id = req.params.id;
-    const hotel = await Hotel.findById(id);
+    const hotel = await Hotel.findById(id)
+      .populate("reviews")
+      .populate("hostId");
     return res.status(200).json(hotel);
   } catch (Err) {
     console.log(`Error fetching individual hotel detail : ${Err}`);
@@ -26,81 +28,37 @@ module.exports.info = async (req, res) => {
 
 module.exports.search = async (req, res) => {
   const query = req.query;
-  console.log(query);
-    
-  try {
-    const { name, totalStars, starNumber, cost, location, amenities, guest, bedrooms, beds, bathrooms, propertyType, mealIncluded, reviews, sort, max, min } = req.query; 
-    const quertObject = {};
-      if(name){
-          quertObject.name = name;
-      }
-      if(totalStars){
-          quertObject.totalStars = totalStars;
-      }
-      if(starNumber){
-          quertObject.starNumber = starNumber;
-      }
-      if(cost){
-          quertObject.cost = cost;
-      }
-      if(location){
-          quertObject.location = { $regex: location, $options: "i" };
-      }
-      if(amenities){
-        if(amenities.includes(",")){
-          let amenitiesFilter = amenities.split(",");
-          quertObject.amenities = {$all: amenitiesFilter};
-        }else{
-          quertObject.amenities = amenities;
-        }
-      }
-      if(guest){
-          quertObject.guest = guest;
-      }
-      if(bedrooms){
-          quertObject.bedrooms = bedrooms;
-      }
-      if(beds){
-          quertObject.beds = beds;
-      }
-      if(bathrooms){
-          quertObject.bathrooms = bathrooms;
-      }
-      if(propertyType){
-        if(propertyType.includes(",")){
-          let propertyFilter = propertyType.split(",");
-          quertObject.propertyType = {$all: propertyFilter};
-        }else{
-          quertObject.propertyType = propertyType;
-        }
-      }
-      if(mealIncluded){
-        if(mealIncluded.includes(",")){
-          let mealFilter = mealIncluded.split(",");
-          quertObject.mealIncluded = {$all: mealFilter};
-        }else{
-          quertObject.mealIncluded = mealIncluded;
-        }
-      }
-      if(reviews){
-          quertObject.reviews = reviews;
-      }
 
-      let apiData = Hotel.find(quertObject);
-      if(sort){
-          let sortFix = sort.replace(",", " ");
-          apiData = apiData.sort(sortFix);
-      }
-      if(min && max){
-        if(typeof(min) == "object"){
-          apiData = apiData.where("cost").gte(min[0]).lte(max[0]);
-        }
-      }
-      const myData = await apiData;
-    return res.status(200).json(myData);
+  try {
+    const filter = {
+      ...((query.max || query.min) && {
+        cost: {
+          ...(query.min && { $gt: query.min }),
+          ...(query.max && { $lt: query.max }),
+        },
+      }),
+      ...(query.location && {
+        location: { $regex: query.location, $options: "i" },
+      }),
+      ...(query.propertyType && {
+        propertyType: query.propertyType,
+      }),
+      /* rating is a revied property: */
+      // ...(query.rating && {
+      // rating: { $gt: query.rating },
+      // }),
+      ...(query.mealIncluded && {
+        mealIncluded: { $all: query.mealIncluded.split(",") },
+      }),
+      ...(query.amenities && {
+        amenities: { $all: query.amenities.split(",") },
+      }),
+    };
+
+    const hotels = await Hotel.find(filter);
+    return res.status(200).json(hotels);
   } catch (Err) {
     console.log(`Error fetching hotel : ${Err}`);
     return res.status(500).json(Err);
   }
 };
-

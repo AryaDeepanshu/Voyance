@@ -1,7 +1,13 @@
-import React from "react";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import React, { useState } from "react";
+import { useSelector } from "react-redux";
+import { useLocation } from "react-router-dom";
 import styled from "styled-components";
-import { largeMobile, mobile } from "../responsive";
-
+import { desktop, largeMobile, mobile, tablet } from "../responsive";
+import HoverRating from "./StarRating";
+import axios from "axios";
+import { Edit, Delete, Close } from "@mui/icons-material";
+import Modal from "./Modal";
 const Container = styled.div`
   display: grid;
   grid-gap: 2rem;
@@ -18,14 +24,15 @@ const Container = styled.div`
 
 const Hr = styled.hr`
   border-top: 1px solid lightgray;
-  margin: 25px auto;
-  width: 90%;
+  width: 100%;
+  margin: 20px 0px;
 `;
 
 const ReviewContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: flex-start;
+  position: relative;
 `;
 
 const AuthorDetails = styled.div`
@@ -72,78 +79,313 @@ const Date = styled.p`
 
 const AuthorReview = styled.p`
   padding: 10px 0px;
+  width: 98%;
   font-family: "Montserrat", sans-serif;
   font-size: 16px;
   color: gray;
+  resize: none;
+
   ${mobile({
     fontSize: "14px",
   })}
 `;
 
+const TakeReviewContainer = styled.div`
+  gap: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  background-color: ${(props) => (props.type === "modal" ? "white" : "")};
+  padding: ${(props) => (props.type === "modal" ? "30px" : "")};
+  position: relative;
+`;
+
+const Heading = styled.div`
+  font-size: 36px;
+  font-weight: 500;
+  padding: 0px 0px 10px 0px;
+  font-family: "Bree Serif", serif;
+
+  ${mobile({
+    fontSize: "24px",
+  })}
+`;
+
+const StarRatingContainer = styled.div`
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+`;
+
+const Label = styled.p`
+  font-size: 17px;
+  font-weight: 500;
+  margin-bottom: 5px;
+  font-family: "Bree Serif", serif;
+`;
+
+const InputReview = styled.textarea`
+  width: ${(props) => (props.type === "modal" ? "94%" : "98%")};
+  resize: none;
+  padding: 20px 10px;
+
+  ${mobile({
+    width: "94%",
+  })}
+
+  ${largeMobile({
+    width: "96%",
+  })}
+`;
+
+const OptionWrapper = styled.div`
+  top: 5px;
+  right: 5px;
+  position: absolute;
+  display: flex;
+  gap: 5px;
+`;
+
+const OptionContainer = styled.div`
+  padding: 7px;
+  border-radius: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  &:hover {
+    box-shadow: 0px 0px 3px 0px rgba(0, 0, 0, 1);
+  }
+`;
+
+const ButtonWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  margin-top: 10px;
+`;
+
+const Button = styled.button`
+  font-family: "Roboto", sans-serif;
+  font-size: 16px;
+  width: 150px;
+  padding: 10px 0px;
+  cursor: pointer;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  background-color: #4ee2ec;
+
+  :hover {
+    opacity: 0.5;
+    transition: 0.5 all;
+  }
+`;
+
 const HotelReview = () => {
-  const data = [
-    {
-      _id: 1,
-      img: "https://cdn-icons-png.flaticon.com/512/147/147144.png",
-      name: "Patrick",
-      date: "January 2021",
-      review:
-        "Beautiful place to stay - excellent views of the ocean, great place to hang out, friendly and excellent staff, comfortable. Had 5 staff actively helping with everything and serving throughout the day. Would recommend and stay again, thanks.",
+  /* Get the Logged-In user from Redux State */
+  const user = useSelector((store) => store.user.currentUser);
+
+  /* Get hotelId from the url */
+  const hotelId = useLocation().pathname.split("/")[2];
+
+  /* State for Star Rating Component: */
+  const [value, setValue] = useState(0);
+
+  /* State for review input: */
+  const [experience, setExperience] = useState("");
+
+  /* State for updated Star Rating Component: */
+  const [updatedValue, setUpdatedValue] = useState(0);
+
+  /* State for updated  review input: */
+  const [updatedExperience, setUpdatedExperience] = useState("");
+
+  /* React Query to fetch hotel review: */
+  const { isLoading, error, data } = useQuery([`review-${hotelId}`], () =>
+    axios
+      .get(`http://localhost:5000/review/${hotelId}`)
+      .then((hotel_review) => {
+        return hotel_review.data;
+      })
+  );
+
+  /* State to display add-review feedback: */
+  const [feedback, setFeedback] = useState(null);
+
+  /* queryClient Object: */
+  const queryClient = useQueryClient();
+
+  /* React Query for add-review Post Request: */
+  const addReviewMutation = useMutation({
+    mutationFn: (review) => {
+      return axios.post(`http://localhost:5000/review/add`, review, {
+        withCredentials: true,
+      });
     },
-    {
-      _id: 2,
-      img: "https://cdn-icons-png.flaticon.com/512/147/147144.png",
-      name: "Andrej",
-      date: "January 2022",
-      review:
-        "It was absoulutly fantastic! Big thanx to the staff, it was amazing. It was the coolest house we have seen. Hope to come again in the future:))",
+    onSuccess: (message) => {
+      setFeedback(message.data);
+      queryClient.invalidateQueries([`review-${hotelId}`]);
     },
-    {
-      _id: 3,
-      img: "https://cdn-icons-png.flaticon.com/512/147/147144.png",
-      name: "Jane",
-      date: "Feburary 2021",
-      review:
-        "Quiet location,comfortable rooms,beautiful scenery,fantastic pool,great service,a lot of good memories,thank you!we will come back again.",
+    onError: (message) => {
+      setFeedback(message.response.data);
     },
-    {
-      _id: 4,
-      img: "https://cdn-icons-png.flaticon.com/512/147/147144.png",
-      name: "Henry",
-      date: "March 2016",
-      review:
-        "Felt really good staying at this place, the beach view cradles and the restaurant was amazing. Food was home made at this place and very reasonable in cost. The host was so welcoming and so friendly and she made our stay a great experience for us.",
+  });
+
+  /* React Query for update-review Post Request: */
+  const updateReviewMutation = useMutation({
+    mutationFn: (review) => {
+      return axios.post(`http://localhost:5000/review/update`, review, {
+        withCredentials: true,
+      });
     },
-    {
-      _id: 5,
-      img: "https://cdn-icons-png.flaticon.com/512/147/147144.png",
-      name: "Filippo",
-      date: "January 2021",
-      review:
-        "How can I say? A M A Z I N G is not enough. If you wanna feel like at home but in the middle of the paradise it is the right place. Amanda makes us feel part of her familiy. It's been amazing be there with all her kind family. It is a perfect mix with relax, sea, food, experiences and Sri Lankan vibes. We never wanted to leave. I suggest this place to everyone.",
+    onSuccess: (message) => {
+      setFeedback(message.data);
+      queryClient.invalidateQueries([`review-${hotelId}`]);
     },
-  ];
+    onError: (message) => {
+      setFeedback(message.response.data);
+    },
+  });
+
+  /* React Query for delete-review Post Request: */
+  const deleteReviewMutation = useMutation({
+    mutationFn: (hotelId) => {
+      return axios.post(`http://localhost:5000/review/delete`, hotelId, {
+        withCredentials: true,
+      });
+    },
+    onSuccess: (message) => {
+      setFeedback(message.data);
+      queryClient.invalidateQueries([`review-${hotelId}`]);
+    },
+    onError: (message) => {
+      setFeedback(message.response.data);
+    },
+  });
+
+  /* state to disable the add review button */
+  const [disable, setDisable] = useState(false);
+
+  /* Add Review Method: */
+  const addReview = () => {
+    setDisable(true);
+
+    addReviewMutation.mutate({
+      hotelId: hotelId,
+      star: value,
+      review: experience,
+    });
+
+    setDisable(false);
+  };
+
+  /* update Review Method: */
+  const updateReview = () => {
+    setDisable(true);
+
+    updateReviewMutation.mutate({
+      hotelId: hotelId,
+      star: updatedValue,
+      review: updatedExperience,
+    });
+
+    setDisable(false);
+    setModal(false);
+  };
+
+  /* delete Review Method: */
+  const deleteReview = () => {
+    deleteReviewMutation.mutate({
+      hotelId: hotelId,
+    });
+  };
+
+  /* State to handle update review: */
+  const [modal, setModal] = useState(false);
 
   return (
     <>
       <Hr />
       <Container>
-        {data.map((data) => (
-          <ReviewContainer key={data._id}>
-            <AuthorDetails>
-              <ImageContainer>
-                <Image src={data.img} />
-              </ImageContainer>
-              <DetailContainer>
-                <Name>{data.name}</Name>
-                <Date>{data.date}</Date>
-              </DetailContainer>
-            </AuthorDetails>
-            <AuthorReview>{data.review}</AuthorReview>
-          </ReviewContainer>
-        ))}
+        {isLoading
+          ? "loading"
+          : data.map((data) => (
+              <ReviewContainer key={data._id}>
+                <AuthorDetails>
+                  <ImageContainer>
+                    <Image src={data.userId.avatar} />
+                  </ImageContainer>
+                  <DetailContainer>
+                    <Name>{data.userId.name}</Name>
+                    <Date>{data.userId.updatedAt}</Date>
+                  </DetailContainer>
+                </AuthorDetails>
+                <AuthorReview>{data.review}</AuthorReview>
+                {data?.userId?._id === user?._id && (
+                  <OptionWrapper>
+                    <OptionContainer>
+                      <Edit onClick={() => setModal(true)} />
+                    </OptionContainer>
+                    <OptionContainer>
+                      <Delete onClick={deleteReview} />
+                    </OptionContainer>
+                  </OptionWrapper>
+                )}
+              </ReviewContainer>
+            ))}
       </Container>
-      <Hr />
+
+      {modal && (
+        <Modal>
+          <TakeReviewContainer type="modal">
+            <Heading> update Review: </Heading>
+            <StarRatingContainer>
+              <Label>Rate our service: </Label>
+              <HoverRating value={updatedValue} setValue={setUpdatedValue} />
+            </StarRatingContainer>
+            <InputReview
+              type="modal"
+              placeholder="share your experience..."
+              rows="4"
+              onChange={(event) => setUpdatedExperience(event.target.value)}
+            />
+            <Button onClick={updateReview} disabled={disable}>
+              update
+            </Button>
+            {feedback && <h4>{feedback}</h4>}
+            <OptionWrapper>
+              <OptionContainer>
+                <Close onClick={() => setModal(false)} />
+              </OptionContainer>
+            </OptionWrapper>
+          </TakeReviewContainer>
+        </Modal>
+      )}
+
+      {user && (
+        // add constraint in form that star and message is required.
+        <>
+          <TakeReviewContainer>
+            <Heading> Add Review: </Heading>
+            <StarRatingContainer>
+              <Label>Rate our service: </Label>
+              <HoverRating value={value} setValue={setValue} />
+            </StarRatingContainer>
+            <InputReview
+              placeholder="share your experience..."
+              rows="4"
+              onChange={(event) => setExperience(event.target.value)}
+            />
+            <Button onClick={addReview} disabled={disable}>
+              Submit
+            </Button>
+            {feedback && <h4>{feedback}</h4>}
+          </TakeReviewContainer>
+
+          <Hr />
+        </>
+      )}
     </>
   );
 };

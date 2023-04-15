@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
-import { desktop, largeMobile, mobile, tablet } from "../responsive";
+import { useDispatch, useSelector } from "react-redux";
 
 import {
   Star,
@@ -9,6 +9,10 @@ import {
   ArrowBackIos,
   ArrowForwardIos,
 } from "@mui/icons-material";
+import { useMutation } from "@tanstack/react-query";
+import axios from "axios";
+import { clearWishlist, wishlisthandler } from "../redux/wishlistSlice";
+import { clear } from "../redux/wishlistSlice";
 
 const Button = styled.button`
   position: absolute;
@@ -29,9 +33,8 @@ const Button = styled.button`
 
 const Container = styled.div`
   height: max-content;
-  width: 90%;
+  width: calc(100% - 20px);
   padding: 20px 10px;
-
   &:hover ${Button} {
     transition: ease-in 0.5s;
     opacity: 1;
@@ -147,7 +150,9 @@ const Duration = styled.span`
   font-family: "Montserrat", sans-serif;
 `;
 
-const HotelCard = ({ hotelInfo }) => {
+const HotelCard = ({ hotelInfo, color }) => {
+  const user = useSelector((store) => store.user.currentUser);
+
   // Logic for string Truncation:
   const trimTitle = (title) => {
     if (title.length > 35) {
@@ -156,12 +161,22 @@ const HotelCard = ({ hotelInfo }) => {
     return title;
   };
 
-  // Logic for Changing color of wishlist Icon
-  const [wishlist, setWishlist] = useState("white");
-  const toogleWishlist = () => {
+  // Logic for Changing color of wishlist Icon:
+  const dispatch = useDispatch();
+  const [wishlist, setWishlist] = useState(color);
+
+  const wishlistHanlder = (_id) => {
+    /* Check if user is logged in or not: */
+    if (!user) {
+      console.log("not authenticated");
+      return;
+    }
+
+    dispatch(wishlisthandler(_id));
     wishlist === "white" ? setWishlist("red") : setWishlist("white");
   };
 
+  /* Carousel util: */
   const [index, setIndex] = useState(0);
 
   const handleMoveButton = (direction) => {
@@ -181,20 +196,29 @@ const HotelCard = ({ hotelInfo }) => {
     <Container>
       {/* Hotel Image Carousel */}
       <Carousel>
+        {/* Carousel: */}
         <ImgContainer>
           <Img alt="hotel" src={hotelInfo.images[index]} />
         </ImgContainer>
-        <Like onClick={toogleWishlist}>
+
+        {/* Wishlist Icon: */}
+        <Like onClick={() => wishlistHanlder(hotelInfo._id)}>
           <Favorite style={{ color: `${wishlist}`, fontSize: "28px" }} />
         </Like>
+
+        {/* Backward Button: */}
         <Button
           direction="backward"
           onClick={() => handleMoveButton("backward")}>
           <ArrowBackIos style={{ fontSize: "15px" }} />
         </Button>
+
+        {/* Forward Button */}
         <Button direction="forward" onClick={() => handleMoveButton("forward")}>
           <ArrowForwardIos style={{ fontSize: "15px" }} />
         </Button>
+
+        {/* Index Dot: */}
         <SliderContainer>
           {hotelInfo.images.map((_, i) => (
             <SlideNumber index={index} key={i} />
@@ -220,7 +244,7 @@ const HotelCard = ({ hotelInfo }) => {
               <Rating>
                 {hotelInfo.starNumber === 0
                   ? 0
-                  : hotelInfo.totalStars / hotelInfo.starNumber}
+                  : (hotelInfo.starNumber / hotelInfo.totalStars).toFixed(1)}
               </Rating>
             </RatingContainer>
           </HeaderContainer>

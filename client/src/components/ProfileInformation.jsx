@@ -1,39 +1,25 @@
 import { Close, Edit } from "@mui/icons-material";
 import React, { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
-import AuthorHotelReview from "./AuthorHotelReview";
-import TripCard from "./TripCard";
-import { desktop, mobile, largeMobile, tablet } from "../responsive";
+import { mobile, largeMobile } from "../responsive";
 import { useDispatch, useSelector } from "react-redux";
 import { individualUpload } from "../utils/fileUpload";
 import axios from "axios";
 import { updateUser } from "../redux/userSlice";
+import default_avatar from "../static/default_avatar.png";
 
 const Wrapper = styled.div`
   display: flex;
-
-  ${tablet({
-    flexDirection: "column",
-    alignItems: "center",
-    justifyContent: "center",
-    marginTop: "20px",
-    padding: "0px 50px",
-  })}
+  padding: 30px 0px;
 
   ${largeMobile({
+    gap: "20px",
     flexDirection: "column",
-    alignItems: "center",
-    justifyContent: "center",
-    marginTop: "20px",
-    padding: "0px 50px",
   })}
 
   ${mobile({
+    gap: "20px",
     flexDirection: "column",
-    alignItems: "center",
-    justifyContent: "center",
-    marginTop: "20px",
-    padding: "0px 20px",
   })}
 `;
 
@@ -41,92 +27,91 @@ const LeftContainer = styled.div`
   width: 100%;
   display: flex;
   align-items: center;
-  justify-content: center;
-  flex: 3;
-  position: sticky;
-  height: calc(100vh - 80px);
-  top: 0px;
-
-  ${desktop({
-    flex: "2",
-  })};
-
-  ${tablet({
-    position: "relative",
-    width: "45%",
-    aspectRatio: "1 / 1",
-  })}
+  justify-content: flex-start;
+  flex: 1;
 
   ${largeMobile({
-    position: "relative",
-    width: "50%",
-    aspectRatio: "1 / 1",
+    justifyContent: "center",
   })}
 
   ${mobile({
-    position: "relative",
-    width: "60%",
-    aspectRatio: "1 / 1",
+    justifyContent: "center",
   })}
 `;
 
-const ImageWrapper = styled.div`
-  width: 85%;
-  aspect-ratio: 0.9;
+const InformationWrapper = styled.div`
+  width: 90%;
+  max-width: 500px;
+  padding: 20px 0px;
+  height: max-content;
   display: flex;
   align-items: center;
+  flex-direction: column;
   justify-content: center;
-  box-shadow: 0px 0px 3px 0px rgba(0, 0, 0, 1);
+  border: 1px solid lightgray;
+
+  ${largeMobile({
+    maxWidth: "300px",
+  })}
+
+  ${mobile({
+    maxWidth: "250px",
+  })}
 `;
 
 const ImageContainer = styled.div`
-  width: 100%;
+  width: 80%;
   aspect-ratio: 1/1;
+  overflow: hidden;
   display: flex;
   align-items: center;
   justify-content: center;
-  flex-direction: column;
 `;
 
 const Img = styled.img`
-  height: 80%;
-  width: 80%;
+  height: 90%;
+  width: 90%;
   border-radius: 100%;
   border: 1px solid gray;
   object-fit: cover;
 `;
 
-const P = styled.div`
+const ImageOption = styled.button`
   margin-top: 10px;
-  font-family: "Montserrat", sans-serif;
+  font-family: "Roboto", sans-serif;
   font-size: 16px;
+  width: 150px;
+  padding: 10px 0px;
+  cursor: pointer;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  background-color: ${(props) =>
+    props.type === "upload" ? "#4ee2ec" : "black"};
+
+  :hover {
+    opacity: 0.5;
+    transition: 0.5 all;
+  }
+
+  :disabled {
+    cursor: not-allowed;
+  }
+`;
+
+const ImageUplaoding = styled.p`
+  padding-top: 10px;
+  font-family: "Bree Serif", serif;
 `;
 
 const RightContainer = styled.div`
   height: max-content;
   width: 100%;
-  flex: 3;
-  margin-right: 20px;
-
-  ${desktop({
-    margin: "0px 50px 0px 25px",
-  })};
-
-  ${tablet({
-    marginRight: "0px",
-  })}
-
-  ${largeMobile({
-    marginRight: "0px",
-  })}
-
-  ${mobile({
-    marginRight: "0px",
-  })}
+  flex: 1.6;
 `;
 
 const Heading = styled.div`
-  font-family: "Montserrat", sans-serif;
+  font-family: "Bree Serif", serif;
   font-size: 1.5rem;
   font-weight: bold;
   display: flex;
@@ -142,6 +127,7 @@ const ControlContainer = styled.div`
   width: max-content;
   gap: 10px;
 `;
+
 const EditContainer = styled.div`
   padding: 7px;
   display: flex;
@@ -167,43 +153,63 @@ const CloseContainer = styled.div`
 `;
 
 const InformationContainer = styled.div`
-  margin: 30px 0px;
-  border: 1px solid black;
   border: 1px solid lightgray;
   padding: 10px;
 `;
 
-const HR = styled.hr`
-  border-top: 1px solid lightgray;
-  width: 95%;
-  margin: auto;
-`;
-
 const DetailWrapper = styled.div`
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 5px;
+  display: flex;
+  flex-direction: column;
 `;
 
 const DetailContainer = styled.div`
-  align-items: center;
-  justify-content: space-between;
+  gap: 5px;
+  display: flex;
+  align-items: flex-start;
+  height: max-content;
 `;
 
 const Label = styled.p`
-  font-family: "Montserrat", sans-serif;
-  padding-left: 4px;
+  font-family: "Bree Serif", serif;
+  font-weight: 500;
+  width: 100px;
 `;
 
 const Input = styled.input`
+  margin-top: 4px;
   outline: ${(props) => (props.enableEdit === true ? "" : "none")};
   border: ${(props) =>
     props.enableEdit === true ? "0.5px solid #d3d3d3" : "none"};
-  padding: 5px;
-  width: 90%;
   background-color: white;
+  font-family: "Josefin Sans", sans-serif;
+  font-size: 1rem;
+  padding: 2px;
+  width: 100%;
 
   ::placeholder {
-    font-size: 0.9rem;
+    font-size: 1rem;
+    font-family: "Josefin Sans", sans-serif;
+  }
+`;
+
+const TextInput = styled.textarea`
+  outline: ${(props) => (props.enableEdit === true ? "" : "none")};
+  border: ${(props) =>
+    props.enableEdit === true ? "0.5px solid #d3d3d3" : "none"};
+  background-color: white;
+  font-family: "Josefin Sans", sans-serif;
+  font-size: 1rem;
+  padding: 2px;
+  width: 100%;
+  height: 100px;
+  resize: none;
+  ::-webkit-scrollbar {
+    display: none;
+  }
+  ::placeholder {
+    font-size: 1rem;
+    font-family: "Josefin Sans", sans-serif;
   }
 `;
 
@@ -215,47 +221,54 @@ const ButtonWrapper = styled.div`
 `;
 
 const Button = styled.button`
-  padding: 10px 30px;
+  font-family: "Roboto", sans-serif;
   font-size: 16px;
-  border: none;
-  outline: none;
+  width: 150px;
+  padding: 10px 0px;
   cursor: pointer;
   color: white;
+  border: none;
+  border-radius: 5px;
   background-color: #4ee2ec;
 
   :hover {
-    background-color: black;
+    opacity: 0.5;
+    transition: 0.5 all;
   }
 `;
 
-const ReviewContianer = styled.div`
-  margin: 30px 0px;
-`;
-
-const TripContainer = styled.div`
-  margin: 30px 0px;
-`;
-
 const ProfileInformation = () => {
+  /* State to Make buttons diabled while Profile photo is uploading. */
+  const [uploading, setUploading] = useState(false);
+
   /* Get the Logged-In user from Redux State */
   const user = useSelector((store) => store.user.currentUser);
 
   /* Information Container Input Field State: */
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
+  const [country, setCountry] = useState("");
+  const [bio, setBio] = useState("");
   const [enableEdit, setEnableEdit] = useState(false);
 
   /* Get required data using Redux State and then populate Input Field state: */
   useEffect(() => {
-    setName(user.name);
-    setEmail(user.email);
+    setBio(user.bio === undefined ? "" : user.bio);
+    setName(user.name === undefined ? "" : user.name);
+    setEmail(user.email === undefined ? "" : user.email);
+    setPhone(user.phone === undefined ? "" : user.phone);
+    setCountry(user.country === undefined ? "" : user.country);
     setProfileImage(user.avatar);
   }, [user.name, user.email, user.avatar]);
 
   /* re-initialize the user information: */
   const Cancel = () => {
-    setName(user.name);
-    setEmail(user.email);
+    setBio(user.bio === undefined ? "" : user.bio);
+    setName(user.name === undefined ? "" : user.name);
+    setEmail(user.email === undefined ? "" : user.email);
+    setPhone(user.phone === undefined ? "" : user.phone);
+    setCountry(user.country === undefined ? "" : user.country);
     setProfileImage(user.avatar);
     setEnableEdit(false);
   };
@@ -273,6 +286,7 @@ const ProfileInformation = () => {
 
   /* uploading profile photo: */
   const uploadProfilePhoto = async (file) => {
+    setUploading(true);
     /* upload the avatar to the cloudinary: */
     const avatar = await individualUpload(file);
 
@@ -283,13 +297,31 @@ const ProfileInformation = () => {
       { withCredentials: true }
     );
 
-    console.log(updatedInfo.data);
-
     /* update the Global Redux State: */
     dispatch(updateUser(updatedInfo.data));
 
     /* Display Avatar to user: */
     setProfileImage(avatar.url);
+    setUploading(false);
+  };
+
+  /* Remove profile photo: */
+  const removeProfilePhoto = async (file) => {
+    setUploading(true);
+
+    /* upload the avatar url to the Mongodb Database: */
+    const updatedInfo = await axios.post(
+      `http://localhost:5000/user/updateInfo/${user._id}`,
+      { avatar: "default_avatar" },
+      { withCredentials: true }
+    );
+
+    /* update the Global Redux State: */
+    dispatch(updateUser(updatedInfo.data));
+
+    /* Display Avatar to user: */
+    setProfileImage("default_avatar");
+    setUploading(false);
   };
 
   /* profile photo trigger function */
@@ -303,7 +335,7 @@ const ProfileInformation = () => {
     /* upload the new profile information to the Mongodb Database: */
     const updatedInfo = await axios.post(
       `http://localhost:5000/user/updateInfo/${user._id}`,
-      { name: name, email: email },
+      { name: name, email: email, country: country, phone: phone, bio: bio },
       { withCredentials: true }
     );
 
@@ -314,79 +346,121 @@ const ProfileInformation = () => {
   };
 
   return (
-    <>
-      <Wrapper>
-        <LeftContainer>
-          <ImageWrapper>
-            <ImageContainer>
-              <Img src={profileImage} />
-              <P onClick={handleClick}>upload profile photo</P>
+    <Wrapper>
+      <LeftContainer>
+        <InformationWrapper>
+          <ImageContainer>
+            <Img
+              src={
+                profileImage === "default_avatar"
+                  ? default_avatar
+                  : profileImage
+              }
+            />
+          </ImageContainer>
+          <ImageOption onClick={handleClick} type="upload" disabled={uploading}>
+            upload
+          </ImageOption>
+          <ImageOption
+            onClick={removeProfilePhoto}
+            type="remove"
+            disabled={uploading}>
+            Remove
+          </ImageOption>
+          {uploading && (
+            <ImageUplaoding>uploading! Please Wait...</ImageUplaoding>
+          )}
+          <Input
+            type="file"
+            ref={hiddenFileInput}
+            onChange={handleAvatarInput}
+            style={{ display: "none" }}
+          />
+        </InformationWrapper>
+      </LeftContainer>
+
+      <RightContainer>
+        <InformationContainer>
+          <Heading>
+            About
+            <ControlContainer>
+              <EditContainer onClick={() => setEnableEdit(true)}>
+                <Edit />
+              </EditContainer>
+              {enableEdit && (
+                <CloseContainer onClick={Cancel}>
+                  <Close />
+                </CloseContainer>
+              )}
+            </ControlContainer>
+          </Heading>
+
+          <DetailWrapper>
+            {/* Name: */}
+            <DetailContainer>
+              <Label>Name:</Label>
+
               <Input
-                type="file"
-                ref={hiddenFileInput}
-                onChange={handleAvatarInput}
-                style={{ display: "none" }}
+                enableEdit={enableEdit}
+                disabled={!enableEdit}
+                value={name}
+                onChange={(event) => setName(event.target.value)}
               />
-            </ImageContainer>
-          </ImageWrapper>
-        </LeftContainer>
-        <RightContainer>
-          <InformationContainer>
-            <Heading>
-              Your details:
-              <ControlContainer>
-                <EditContainer onClick={() => setEnableEdit(true)}>
-                  <Edit />
-                </EditContainer>
-                {enableEdit && (
-                  <CloseContainer onClick={Cancel}>
-                    <Close />
-                  </CloseContainer>
-                )}
-              </ControlContainer>
-            </Heading>
+            </DetailContainer>
 
-            <DetailWrapper>
-              <DetailContainer>
-                <Label>Name:</Label>
-                <Input
-                  enableEdit={enableEdit}
-                  disabled={!enableEdit}
-                  value={name}
-                  onChange={(event) => setName(event.target.value)}
-                />
-              </DetailContainer>
+            {/* Email */}
+            <DetailContainer>
+              <Label>Email:</Label>
+              <Input
+                disabled={true}
+                value={email}
+                onChange={(event) => setEmail(event.target.value)}
+              />
+            </DetailContainer>
 
-              <DetailContainer>
-                <Label>Email:</Label>
-                <Input
-                  disabled={true}
-                  value={email}
-                  onChange={(event) => setEmail(event.target.value)}
-                />
-              </DetailContainer>
-            </DetailWrapper>
+            {/* Country: */}
+            <DetailContainer>
+              <Label>Country:</Label>
+              <Input
+                enableEdit={enableEdit}
+                disabled={!enableEdit}
+                value={country}
+                onChange={(event) => setCountry(event.target.value)}
+              />
+            </DetailContainer>
 
-            {enableEdit && (
-              <ButtonWrapper>
-                <Button onClick={update}>update</Button>
-              </ButtonWrapper>
-            )}
-          </InformationContainer>
-          <HR />
-          <TripContainer>
-            <Heading>Your trips:</Heading>
-            <TripCard />
-          </TripContainer>
-          <HR />
-          <ReviewContianer>
-            <Heading>Your reviews:</Heading>
-            <AuthorHotelReview />
-          </ReviewContianer>
-        </RightContainer>
-      </Wrapper>
-      <HR />
-    </>
+            {/* Phone Number: */}
+            <DetailContainer>
+              <Label>Phone No:</Label>
+              <Input
+                enableEdit={enableEdit}
+                disabled={!enableEdit}
+                value={phone}
+                onChange={(event) => setPhone(event.target.value)}
+                type="number"
+              />
+            </DetailContainer>
+
+            {/* Bio */}
+            <DetailContainer>
+              <Label>Bio:</Label>
+              <TextInput
+                enableEdit={enableEdit}
+                disabled={!enableEdit}
+                value={bio}
+                onChange={(event) => setBio(event.target.value)}
+              />
+            </DetailContainer>
+          </DetailWrapper>
+
+          {enableEdit && (
+            <ButtonWrapper>
+              <Button onClick={update}>update</Button>
+            </ButtonWrapper>
+          )}
+        </InformationContainer>
+      </RightContainer>
+    </Wrapper>
   );
 };
 

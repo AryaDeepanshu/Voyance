@@ -58,12 +58,12 @@ const Input = styled.p`
   font-size: 0.8rem;
 `;
 
-const SearchInputSm = ({ openModal }) => {
+const SearchInputSm = ({ setModal }) => {
   return (
     <Wrapper>
       <Container>
         <Search style={{ transform: "scale(1.2)", paddingRight: "10px" }} />
-        <InputContainer onClick={() => openModal(1)}>
+        <InputContainer onClick={() => setModal(true)}>
           <Header>Anywhere</Header>
           <Input>Any week . Add guests</Input>
         </InputContainer>

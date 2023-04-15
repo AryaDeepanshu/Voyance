@@ -1,13 +1,15 @@
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import useWindowDimensions from "../hooks/useWindowDimensions";
 import { desktop, largeMobile, mobile, tablet } from "../responsive";
 import Navbar from "./Navbar";
 import NewSearch from "./NewSearch";
 import SearchInputSm from "./SearchInputSm";
+import SearchInputModal from "./SearchInputModal";
+import Modal from "./Modal";
 
 const Container = styled.div`
-  width: 100vw;
+  width: 100%;
   aspect-ratio: 1.6;
   position: relative;
   background-size: 100%;
@@ -39,13 +41,24 @@ const Container = styled.div`
   })}
 `;
 
-const Search = () => {
+const Search = ({ scrollPosition }) => {
   const { width } = useWindowDimensions();
+  const [modal, setModal] = useState(false);
+
   return (
-    // <SearchInputModal openModal={openModal} />
     <Container>
-      <Navbar />
-      {width > 768 ? <NewSearch /> : <SearchInputSm />}
+      {modal && (
+        <Modal>
+          <SearchInputModal setModal={setModal} />
+        </Modal>
+      )}
+
+      {scrollPosition < 80 && <Navbar isHome={true} />}
+      {width > 850 ? (
+        <NewSearch />
+      ) : (
+        !modal && <SearchInputSm setModal={setModal} />
+      )}
     </Container>
   );
 };

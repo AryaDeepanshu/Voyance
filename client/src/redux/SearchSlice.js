@@ -5,6 +5,7 @@ const searchSlice = createSlice({
   initialState: {
     startDate: null,
     endDate: null,
+    stay: 1,
     searchResult: [],
     location: null,
     isFetching: false,
@@ -16,6 +17,7 @@ const searchSlice = createSlice({
     essentials: [],
     mealIncluded: [],
     rating: 0,
+    guest: 0,
   },
   reducers: {
     searchStart: (state, action) => {
@@ -42,6 +44,8 @@ const searchSlice = createSlice({
         ? action.payload.mealIncluded
         : [];
       state.rating = action.payload.rating ? action.payload.rating : 0;
+      state.guest = action.payload.guest ? action.payload.guest : 0;
+      state.stay = action.payload.stay ? action.payload.stay : 0;
     },
     searchSuccess: (state, action) => {
       state.isFetching = false;

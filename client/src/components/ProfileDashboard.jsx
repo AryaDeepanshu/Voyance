@@ -1,66 +1,31 @@
-import { FavoriteBorder } from "@mui/icons-material";
+import { Favorite, FavoriteBorder } from "@mui/icons-material";
+import { useMutation } from "@tanstack/react-query";
+import axios from "axios";
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { logout } from "../redux/userSlice";
+import { clearWishlist } from "../redux/wishlistSlice";
+import default_avatar from "../static/default_avatar.png";
 
-const Container = styled.div`
-  margin-right: 20px;
-  display: flex;
-  gap: 30px;
-  align-items: center;
-`;
+/* Material - UI imports: */
+import Box from "@mui/material/Box";
+import Avatar from "@mui/material/Avatar";
+import Menu from "@mui/material/Menu";
+import MenuItem from "@mui/material/MenuItem";
+import IconButton from "@mui/material/IconButton";
+import Tooltip from "@mui/material/Tooltip";
 
-const BecomeHost = styled.span`
-  color: white;
-  font-size: 16px;
-  padding: 12px 25px;
-  border-radius: 24px;
-  background-color: teal;
-  font-family: "Roboto", sans-serif;
-`;
+const Container = styled.div``;
 
-const DetailWrapper = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 15px;
-`;
-
-const Favorite = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  cursor: pointer;
-`;
-
-const AvatarWrapper = styled.div`
-  height: 36px;
-  width: 36px;
-  position: relative;
-`;
-
-const Avatar = styled.img`
+const ProfileImage = styled.img`
   height: 100%;
   width: 100%;
   object-fit: cover;
   border: 2px solid black;
   border-radius: 50%;
   cursor: pointer;
-`;
-
-const OptionWrapper = styled.div`
-  /* gap: 10px; */
-  right: 0px;
-  width: 200px;
-  z-index: 999;
-  display: flex;
-  padding: 15px 0px;
-  position: absolute;
-  border-radius: 10px;
-  flex-direction: column;
-  background-color: white;
-  border: 1px solid lightgray;
 `;
 
 const Option = styled.p`
@@ -72,86 +37,138 @@ const Option = styled.p`
   }
 `;
 
-const ProfileDashboard = () => {
+const ProfileDashboard = ({ setShowLoginModal, setShowRegisterModal }) => {
   const user = useSelector((store) => store.user.currentUser);
-  const [option, setOption] = useState(false);
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const { wishlist } = useSelector((store) => store.wishlist);
+
+  const mutation = useMutation({
+    mutationFn: (wishlist) => {
+      return axios.post(
+        `http://localhost:5000/user/saveWishlist`,
+        { wishlist: wishlist },
+        {
+          withCredentials: true,
+        }
+      );
+    },
+  });
+
   const handleLogout = () => {
+    /* Save the wishlist from redux-store to the mongodb: */
+    mutation.mutate(wishlist);
+    dispatch(clearWishlist());
     dispatch(logout());
     navigate("/");
   };
 
+  /* Material-UI defined state and Functions: */
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const open = Boolean(anchorEl);
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
   return (
-    <Container>
-      <BecomeHost>Become Host</BecomeHost>
+    <>
+      {user && <Option onClick={handleLogout}>Logout</Option>}
 
-      <DetailWrapper>
-        <Favorite>
-          <FavoriteBorder style={{ transform: "scale(1.3)", color: "black" }} />
-        </Favorite>
-        <AvatarWrapper onClick={() => setOption(!option)}>
-          <Avatar
-            src={
-              user
-                ? user.avatar
-                : "https://pic.onlinewebfonts.com/svg/img_569204.png"
-            }
-          />
+      <Box sx={{ display: "flex", alignItems: "center", textAlign: "center" }}>
+        <Tooltip title="Account settings">
+          <IconButton
+            onClick={handleClick}
+            size="small"
+            sx={{ ml: 2 }}
+            aria-controls={open ? "account-menu" : undefined}
+            aria-haspopup="true"
+            aria-expanded={open ? "true" : undefined}>
+            <Avatar sx={{ width: 40, height: 40 }}>
+              <ProfileImage
+                src={
+                  user
+                    ? user.avatar === "default_avatar"
+                      ? default_avatar
+                      : user.avatar
+                    : default_avatar
+                }
+              />
+            </Avatar>
+          </IconButton>
+        </Tooltip>
+      </Box>
 
-          {option && (
-            <OptionWrapper>
-              {user ? (
-                <>
-                  <Link
-                    style={{ textDecoration: "none", color: "inherit" }}
-                    to="/profile">
-                    <Option>Profile</Option>
-                  </Link>
-                  <Link
-                    style={{ textDecoration: "none", color: "inherit" }}
-                    to={`/wishlist/${user._id}`}>
-                    <Option>Wishlist</Option>
-                  </Link>
-                  <Link
-                    style={{ textDecoration: "none", color: "inherit" }}
-                    to={`/orders/${user._id}`}>
-                    <Option>Your orders</Option>
-                  </Link>
-                  {user.host && (
-                    <Link
-                      style={{ textDecoration: "none", color: "inherit" }}
-                      to={`/add-hotel`}>
-                      <Option>Add Hotel</Option>
-                    </Link>
-                  )}
-                  <Option onClick={handleLogout}>Logout</Option>
-                </>
-              ) : (
-                <>
-                  <Link
-                    style={{ textDecoration: "none", color: "inherit" }}
-                    to={`/login/`}>
-                    <Option>Login</Option>{" "}
-                  </Link>
-                  <Link
-                    style={{ textDecoration: "none", color: "inherit" }}
-                    to="/register">
-                    <Option>Register</Option>{" "}
-                  </Link>
-                  <Link
-                    style={{ textDecoration: "none", color: "inherit" }}
-                    to="/become-host">
-                    <Option>Become a host</Option>{" "}
-                  </Link>
-                </>
-              )}
-            </OptionWrapper>
-          )}
-        </AvatarWrapper>
-      </DetailWrapper>
-    </Container>
+      <Menu
+        anchorEl={anchorEl}
+        id="account-menu"
+        open={open}
+        onClose={handleClose}
+        onClick={handleClose}
+        PaperProps={{
+          elevation: 0,
+          sx: {
+            overflow: "visible",
+            filter: "drop-shadow(0px 2px 8px rgba(0,0,0,0.32))",
+            mt: 1.5,
+            "& .MuiAvatar-root": {
+              width: 32,
+              height: 32,
+              ml: -0.5,
+              mr: 1,
+            },
+            "&:before": {
+              content: '""',
+              display: "block",
+              position: "absolute",
+              top: 0,
+              right: 14,
+              width: 10,
+              height: 10,
+              bgcolor: "background.paper",
+              transform: "translateY(-50%) rotate(45deg)",
+              zIndex: 0,
+            },
+          },
+        }}
+        transformOrigin={{ horizontal: "right", vertical: "top" }}
+        anchorOrigin={{ horizontal: "right", vertical: "bottom" }}>
+        {user ? (
+          <Container>
+            <Link
+              style={{ textDecoration: "none", color: "inherit" }}
+              to="/profile">
+              <MenuItem onClick={handleClose}>
+                <Avatar /> Profile
+              </MenuItem>
+            </Link>
+            <Link
+              style={{ textDecoration: "none", color: "inherit" }}
+              to={`/orders/${user._id}`}>
+              <MenuItem onClick={handleClose}>Your Orders</MenuItem>
+            </Link>
+            <Link
+              style={{ textDecoration: "none", color: "inherit" }}
+              to={`/wishlist`}>
+              <MenuItem onClick={handleClose}>Your Wishlist</MenuItem>
+            </Link>
+            <Link style={{ textDecoration: "none", color: "inherit" }}>
+              <MenuItem onClick={handleClose}>Become Host</MenuItem>
+            </Link>
+          </Container>
+        ) : (
+          <Container>
+            <MenuItem onClick={() => setShowLoginModal(true)}>Login</MenuItem>
+            <MenuItem onClick={() => setShowRegisterModal(true)}>
+              Register
+            </MenuItem>
+          </Container>
+        )}
+      </Menu>
+    </>
   );
 };
 
