@@ -294,7 +294,7 @@ const ReservationCard = ({ data, setModal, checkoutHandler }) => {
           </InputContainer>
         </TripDetails>
 
-        <Button onClick={()=>checkoutHandler(data.cost)}>Reserve</Button>
+        <Button onClick={()=>checkoutHandler(data.cost, data.name)}>Reserve</Button>
 
         <DataContainer>
           <DataWrapper>

@@ -13,6 +13,11 @@ const paymentSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
+    order_details: {
+        //json
+        type: Object, 
+        required: true,
+    },
 });
 
 module.exports = mongoose.model("Payment", paymentSchema);

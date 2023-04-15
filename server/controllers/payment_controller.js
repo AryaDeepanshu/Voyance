@@ -9,10 +9,12 @@ const instance = new Razorpay({
 
 
 module.exports.checkout = async (req, res) => {
-    console.log(req)
     const options = {
         amount: Number(req.body.amount * 100),  // amount in the smallest currency unit
         currency: "INR",
+        notes: {
+            Property_name: req.body.property_name,
+          }
     }
     const order = await instance.orders.create(options);
     res.status(200).json({
@@ -30,10 +32,12 @@ module.exports.paymentVerification = async (req, res) => {
                                     .digest('hex');
     const isAuthentic = expectedSignature === razorpay_signature;
     if(isAuthentic) {
+        const order_details = await instance.orders.fetch(razorpay_order_id)
         await Payment.create({
             razorpay_payment_id,
             razorpay_order_id,
             razorpay_signature,
+            order_details,
         });
         res.redirect(`http://localhost:3000/paymentsuccess?reference=${razorpay_payment_id}`);
     } 

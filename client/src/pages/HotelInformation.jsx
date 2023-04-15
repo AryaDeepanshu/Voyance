@@ -51,24 +51,25 @@ const HotelInformation = () => {
   /* Width of window: */
   const { width } = useWindowDimensions();
 
-  const checkoutHandler = async (amount) => {
+  const checkoutHandler = async (amount, property_name) => {
     const {data:{key}} = await axios.get("http://localhost:4000/payment/getkey")
     const {data:{order}} = await axios.post("http://localhost:4000/payment/pay", {
-      amount
+      amount,
+      property_name,
     })
     const options = {
       key, // Enter the Key ID generated from the Dashboard
       amount: order.amount, // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
       currency: "INR",
       name: "Voyance",
-      description: "Test Transaction",
+      description: data.name,
       image: "https://res.cloudinary.com/additya/image/upload/v1678127598/Voyance/r9udien7vaenzecl8mmk.png",
       order_id: order.id, //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
       callback_url: "http://localhost:4000/payment/paymentVerification",
       prefill: {
           name: "Deepanshu Arya",
-          email: "deepanshu@example.com",
-          contact: "1234567890"
+          email: "deepanshu.da85@gmail.com",
+          contact: "7206918462"
       },
       notes: {
           address: "Puri duniya apni h"
