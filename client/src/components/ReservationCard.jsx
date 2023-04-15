@@ -192,6 +192,7 @@ const ReservationCard = ({
   stay,
   guest,
   setGuest,
+  checkoutHandler,
 }) => {
   /* Width of window: */
   const { width } = useWindowDimensions();
@@ -291,7 +292,7 @@ const ReservationCard = ({
           </PriceContainer>
         </DataWrapper>
 
-        <Button>Reserve</Button>
+        <Button onClick={()=>checkoutHandler(data.cost * stay, data.name)}>Reserve</Button>
 
         {/* Handling Modal Feature */}
         {width <= 768 && <Button onClick={() => setModal(0)}>Close</Button>}

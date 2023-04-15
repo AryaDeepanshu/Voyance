@@ -98,8 +98,8 @@ const HotelInformation = () => {
     })
   );
 
-  // final-rder-detail:
-  const order = {
+  // final-booking-detail:
+  const booking_details = {
     startDate:
       typeof beginDate === "string"
         ? decode(beginDate)
@@ -114,8 +114,12 @@ const HotelInformation = () => {
     cost: isLoading ? 0 : data.cost * stay,
     hostId: isLoading ? "" : data.hostId._id,
     userId: !user ? "" : user._id,
+    userPhone: !user ? "" : user.phone,
+    userEmail: !user ? "" : user.email,
+    userName: !user ? "" : user.name
   };
-  console.log(order);
+  console.log(booking_details)
+
 
   /* State to manage the index of the image clicked: */
   const [index, setIndex] = useState(0);
@@ -129,6 +133,38 @@ const HotelInformation = () => {
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
+
+  const checkoutHandler = async (amount, property_name) => {
+    const {data:{key}} = await axios.get("http://localhost:4000/payment/getkey")
+    const {data:{order}} = await axios.post("http://localhost:4000/payment/pay", {
+      amount,
+      property_name,
+      booking_details,
+    })
+    const options = {
+      key, // Enter the Key ID generated from the Dashboard
+      amount: order.amount, // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
+      currency: "INR",
+      name: "Voyance",
+      description: data.name,
+      image: "https://res.cloudinary.com/additya/image/upload/v1678127598/Voyance/r9udien7vaenzecl8mmk.png",
+      order_id: order.id, //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
+      callback_url: "http://localhost:4000/payment/paymentVerification",
+      prefill: {
+          name: booking_details.userName,
+          email: booking_details.userEmail,
+          contact: booking_details.userPhone,
+      },
+      notes: {
+          address: "Puri duniya apni h"
+      },
+      theme: {
+          color: "#008080"
+      }
+    };
+  const razor  = new window.Razorpay(options);
+  razor.open();
+  }
 
   return (
     <>
@@ -189,6 +225,7 @@ const HotelInformation = () => {
                       stay={stay}
                       guest={guest}
                       setGuest={setGuest}
+                      checkoutHandler={checkoutHandler}
                     />
                   )}
                 </BottomContainer>
