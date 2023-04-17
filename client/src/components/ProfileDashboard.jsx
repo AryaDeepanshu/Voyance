@@ -8,7 +8,7 @@ import styled from "styled-components";
 import { logout } from "../redux/userSlice";
 import { clearWishlist } from "../redux/wishlistSlice";
 import default_avatar from "../static/default_avatar.png";
-
+import BASE_URL from "../Base";
 /* Material - UI imports: */
 import Box from "@mui/material/Box";
 import Avatar from "@mui/material/Avatar";
@@ -47,7 +47,7 @@ const ProfileDashboard = ({ setShowLoginModal, setShowRegisterModal }) => {
   const mutation = useMutation({
     mutationFn: (wishlist) => {
       return axios.post(
-        `http://localhost:5000/user/saveWishlist`,
+        `http://${BASE_URL}:5000/user/saveWishlist`,
         { wishlist: wishlist },
         {
           withCredentials: true,

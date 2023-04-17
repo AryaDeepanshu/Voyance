@@ -19,7 +19,7 @@ import HotelInformationLoader from "../components/Loaders/HotelInformationLoader
 import { useEffect } from "react";
 import { useSelector } from "react-redux";
 import dayjs from "dayjs";
-
+import BASE_URL from "../Base";
 const Wrapper = styled.div`
   width: calc(100vw - 10%);
   margin: 0% 5%;
@@ -93,7 +93,7 @@ const HotelInformation = () => {
 
   /* Fetching Data using React Query: */
   const { isLoading, error, data } = useQuery([`${id}`], () =>
-    axios.get(`http://localhost:5000/hotel/info/${id}`).then((hotel) => {
+    axios.get(`http://${BASE_URL}:5000/hotel/info/${id}`).then((hotel) => {
       return hotel.data;
     })
   );
@@ -135,8 +135,8 @@ const HotelInformation = () => {
   }, []);
 
   const checkoutHandler = async (amount, property_name) => {
-    const {data:{key}} = await axios.get("http://localhost:4000/payment/getkey")
-    const {data:{order}} = await axios.post("http://localhost:4000/payment/pay", {
+    const {data:{key}} = await axios.get(`http://${BASE_URL}:4000/payment/getkey`)
+    const {data:{order}} = await axios.post(`http://${BASE_URL}:4000/payment/pay`, {
       amount,
       property_name,
       booking_details,
@@ -149,7 +149,7 @@ const HotelInformation = () => {
       description: data.name,
       image: "https://res.cloudinary.com/additya/image/upload/v1678127598/Voyance/r9udien7vaenzecl8mmk.png",
       order_id: order.id, //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
-      callback_url: "http://localhost:4000/payment/paymentVerification",
+      callback_url: `http://${BASE_URL}:4000/payment/paymentVerification`,
       prefill: {
           name: booking_details.userName,
           email: booking_details.userEmail,

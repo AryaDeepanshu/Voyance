@@ -7,7 +7,7 @@ import { individualUpload } from "../utils/fileUpload";
 import axios from "axios";
 import { updateUser } from "../redux/userSlice";
 import default_avatar from "../static/default_avatar.png";
-
+import BASE_URL from "../Base";
 const Wrapper = styled.div`
   display: flex;
   padding: 30px 0px;
@@ -292,7 +292,7 @@ const ProfileInformation = () => {
 
     /* upload the avatar url to the Mongodb Database: */
     const updatedInfo = await axios.post(
-      `http://localhost:5000/user/updateInfo/${user._id}`,
+      `http://${BASE_URL}:5000/user/updateInfo/${user._id}`,
       { avatar: avatar.url },
       { withCredentials: true }
     );
@@ -311,7 +311,7 @@ const ProfileInformation = () => {
 
     /* upload the avatar url to the Mongodb Database: */
     const updatedInfo = await axios.post(
-      `http://localhost:5000/user/updateInfo/${user._id}`,
+      `http://${BASE_URL}:5000/user/updateInfo/${user._id}`,
       { avatar: "default_avatar" },
       { withCredentials: true }
     );
@@ -334,7 +334,7 @@ const ProfileInformation = () => {
   const update = async () => {
     /* upload the new profile information to the Mongodb Database: */
     const updatedInfo = await axios.post(
-      `http://localhost:5000/user/updateInfo/${user._id}`,
+      `http://${BASE_URL}:5000/user/updateInfo/${user._id}`,
       { name: name, email: email, country: country, phone: phone, bio: bio },
       { withCredentials: true }
     );

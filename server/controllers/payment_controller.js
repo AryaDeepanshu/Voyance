@@ -1,7 +1,7 @@
 const Razorpay = require("razorpay");
 const crypto = require("crypto");
 const Payment = require("../models/PaymentModel");
-
+const BASE_URL = process.env.APP_URL
 const instance = new Razorpay({
     key_id: process.env.RAZORPAY_API_KEY,
     key_secret: process.env.RAZORPAY_API_SECRET,
@@ -47,7 +47,7 @@ module.exports.paymentVerification = async (req, res) => {
             razorpay_signature,
             order_details,
         });
-        res.redirect(`http://localhost:3000/order`);
+        res.redirect(`http://${BASE_URL}:3000/order`);
     } 
     else{
         res.status(400).json({

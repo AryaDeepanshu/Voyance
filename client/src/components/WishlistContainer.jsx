@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import styled from "styled-components";
 import { largeMobile, mobile } from "../responsive";
-
+import BASE_URL from "../Base";
 import HotelCard from "./HotelCard";
 import SearchHotelListLoader from "./Loaders/SearchHotelListLoader";
 
@@ -44,7 +44,7 @@ const WishlistContainer = () => {
       const data = await Promise.all(
         wishlisted.map(async (wish) => {
           const response = await axios.get(
-            `http://localhost:5000/hotel/info/${wish}`
+            `http://${BASE_URL}:5000/hotel/info/${wish}`
           );
           return response.data;
         })

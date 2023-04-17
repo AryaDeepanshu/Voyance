@@ -9,7 +9,7 @@ import axios from "axios";
 import { Upload } from "@mui/icons-material";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
-
+import BASE_URL from "../Base";
 const Wrapper = styled.div`
   flex: 1;
   display: flex;
@@ -175,7 +175,7 @@ const HotelForm = () => {
     if (edit) {
       const getHotel = async () => {
         const hotel = await axios.get(
-          `http://localhost:5000/host/getHotel/${hotelId}`
+          `http://${BASE_URL}:5000/host/getHotel/${hotelId}`
         );
 
         const location = hotel.data.location.split(", ");
@@ -295,7 +295,7 @@ const HotelForm = () => {
 
     if (edit) {
       const hotel_updated = await axios.post(
-        `http://localhost:5000/host/updateHotel/${hotelId}`,
+        `http://${BASE_URL}:5000/host/updateHotel/${hotelId}`,
         data
       );
 
@@ -303,7 +303,7 @@ const HotelForm = () => {
       navigate(`/hotel-information/${hotel_updated.data._id}`);
     } else {
       const hotel_created = await axios.post(
-        "http://localhost:5000/host/addHotel",
+        `http://${BASE_URL}:5000/host/addHotel`,
         data
       );
       navigate(`/hotel-information/${hotel_created.data._id}`);

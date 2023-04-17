@@ -1,7 +1,7 @@
 import axios from "axios";
 import { loginStart, loginSuccess, loginFailure, logout } from "./userSlice";
 import { setWishlist } from "./wishlistSlice";
-
+import BASE_URL from "../Base";
 /* Email and Password Authentication (Register): */
 export const auth_Register = async (Navigate, dispatch, data) => {
   dispatch(loginStart());
@@ -9,7 +9,7 @@ export const auth_Register = async (Navigate, dispatch, data) => {
   const { name, email, password } = data;
   try {
     const user = await axios.post(
-      "http://localhost:5000/auth/register",
+      `http://${BASE_URL}:5000/auth/register`,
       {
         name,
         email,
@@ -36,7 +36,7 @@ export const auth_Login = async (Navigate, dispatch, data) => {
   const { email, password } = data;
   try {
     const user = await axios.post(
-      "http://localhost:5000/auth/login",
+      `http://${BASE_URL}:5000/auth/login`,
       {
         email,
         password,
@@ -61,7 +61,7 @@ export const auth_Google_Verification = async (Navigate, dispatch, data) => {
   try {
     const { access_token } = data;
     const google_info = await axios.get(
-      "https://www.googleapis.com/oauth2/v3/userinfo",
+      `https://www.googleapis.com/oauth2/v3/userinfo`,
       {
         headers: {
           Authorization: `Bearer ${access_token}`,
@@ -75,7 +75,7 @@ export const auth_Google_Verification = async (Navigate, dispatch, data) => {
 
     try {
       const user = await axios.post(
-        "http://localhost:5000/auth/google",
+        `http://${BASE_URL}:5000/auth/google`,
         {
           name,
           email,

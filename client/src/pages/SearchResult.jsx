@@ -8,7 +8,7 @@ import React, { useEffect, useState } from "react";
 import SearchHotelList from "../components/SearchHotelList";
 import styled from "styled-components";
 import SearchHotelListLoader from "../components/Loaders/SearchHotelListLoader";
-
+import BASE_URL from "../Base";
 const Wrapper = styled.div`
   width: calc(100vw - 10%);
   margin: 0% 5%;
@@ -26,7 +26,7 @@ const SearchResult = () => {
   const { isLoading, error, data, refetch } = useQuery([location], () =>
     axios
       .get(
-        `http://localhost:5000/hotel/search?location=${location}&propertyType=${category}&min=${minPrice}&max=${maxPrice}&amenities=${essentials}&mealIncluded=${mealIncluded}&rating=${rating} `
+        `http://${BASE_URL}:5000/hotel/search?location=${location}&propertyType=${category}&min=${minPrice}&max=${maxPrice}&amenities=${essentials}&mealIncluded=${mealIncluded}&rating=${rating} `
       )
       .then((hotels) => {
         return hotels.data;

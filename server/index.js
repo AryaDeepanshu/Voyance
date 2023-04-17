@@ -23,10 +23,10 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 dotenv.config();
-
+BASE_URL = process.env.APP_URL
 app.use(
   cors({
-    origin: "http://localhost:3000",
+    origin: `*`,
     credentials: true,
   })
 );

@@ -7,7 +7,7 @@ import { useQuery } from "@tanstack/react-query";
 import useWindowDimensions from "../hooks/useWindowDimensions";
 import { useEffect } from "react";
 import { useSelector } from "react-redux";
-
+import BASE_URL from "../Base";
 const Container = styled.div`
   height: max-content;
   width: 100%;
@@ -46,7 +46,7 @@ function FeaturedProperties() {
     refetch,
   } = useQuery(["featured-hotel"], () =>
     axios
-      .get(`http://localhost:5000/hotel/featured-hotel?category=${category}`)
+      .get(`http://${BASE_URL}:5000/hotel/featured-hotel?category=${category}`)
       .then((featured_hotel) => {
         return featured_hotel.data;
       })

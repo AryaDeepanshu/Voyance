@@ -8,6 +8,7 @@ import HoverRating from "./StarRating";
 import axios from "axios";
 import { Edit, Delete, Close } from "@mui/icons-material";
 import Modal from "./Modal";
+import BASE_URL from "../Base";
 const Container = styled.div`
   display: grid;
   grid-gap: 2rem;
@@ -204,7 +205,7 @@ const HotelReview = () => {
   /* React Query to fetch hotel review: */
   const { isLoading, error, data } = useQuery([`review-${hotelId}`], () =>
     axios
-      .get(`http://localhost:5000/review/${hotelId}`)
+      .get(`http://${BASE_URL}:5000/review/${hotelId}`)
       .then((hotel_review) => {
         return hotel_review.data;
       })
@@ -219,7 +220,7 @@ const HotelReview = () => {
   /* React Query for add-review Post Request: */
   const addReviewMutation = useMutation({
     mutationFn: (review) => {
-      return axios.post(`http://localhost:5000/review/add`, review, {
+      return axios.post(`http://${BASE_URL}:5000/review/add`, review, {
         withCredentials: true,
       });
     },
@@ -235,7 +236,7 @@ const HotelReview = () => {
   /* React Query for update-review Post Request: */
   const updateReviewMutation = useMutation({
     mutationFn: (review) => {
-      return axios.post(`http://localhost:5000/review/update`, review, {
+      return axios.post(`http://${BASE_URL}:5000/review/update`, review, {
         withCredentials: true,
       });
     },
@@ -251,7 +252,7 @@ const HotelReview = () => {
   /* React Query for delete-review Post Request: */
   const deleteReviewMutation = useMutation({
     mutationFn: (hotelId) => {
-      return axios.post(`http://localhost:5000/review/delete`, hotelId, {
+      return axios.post(`http://${BASE_URL}:5000/review/delete`, hotelId, {
         withCredentials: true,
       });
     },
