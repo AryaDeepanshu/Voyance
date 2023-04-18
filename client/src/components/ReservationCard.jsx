@@ -215,7 +215,9 @@ const ReservationCard = ({
           <RatingContainer>
             <Grade style={{ fontSize: "24px", color: "#E6B325" }} />
             <Rating>
-              {data.starNumber === 0 ? 0 : data.totalStars / data.starNumber}
+              {data.starNumber === 0
+                ? 0
+                : (data.starNumber / data.totalStars).toFixed(1)}
             </Rating>
           </RatingContainer>
         </TopContainer>
@@ -292,7 +294,9 @@ const ReservationCard = ({
           </PriceContainer>
         </DataWrapper>
 
-        <Button onClick={()=>checkoutHandler(data.cost * stay, data.name)}>Reserve</Button>
+        <Button onClick={() => checkoutHandler(data.cost * stay, data.name)}>
+          Reserve
+        </Button>
 
         {/* Handling Modal Feature */}
         {width <= 768 && <Button onClick={() => setModal(0)}>Close</Button>}

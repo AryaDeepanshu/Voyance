@@ -17,7 +17,7 @@ const Container = styled.div`
 `;
 
 const Heading = styled.h1`
-  font-family: "Montserrat", sans-serif;
+  font-family: "Bree Serif", serif;
 `;
 
 const ServiceContainer = styled.div`
@@ -62,10 +62,12 @@ const Wrapper = styled.div`
 
 const Title = styled.h2`
   padding: 15px 0px;
-  font-family: "Montserrat", sans-serif;
+  font-family: "Bree Serif", serif;
 `;
 
-const Description = styled.p``;
+const Description = styled.p`
+  font-family: "Noto Serif", serif;
+`;
 
 function OurServices() {
   return (

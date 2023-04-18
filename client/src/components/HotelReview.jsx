@@ -8,6 +8,10 @@ import HoverRating from "./StarRating";
 import axios from "axios";
 import { Edit, Delete, Close } from "@mui/icons-material";
 import Modal from "./Modal";
+import default_avatar from "../static/default_avatar.png";
+import { Rating } from "@mui/material";
+import dayjs from "dayjs";
+
 const Container = styled.div`
   display: grid;
   grid-gap: 2rem;
@@ -42,13 +46,15 @@ const AuthorDetails = styled.div`
 `;
 
 const ImageContainer = styled.div`
-  height: 45px;
-  width: 45px;
+  height: 50px;
+  width: 50px;
+  border-radius: 100%;
 `;
 
 const Image = styled.img`
   height: 100%;
   width: 100%;
+  border-radius: 100%;
 `;
 
 const DetailContainer = styled.div`
@@ -57,13 +63,13 @@ const DetailContainer = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: space-around;
-  padding-left: 10px;
+  padding-left: 15px;
 `;
 
 const Name = styled.p`
   font-size: 17px;
   font-weight: bold;
-  font-family: "Montserrat", sans-serif;
+  font-family: "Josefin Sans", sans-serif;
   ${mobile({
     fontSize: "15px",
   })}
@@ -71,7 +77,8 @@ const Name = styled.p`
 
 const Date = styled.p`
   font-size: 15px;
-  font-family: "Montserrat", sans-serif;
+  font-family: "Josefin Sans", sans-serif;
+
   ${mobile({
     fontSize: "13px",
   })}
@@ -80,7 +87,7 @@ const Date = styled.p`
 const AuthorReview = styled.p`
   padding: 10px 0px;
   width: 98%;
-  font-family: "Montserrat", sans-serif;
+  font-family: "Noto Serif", serif;
   font-size: 16px;
   color: gray;
   resize: none;
@@ -314,11 +321,17 @@ const HotelReview = () => {
               <ReviewContainer key={data._id}>
                 <AuthorDetails>
                   <ImageContainer>
-                    <Image src={data.userId.avatar} />
+                    <Image
+                      src={
+                        data.userId.avatar === "default_avatar"
+                          ? default_avatar
+                          : data.userId.avatar
+                      }
+                    />
                   </ImageContainer>
                   <DetailContainer>
                     <Name>{data.userId.name}</Name>
-                    <Date>{data.userId.updatedAt}</Date>
+                    <Date>{dayjs(data.updatedAt).format("MMMM YYYY")}</Date>
                   </DetailContainer>
                 </AuthorDetails>
                 <AuthorReview>{data.review}</AuthorReview>
@@ -382,8 +395,6 @@ const HotelReview = () => {
             </Button>
             {feedback && <h4>{feedback}</h4>}
           </TakeReviewContainer>
-
-          <Hr />
         </>
       )}
     </>

@@ -147,7 +147,7 @@ const ProfileDashboard = ({ setShowLoginModal, setShowRegisterModal }) => {
             </Link>
             <Link
               style={{ textDecoration: "none", color: "inherit" }}
-              to={`/orders/${user._id}`}>
+              to={`/order`}>
               <MenuItem onClick={handleClose}>Your Orders</MenuItem>
             </Link>
             <Link

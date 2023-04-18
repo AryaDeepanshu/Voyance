@@ -4,7 +4,6 @@ import { largeMobile, desktop, mobile, tablet } from "../responsive";
 
 const Container = styled.div`
   width: 100%;
-  overflow: hidden;
   display: flex;
   align-items: center;
   flex-direction: column;
@@ -12,7 +11,7 @@ const Container = styled.div`
 `;
 
 const Heading = styled.h1`
-  font-family: "Montserrat", sans-serif;
+  font-family: "Bree Serif", serif;
   padding: 25px;
   ${mobile({
     fontSize: "24px",
@@ -33,6 +32,10 @@ const LeftSection = styled.div`
   })}
 
   ${largeMobile({
+    display: "none",
+  })}
+
+  ${tablet({
     display: "none",
   })}
 `;
@@ -58,43 +61,41 @@ const RightSection = styled.div`
 const DestinationContainer = styled.div`
   display: flex;
   min-height: 105px;
-  width: 70%;
+  width: 80%;
   border-radius: 10px;
   margin-bottom: 5%;
   box-shadow: rgba(50, 50, 93, 0.25) 0px 30px 60px -12px,
     rgba(0, 0, 0, 0.3) 0px 18px 36px -18px;
 
   ${mobile({
-    width: "70%",
-    minHeight: "130px",
-    marginBottom: "20px",
+    width: "90%",
   })}
 
   ${largeMobile({
-    width: "60%",
-    minHeight: "120px",
-    marginBottom: "20px",
+    width: "80%",
   })}
 
   ${tablet({
-    minHeight: "90px",
+    width: "80%",
   })}
 
   ${desktop({
     width: "70%",
-    minHeight: "110px",
-    marginBottom: "2%",
   })}
 `;
 
 const ImgContainer = styled.div`
-  flex: 3.5;
+  flex: 4;
   width: 100%;
   aspect-ratio: 1/1;
   margin-right: 10px;
 
-  ${desktop({
-    flex: "4",
+  ${mobile({
+    flex: "5",
+  })}
+
+  ${largeMobile({
+    flex: "5",
   })}
 `;
 
@@ -110,6 +111,7 @@ const InfoContainer = styled.div`
   flex: 6;
   display: flex;
   align-items: center;
+  flex-direction: column;
 
   ${mobile({
     flexDirection: "column",
@@ -122,10 +124,9 @@ const InfoContainer = styled.div`
 
 const Title = styled.p`
   flex: 1.5;
-  color: #1b2430;
   font-weight: bold;
-  font-size: 14px;
-  font-family: "Montserrat", sans-serif;
+  font-size: 20px;
+  font-family: "Bree Serif", serif;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -135,27 +136,19 @@ const Title = styled.p`
     flex: "1",
     marginRight: "0px",
   })}
-
-  ${desktop({
-    fontSize: "15px",
-  })}
 `;
 
 const Description = styled.p`
   color: #151515;
   font-weight: bold;
-  font-size: 12px;
-  font-family: "Montserrat", sans-serif;
+  font-size: 14px;
+  font-family: "Roboto", sans-serif;
   flex: 1;
   margin-right: 10px;
   text-align: center;
 
   ${mobile({
     marginRight: "0px",
-  })}
-
-  ${desktop({
-    fontSize: "14px",
   })}
 `;
 

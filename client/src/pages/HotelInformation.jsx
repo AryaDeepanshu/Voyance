@@ -19,6 +19,9 @@ import HotelInformationLoader from "../components/Loaders/HotelInformationLoader
 import { useEffect } from "react";
 import { useSelector } from "react-redux";
 import dayjs from "dayjs";
+// import Modal from "../components/Modal";
+import SignIn from "../components/SignIn";
+import SignUp from "../components/SignUp";
 
 const Wrapper = styled.div`
   width: calc(100vw - 10%);
@@ -116,10 +119,8 @@ const HotelInformation = () => {
     userId: !user ? "" : user._id,
     userPhone: !user ? "" : user.phone,
     userEmail: !user ? "" : user.email,
-    userName: !user ? "" : user.name
+    userName: !user ? "" : user.name,
   };
-  console.log(booking_details)
-
 
   /* State to manage the index of the image clicked: */
   const [index, setIndex] = useState(0);
@@ -134,45 +135,78 @@ const HotelInformation = () => {
     window.scrollTo(0, 0);
   }, []);
 
+  /* State for handling the Login and Register Modal */
+  const [showLoginModal, setShowLoginModal] = useState(false);
+  const [showRegisterModal, setShowRegisterModal] = useState(false);
+
+  /* Function that control the Complete Reservation Mechanism: */
   const checkoutHandler = async (amount, property_name) => {
-    const {data:{key}} = await axios.get("http://localhost:4000/payment/getkey")
-    const {data:{order}} = await axios.post("http://localhost:4000/payment/pay", {
+    if (!user) {
+      setShowLoginModal(true);
+      return;
+    }
+
+    const {
+      data: { key },
+    } = await axios.get("http://localhost:4000/payment/getkey");
+    const {
+      data: { order },
+    } = await axios.post("http://localhost:4000/payment/pay", {
       amount,
       property_name,
       booking_details,
-    })
+    });
     const options = {
       key, // Enter the Key ID generated from the Dashboard
       amount: order.amount, // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
       currency: "INR",
       name: "Voyance",
       description: data.name,
-      image: "https://res.cloudinary.com/additya/image/upload/v1678127598/Voyance/r9udien7vaenzecl8mmk.png",
+      image:
+        "https://res.cloudinary.com/additya/image/upload/v1678127598/Voyance/r9udien7vaenzecl8mmk.png",
       order_id: order.id, //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
       callback_url: "http://localhost:4000/payment/paymentVerification",
       prefill: {
-          name: booking_details.userName,
-          email: booking_details.userEmail,
-          contact: booking_details.userPhone,
+        name: booking_details.userName,
+        email: booking_details.userEmail,
+        contact: booking_details.userPhone,
       },
       notes: {
-          address: "Puri duniya apni h"
+        address: "Puri duniya apni h",
       },
       theme: {
-          color: "#008080"
-      }
+        color: "#008080",
+      },
     };
-  const razor  = new window.Razorpay(options);
-  razor.open();
-  }
+    const razor = new window.Razorpay(options);
+    razor.open();
+  };
 
   return (
     <>
+      {showLoginModal && (
+        <Modal>
+          <SignIn
+            setShowLoginModal={setShowLoginModal}
+            setShowRegisterModal={setShowRegisterModal}
+          />
+        </Modal>
+      )}
+
+      {showRegisterModal && (
+        <Modal>
+          <SignUp
+            setShowLoginModal={setShowLoginModal}
+            setShowRegisterModal={setShowRegisterModal}
+          />
+        </Modal>
+      )}
+
       {isLoading ? (
         <Wrapper>
           <Navbar scrollPosition={80} />
           <HotelInformationLoader />
-          <Footer type="hotelInfo" />
+          <Footer />
         </Wrapper>
       ) : (
         <>
@@ -197,6 +231,7 @@ const HotelInformation = () => {
                     stay={stay}
                     guest={guest}
                     setGuest={setGuest}
+                    checkoutHandler={checkoutHandler}
                   />
                 </Modal>
               ) : (
@@ -232,7 +267,7 @@ const HotelInformation = () => {
                 <HotelReview />
               </Wrapper>
 
-              <Footer type="hotelInfo" />
+              <Footer />
               {width <= 768 && (
                 <ReservationStrip setModal={setModal} data={data} stay={stay} />
               )}

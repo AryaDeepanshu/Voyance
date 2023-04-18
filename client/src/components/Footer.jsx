@@ -10,10 +10,11 @@ import styled from "styled-components";
 import { mobile, largeMobile, tablet, desktop } from "../responsive";
 
 const Container = styled.div`
+  margin-top: 10px;
   display: flex;
-  padding: 80px 0px;
   flex-wrap: wrap;
   align-items: flex-start;
+  padding: 80px 0px;
   background-color: ${(props) => (props.home === true ? "white" : "#f5f5f5")};
 
   ${mobile({
@@ -89,13 +90,19 @@ const MiddleWrapper = styled.div`
   min-width: 345px;
   max-width: 600px;
 
+  ${mobile({
+    order: "2",
+    paddingBottom: "60px",
+  })}
+
   ${largeMobile({
     order: "2",
-    padding: "0px 25px",
+    padding: "0px 25px 100px 25px",
   })}
 
   ${tablet({
     order: "2",
+    paddingBottom: "100px",
   })}
 `;
 
@@ -150,7 +157,7 @@ const RightWrapper = styled.div`
     marginBottom: "25px",
   })}
 
-${tablet({
+  ${tablet({
     marginBottom: "25px",
   })}
 `;
@@ -204,7 +211,7 @@ const Input = styled.input`
 // Pending Task : handle the responsiveness of this element below 480px i.e for mobile view and for above 1024px i.e desktop view. --> only if time permits
 const Footer = ({ home }) => {
   return (
-    <Container type="hotelInfo" home={home}>
+    <Container home={home}>
       <LeftWrapper>
         <AddressContainer>
           <HeadingContainer>

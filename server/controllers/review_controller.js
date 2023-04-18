@@ -65,8 +65,8 @@ module.exports.updateReview = async (req, res) => {
 
   try {
     await Hotel.findByIdAndUpdate(req.body.hotelId, {
-      $set: {
-        starNumber: req.body.star,
+      $inc: {
+        starNumber: req.body.star - existingReview[0].star,
       },
     });
 

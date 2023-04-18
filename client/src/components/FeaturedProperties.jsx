@@ -21,6 +21,7 @@ const Container = styled.div`
 const Heading = styled.h1`
   font-family: "Montserrat", sans-serif;
   padding: 40px 0px 20px 0px;
+  font-family: "Bree Serif", serif;
 `;
 
 const Wrapper = styled.div`
@@ -67,7 +68,7 @@ function FeaturedProperties() {
   return (
     <Container>
       <></>
-      {/* <Heading>Featured Properties</Heading> */}
+      <Heading>Featured Properties</Heading>
       <CategorySlider category={category} setCategory={setCategory} />
 
       <Wrapper>

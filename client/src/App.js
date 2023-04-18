@@ -13,6 +13,7 @@ import PaymentSuccess from "./pages/PaymentSuccess";
 import Practice from "./components/Practice";
 import Wishlist from "./pages/Wishlist";
 import Order from "./pages/Order";
+import PlanTrip from "./pages/PlanTrip";
 
 export default function App() {
   const queryClient = new QueryClient();
@@ -33,7 +34,8 @@ export default function App() {
           <Route path="/become-host" element={<>host</>} />
           <Route path="/order" element={<Order />} />
           <Route path="/wishlist" element={<Wishlist />} />
-          <Route path="/paymentsuccess" element={<PaymentSuccess/>} />
+          <Route path="/paymentsuccess" element={<PaymentSuccess />} />
+          <Route path="/plan" element={<PlanTrip />} />
         </Routes>
       </BrowserRouter>
     </QueryClientProvider>

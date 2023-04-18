@@ -13,6 +13,9 @@ import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
 import { clearWishlist, wishlisthandler } from "../redux/wishlistSlice";
 import { clear } from "../redux/wishlistSlice";
+import Modal from "./Modal";
+import SignIn from "./SignIn";
+import SignUp from "./SignUp";
 
 const Button = styled.button`
   position: absolute;
@@ -151,6 +154,7 @@ const Duration = styled.span`
 `;
 
 const HotelCard = ({ hotelInfo, color }) => {
+  /* Get the signed in user from the redux store: */
   const user = useSelector((store) => store.user.currentUser);
 
   // Logic for string Truncation:
@@ -192,71 +196,106 @@ const HotelCard = ({ hotelInfo, color }) => {
     }
   };
 
+  /* State for handling the Login and Register Modal */
+  const [showLoginModal, setShowLoginModal] = useState(false);
+  const [showRegisterModal, setShowRegisterModal] = useState(false);
+
+  /* Handling wishlist functionality: */
+  const handleWishlist = (id) => {
+    if (!user) {
+      setShowLoginModal(true);
+    } else {
+      wishlistHanlder(id);
+    }
+  };
+
   return (
-    <Container>
-      {/* Hotel Image Carousel */}
-      <Carousel>
-        {/* Carousel: */}
-        <ImgContainer>
-          <Img alt="hotel" src={hotelInfo.images[index]} />
-        </ImgContainer>
+    <>
+      {showLoginModal && (
+        <Modal>
+          <SignIn
+            setShowLoginModal={setShowLoginModal}
+            setShowRegisterModal={setShowRegisterModal}
+          />
+        </Modal>
+      )}
 
-        {/* Wishlist Icon: */}
-        <Like onClick={() => wishlistHanlder(hotelInfo._id)}>
-          <Favorite style={{ color: `${wishlist}`, fontSize: "28px" }} />
-        </Like>
+      {showRegisterModal && (
+        <Modal>
+          <SignUp
+            setShowLoginModal={setShowLoginModal}
+            setShowRegisterModal={setShowRegisterModal}
+          />
+        </Modal>
+      )}
 
-        {/* Backward Button: */}
-        <Button
-          direction="backward"
-          onClick={() => handleMoveButton("backward")}>
-          <ArrowBackIos style={{ fontSize: "15px" }} />
-        </Button>
+      <Container>
+        {/* Hotel Image Carousel */}
+        <Carousel>
+          {/* Carousel: */}
+          <ImgContainer>
+            <Img alt="hotel" src={hotelInfo.images[index]} />
+          </ImgContainer>
 
-        {/* Forward Button */}
-        <Button direction="forward" onClick={() => handleMoveButton("forward")}>
-          <ArrowForwardIos style={{ fontSize: "15px" }} />
-        </Button>
+          {/* Wishlist Icon: */}
+          <Like onClick={() => handleWishlist(hotelInfo._id)}>
+            <Favorite style={{ color: `${wishlist}`, fontSize: "28px" }} />
+          </Like>
 
-        {/* Index Dot: */}
-        <SliderContainer>
-          {hotelInfo.images.map((_, i) => (
-            <SlideNumber index={index} key={i} />
-          ))}
-        </SliderContainer>
-      </Carousel>
+          {/* Backward Button: */}
+          <Button
+            direction="backward"
+            onClick={() => handleMoveButton("backward")}>
+            <ArrowBackIos style={{ fontSize: "15px" }} />
+          </Button>
 
-      {/* Hotel Information */}
-      <Link
-        to={`/hotel-information/${hotelInfo._id}`}
-        style={{ textDecoration: "none", color: "inherit" }}>
-        <InformationContainer>
-          <HeaderContainer>
-            <Header>{hotelInfo.location}</Header>
-            <RatingContainer>
-              <Star
-                style={{
-                  fontSize: "18px",
-                  marginRight: "5px",
-                  fontFamily: "Montserrat",
-                }}
-              />
-              <Rating>
-                {hotelInfo.starNumber === 0
-                  ? 0
-                  : (hotelInfo.starNumber / hotelInfo.totalStars).toFixed(1)}
-              </Rating>
-            </RatingContainer>
-          </HeaderContainer>
-          <Info> {trimTitle(hotelInfo.name)} </Info>
-          <Date> date here </Date>
-          <PriceDetails>
-            <Price>${hotelInfo.cost}</Price>
-            <Duration>night</Duration>
-          </PriceDetails>
-        </InformationContainer>
-      </Link>
-    </Container>
+          {/* Forward Button */}
+          <Button
+            direction="forward"
+            onClick={() => handleMoveButton("forward")}>
+            <ArrowForwardIos style={{ fontSize: "15px" }} />
+          </Button>
+
+          {/* Index Dot: */}
+          <SliderContainer>
+            {hotelInfo.images.map((_, i) => (
+              <SlideNumber index={index} key={i} />
+            ))}
+          </SliderContainer>
+        </Carousel>
+
+        {/* Hotel Information */}
+        <Link
+          to={`/hotel-information/${hotelInfo._id}`}
+          style={{ textDecoration: "none", color: "inherit" }}>
+          <InformationContainer>
+            <HeaderContainer>
+              <Header>{hotelInfo.location}</Header>
+              <RatingContainer>
+                <Star
+                  style={{
+                    fontSize: "18px",
+                    marginRight: "5px",
+                    fontFamily: "Montserrat",
+                  }}
+                />
+                <Rating>
+                  {hotelInfo.starNumber === 0
+                    ? 0
+                    : (hotelInfo.starNumber / hotelInfo.totalStars).toFixed(1)}
+                </Rating>
+              </RatingContainer>
+            </HeaderContainer>
+            <Info> {trimTitle(hotelInfo.name)} </Info>
+            <Date> date here </Date>
+            <PriceDetails>
+              <Price>${hotelInfo.cost}</Price>
+              <Duration>night</Duration>
+            </PriceDetails>
+          </InformationContainer>
+        </Link>
+      </Container>
+    </>
   );
 };
 
