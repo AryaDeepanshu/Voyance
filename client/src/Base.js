@@ -1,3 +1,3 @@
-const BASE_URL = "192.168.29.31"
+const BASE_URL = "localhost"
 
 export default BASE_URL

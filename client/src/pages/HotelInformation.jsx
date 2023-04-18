@@ -197,6 +197,7 @@ const HotelInformation = () => {
                     stay={stay}
                     guest={guest}
                     setGuest={setGuest}
+                    checkoutHandler={checkoutHandler}
                   />
                 </Modal>
               ) : (
