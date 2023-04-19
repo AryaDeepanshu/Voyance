@@ -138,7 +138,7 @@ const Plan = () => {
       {
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer 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`,
+          Authorization: `Bearer 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`,
         },
       }
     );
