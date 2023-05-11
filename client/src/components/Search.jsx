@@ -2,11 +2,12 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import useWindowDimensions from "../hooks/useWindowDimensions";
 import { desktop, largeMobile, mobile, tablet } from "../responsive";
-import Navbar from "./Navbar";
-import NewSearch from "./NewSearch";
-import SearchInputSm from "./SearchInputSm";
-import SearchInputModal from "./SearchInputModal";
+
 import Modal from "./Modal";
+import Navbar from "./Navbar";
+import SearchSm from "./SearchSm";
+import SearchLgMd from "./SearchLgMd";
+import SearchInputModal from "./SearchInputModal";
 
 const Container = styled.div`
   width: 100%;
@@ -55,9 +56,9 @@ const Search = ({ scrollPosition }) => {
 
       {scrollPosition < 80 && <Navbar isHome={true} />}
       {width > 850 ? (
-        <NewSearch />
+        <SearchLgMd />
       ) : (
-        !modal && <SearchInputSm setModal={setModal} />
+        !modal && <SearchSm setModal={setModal} />
       )}
     </Container>
   );

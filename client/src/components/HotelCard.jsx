@@ -1,5 +1,5 @@
-import React, { useState } from "react";
 import styled from "styled-components";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -9,10 +9,8 @@ import {
   ArrowBackIos,
   ArrowForwardIos,
 } from "@mui/icons-material";
-import { useMutation } from "@tanstack/react-query";
-import axios from "axios";
-import { clearWishlist, wishlisthandler } from "../redux/wishlistSlice";
-import { clear } from "../redux/wishlistSlice";
+import { wishlisthandler } from "../redux/wishlistSlice";
+
 import Modal from "./Modal";
 import SignIn from "./SignIn";
 import SignUp from "./SignUp";
@@ -171,10 +169,7 @@ const HotelCard = ({ hotelInfo, color }) => {
 
   const wishlistHanlder = (_id) => {
     /* Check if user is logged in or not: */
-    if (!user) {
-      console.log("not authenticated");
-      return;
-    }
+    if (!user) return;
 
     dispatch(wishlisthandler(_id));
     wishlist === "white" ? setWishlist("red") : setWishlist("white");
@@ -202,11 +197,7 @@ const HotelCard = ({ hotelInfo, color }) => {
 
   /* Handling wishlist functionality: */
   const handleWishlist = (id) => {
-    if (!user) {
-      setShowLoginModal(true);
-    } else {
-      wishlistHanlder(id);
-    }
+    !user ? setShowLoginModal(true) : wishlistHanlder(id);
   };
 
   return (

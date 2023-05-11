@@ -1,30 +1,8 @@
-// import Icon from "@material-ui/core/Icon";
 import styled from "styled-components";
-import {
-  AgricultureOutlined,
-  ParkOutlined,
-  CottageOutlined,
-  PhotoFilterOutlined,
-  GiteOutlined,
-  WarehouseOutlined,
-  BeachAccessOutlined,
-  CabinOutlined,
-  VillaOutlined,
-  DiamondOutlined,
-  DirectionsBoatFilledOutlined,
-  HouseboatOutlined,
-  SportsGolfOutlined,
-  SurfingOutlined,
-  FoundationOutlined,
-  ArrowBackIosNew,
-  ArrowForwardIos,
-  OtherHousesOutlined,
-  ApartmentOutlined,
-  CastleOutlined,
-} from "@mui/icons-material";
+import { propertyList } from "../data/propertyList";
 import { useRef, useLayoutEffect, useState } from "react";
 import useWindowDimensions from "../hooks/useWindowDimensions";
-import { propertyList } from "../data/propertyList";
+import { ArrowBackIosNew, ArrowForwardIos } from "@mui/icons-material";
 
 const Container = styled.div`
   width: 95%;
@@ -34,7 +12,7 @@ const Container = styled.div`
   justify-content: flex-start;
   height: 80px;
   overflow: hidden;
-  flex: 11; // defined wrt SearchResult --> Filter Component.
+  flex: 11;
 `;
 
 const Wrapper = styled.div`

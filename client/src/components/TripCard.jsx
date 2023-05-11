@@ -9,6 +9,7 @@ import {
   Star,
 } from "@mui/icons-material";
 import useWindowDimensions from "../hooks/useWindowDimensions";
+import { Link } from "react-router-dom";
 
 const Wrapper = styled.div`
   margin: 20px 0px 50px 0px;
@@ -52,10 +53,11 @@ const TripCardContainer = styled.div`
   flex-direction: column;
   padding: 10px;
   justify-content: space-between;
-  cursor: pointer;
 `;
 
-const HotelNameWrapper = styled.div``;
+const HotelNameWrapper = styled.div`
+  cursor: pointer;
+`;
 
 const HotelName = styled.p`
   font-size: 24px;
@@ -124,67 +126,37 @@ const Detail = styled.p`
   })}
 `;
 
-const TripCard = () => {
+const TripCard = ({ tripData }) => {
   const { width } = useWindowDimensions();
-  // console.log(width);
 
-  const TripData = [
-    {
-      name: "Whispering Pines Cottages|Treehouse|Tandi",
-      address: "Jibhi, Himachal Pradesh, India",
-      rating: "4.69",
-      description:
-        "Lorem ipsum dolor sit amet consectetur adipisicing elit. Omnis quia minus provident, id eius quas est saepe porro minima voluptatem alias ipsam quidem animi ipsa dolor officia non suscipit ut.",
-      date: "18thfeb - 24th feb",
-      cost: "17,000",
-    },
-    {
-      name: "Whispering Pines Cottages|Treehouse|Tandi",
-      address: "Jibhi, Himachal Pradesh, India",
-      rating: "4.69",
-      description:
-        "Lorem ipsum dolor sit amet consectetur adipisicing elit. Omnis quia minus provident, id eius quas est saepe porro minima voluptatem alias ipsam quidem animi ipsa dolor officia non suscipit ut.",
-      date: "18thfeb - 24th feb",
-      cost: "17,000",
-    },
-    {
-      name: "Whispering Pines Cottages|Treehouse|Tandi",
-      address: "Jibhi, Himachal Pradesh, India",
-      rating: "4.69",
-      description:
-        "Lorem ipsum dolor sit amet consectetur adipisicing elit. Omnis quia minus provident, id eius quas est saepe porro minima voluptatem alias ipsam quidem animi ipsa dolor officia non suscipit ut.",
-      date: "18thfeb - 24th feb",
-      cost: "17,000",
-    },
-    {
-      name: "Whispering Pines Cottages|Treehouse|Tandi",
-      address: "Jibhi, Himachal Pradesh, India",
-      rating: "4.69",
-      description:
-        "Lorem ipsum dolor sit amet consectetur adipisicing elit. Omnis quia minus provident, id eius quas est saepe porro minima voluptatem alias ipsam quidem animi ipsa dolor officia non suscipit ut.",
-      date: "18thfeb - 24th feb",
-      cost: "17,000",
-    },
-  ];
   return (
     <Wrapper>
-      {TripData.map((trip) => (
-        <TripCardWrapper>
+      {tripData.map((trip) => (
+        <TripCardWrapper key={trip?._id}>
           {width > 660 && (
             <TripCardImg>
-              <Img src="https://images.unsplash.com/photo-1590073844006-33379778ae09?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=774&q=80" />
+              <Img src={trip?.hotel?.images[0]} />
             </TripCardImg>
           )}
           <TripCardContainer>
-            <HotelNameWrapper>
-              <HotelName>Whispering Pines Cottages|Treehouse|Tandi</HotelName>
-              <HotelDetailWrapper>
-                <HotelAddress>Jibhi, Himachal Pradesh, India</HotelAddress>
-                <HotelRating>
-                  <Star style={{ transform: "scale(0.7)" }} /> 4.69
-                </HotelRating>
-              </HotelDetailWrapper>
-            </HotelNameWrapper>
+            <Link
+              to={`/hotel-information/${trip?.hotel?._id}`}
+              style={{ textDecoration: "none", color: "inherit" }}>
+              <HotelNameWrapper>
+                <HotelName>{trip?.hotel?.name}</HotelName>
+                <HotelDetailWrapper>
+                  <HotelAddress>{trip?.hotel?.location}</HotelAddress>
+                  <HotelRating>
+                    <Star style={{ transform: "scale(0.7)" }} />
+                    {trip?.hotel.starNumber === 0
+                      ? 0
+                      : (
+                          trip?.hotel?.starNumber / trip?.hotel?.totalStars
+                        ).toFixed(1)}
+                  </HotelRating>
+                </HotelDetailWrapper>
+              </HotelNameWrapper>
+            </Link>
 
             <BottomWrapper>
               <OrderDetailContainer>
@@ -192,13 +164,13 @@ const TripCard = () => {
                   <ReceiptOutlined
                     style={{ transform: "scale(0.9)", paddingRight: "5px" }}
                   />
-                  #$12SA21AF45
+                  {trip?.razorpay_order_id}
                 </Detail>
                 <Detail>
                   <Grid3x3
                     style={{ transform: "scale(0.9)", paddingRight: "5px" }}
                   />
-                  #$12SA21AF45
+                  {trip?.razorpay_payment_id}
                 </Detail>
               </OrderDetailContainer>
               <DetailContainer>
@@ -206,13 +178,13 @@ const TripCard = () => {
                   <CalendarMonthOutlined
                     style={{ transform: "scale(0.9)", paddingRight: "5px" }}
                   />
-                  18thfeb - 24th feb
+                  {`${trip?.beginDate} - ${trip?.endDate}`}
                 </Detail>
                 <Detail>
                   <CurrencyRupee
                     style={{ transform: "scale(0.9)", paddingRight: "5px" }}
                   />
-                  17,000
+                  {trip?.totalCost}
                 </Detail>
               </DetailContainer>
             </BottomWrapper>

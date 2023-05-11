@@ -1,9 +1,9 @@
-import { Favorite, FavoriteBorder } from "@mui/icons-material";
-import { useMutation } from "@tanstack/react-query";
+import React from "react";
 import axios from "axios";
-import React, { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useMutation } from "@tanstack/react-query";
 import { Link, useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+
 import styled from "styled-components";
 import { logout } from "../redux/userSlice";
 import { clearWishlist } from "../redux/wishlistSlice";
@@ -42,6 +42,7 @@ const ProfileDashboard = ({ setShowLoginModal, setShowRegisterModal }) => {
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
   const { wishlist } = useSelector((store) => store.wishlist);
 
   const mutation = useMutation({

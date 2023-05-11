@@ -40,16 +40,16 @@ mongoose
 app.use(express.json()); // -> allows the app to take json as post request input.
 
 app.use(cookieParser());
-app.use(express.urlencoded({extended: true}));
+app.use(express.urlencoded({ extended: true }));
 // use express router: -> all the request will be handled by the index.js file in the routes folder.
 app.use("/", require("./routes/index"));
 
-app.get("/payment/getkey", (req,res) =>
-  res.status(200).json({key: process.env.RAZORPAY_API_KEY})
+app.get("/payment/getkey", (req, res) =>
+  res.status(200).json({ key: process.env.RAZORPAY_API_KEY })
 );
 
 app.listen("5000", () => {
   console.log("The server is up and running on port: 5000");
 });
 
-app.listen(process.env.PORT,()=>console.log(`Server is running on port ${process.env.PORT}`));
+// app.listen(process.env.PORT,()=>console.log(`Server is running on port ${process.env.PORT}`));

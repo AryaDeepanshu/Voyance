@@ -12,6 +12,9 @@ import default_avatar from "../static/default_avatar.png";
 import { Rating } from "@mui/material";
 import dayjs from "dayjs";
 
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 const Container = styled.div`
   display: grid;
   grid-gap: 2rem;
@@ -217,9 +220,6 @@ const HotelReview = () => {
       })
   );
 
-  /* State to display add-review feedback: */
-  const [feedback, setFeedback] = useState(null);
-
   /* queryClient Object: */
   const queryClient = useQueryClient();
 
@@ -231,11 +231,7 @@ const HotelReview = () => {
       });
     },
     onSuccess: (message) => {
-      setFeedback(message.data);
       queryClient.invalidateQueries([`review-${hotelId}`]);
-    },
-    onError: (message) => {
-      setFeedback(message.response.data);
     },
   });
 
@@ -247,11 +243,7 @@ const HotelReview = () => {
       });
     },
     onSuccess: (message) => {
-      setFeedback(message.data);
       queryClient.invalidateQueries([`review-${hotelId}`]);
-    },
-    onError: (message) => {
-      setFeedback(message.response.data);
     },
   });
 
@@ -262,12 +254,8 @@ const HotelReview = () => {
         withCredentials: true,
       });
     },
-    onSuccess: (message) => {
-      setFeedback(message.data);
+    onSuccess: () => {
       queryClient.invalidateQueries([`review-${hotelId}`]);
-    },
-    onError: (message) => {
-      setFeedback(message.response.data);
     },
   });
 
@@ -276,6 +264,14 @@ const HotelReview = () => {
 
   /* Add Review Method: */
   const addReview = () => {
+    if (experience === "" || value === 0) {
+      toast.error("All fields are required.", {
+        position: toast.POSITION.BOTTOM_LEFT,
+      });
+
+      return;
+    }
+
     setDisable(true);
 
     addReviewMutation.mutate({
@@ -284,17 +280,44 @@ const HotelReview = () => {
       review: experience,
     });
 
+    toast.success("Successfully added the review", {
+      position: toast.POSITION.BOTTOM_LEFT,
+    });
+
+    setValue(0);
+    setExperience("");
+    setUpdatedValue(0);
+    setUpdatedExperience("");
+
     setDisable(false);
   };
 
   /* update Review Method: */
   const updateReview = () => {
+    if (updatedExperience === "" || updatedValue === 0) {
+      toast.error("All fields are required.", {
+        position: toast.POSITION.BOTTOM_LEFT,
+      });
+
+      return;
+    }
+
     setDisable(true);
 
     updateReviewMutation.mutate({
+      userId: user._id,
       hotelId: hotelId,
       star: updatedValue,
       review: updatedExperience,
+    });
+
+    setValue(0);
+    setExperience("");
+    setUpdatedValue(0);
+    setUpdatedExperience("");
+
+    toast.success("Successfully updated the review", {
+      position: toast.POSITION.BOTTOM_LEFT,
     });
 
     setDisable(false);
@@ -304,7 +327,17 @@ const HotelReview = () => {
   /* delete Review Method: */
   const deleteReview = () => {
     deleteReviewMutation.mutate({
+      userId: user._id,
       hotelId: hotelId,
+    });
+
+    setValue(0);
+    setExperience("");
+    setUpdatedValue(0);
+    setUpdatedExperience("");
+
+    toast.success("Successfully deleted the review", {
+      position: toast.POSITION.BOTTOM_LEFT,
     });
   };
 
@@ -361,12 +394,12 @@ const HotelReview = () => {
               type="modal"
               placeholder="share your experience..."
               rows="4"
+              value={updatedExperience}
               onChange={(event) => setUpdatedExperience(event.target.value)}
             />
             <Button onClick={updateReview} disabled={disable}>
               update
             </Button>
-            {feedback && <h4>{feedback}</h4>}
             <OptionWrapper>
               <OptionContainer>
                 <Close onClick={() => setModal(false)} />
@@ -377,7 +410,6 @@ const HotelReview = () => {
       )}
 
       {user && (
-        // add constraint in form that star and message is required.
         <>
           <TakeReviewContainer>
             <Heading> Add Review: </Heading>
@@ -388,15 +420,16 @@ const HotelReview = () => {
             <InputReview
               placeholder="share your experience..."
               rows="4"
+              value={experience}
               onChange={(event) => setExperience(event.target.value)}
             />
             <Button onClick={addReview} disabled={disable}>
               Submit
             </Button>
-            {feedback && <h4>{feedback}</h4>}
           </TakeReviewContainer>
         </>
       )}
+      <ToastContainer />
     </>
   );
 };

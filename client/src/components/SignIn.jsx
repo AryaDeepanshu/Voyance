@@ -20,6 +20,9 @@ import useWindowDimensions from "../hooks/useWindowDimensions";
 import { setWishlist } from "../redux/wishlistSlice";
 import { Close } from "@mui/icons-material";
 
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 const Wrapper = styled.div`
   display: flex;
   border-radius: 5px;
@@ -79,7 +82,7 @@ const Input = styled.input`
 `;
 
 const Button = styled.button`
-  background-color: #ff4b2b;
+  background-color: #0ead69;
   color: white;
   cursor: pointer;
   font-size: 18px;
@@ -173,6 +176,10 @@ const SignIn = ({ setShowLoginModal, setShowRegisterModal }) => {
     auth_Login(navigate, dispatch, { email, password });
     setShowLoginModal(false);
     setShowRegisterModal(false);
+
+    toast.success("Successfully Logged In.", {
+      position: toast.POSITION.BOTTOM_LEFT,
+    });
   };
 
   return (
@@ -219,6 +226,7 @@ const SignIn = ({ setShowLoginModal, setShowRegisterModal }) => {
           <GoogleAuthTextField>Continue with Google</GoogleAuthTextField>
         </GoogleAuthWrapper>
       </Card>
+      <ToastContainer />
     </Wrapper>
   );
 };

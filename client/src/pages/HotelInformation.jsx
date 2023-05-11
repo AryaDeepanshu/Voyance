@@ -11,7 +11,7 @@ import ReservationModal from "../components/ReservationModal";
 import ReservationStrip from "../components/RevervationStrip";
 import useWindowDimensions from "../hooks/useWindowDimensions";
 import HotelReview from "../components/HotelReview";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
 import Modal from "../components/Modal";
@@ -22,6 +22,7 @@ import dayjs from "dayjs";
 // import Modal from "../components/Modal";
 import SignIn from "../components/SignIn";
 import SignUp from "../components/SignUp";
+import { axiosBaseURL } from "../utils/axiosBaseURL";
 
 const Wrapper = styled.div`
   width: calc(100vw - 10%);
@@ -36,6 +37,8 @@ const BottomContainer = styled.div`
 `;
 
 const HotelInformation = () => {
+  const navigate = useNavigate();
+
   /* Get the current user: */
   const user = useSelector((store) => store.user.currentUser);
 
@@ -96,31 +99,10 @@ const HotelInformation = () => {
 
   /* Fetching Data using React Query: */
   const { isLoading, error, data } = useQuery([`${id}`], () =>
-    axios.get(`http://localhost:5000/hotel/info/${id}`).then((hotel) => {
+    axiosBaseURL.get(`hotel/info/${id}`).then((hotel) => {
       return hotel.data;
     })
   );
-
-  // final-booking-detail:
-  const booking_details = {
-    startDate:
-      typeof beginDate === "string"
-        ? decode(beginDate)
-        : beginDate.format("MM/DD/YYYY"),
-    finishDate:
-      typeof endDate === "string"
-        ? decode(endDate)
-        : endDate.format("MM/DD/YYYY"),
-    stay: stay,
-    guest: guest,
-    hotelId: id,
-    cost: isLoading ? 0 : data.cost * stay,
-    hostId: isLoading ? "" : data.hostId._id,
-    userId: !user ? "" : user._id,
-    userPhone: !user ? "" : user.phone,
-    userEmail: !user ? "" : user.email,
-    userName: !user ? "" : user.name,
-  };
 
   /* State to manage the index of the image clicked: */
   const [index, setIndex] = useState(0);
@@ -139,6 +121,23 @@ const HotelInformation = () => {
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [showRegisterModal, setShowRegisterModal] = useState(false);
 
+  // final-booking-detail:
+  const bookingDetail = {
+    beginDate:
+      typeof beginDate === "string"
+        ? decode(beginDate)
+        : beginDate.format("MM/DD/YYYY"),
+    endDate:
+      typeof endDate === "string"
+        ? decode(endDate)
+        : endDate.format("MM/DD/YYYY"),
+    guest: guest,
+    hotel: id,
+    totalCost: isLoading ? 0 : data.cost * stay,
+    host: isLoading ? "" : data.hostId._id,
+    user: !user ? "" : user._id,
+  };
+
   /* Function that control the Complete Reservation Mechanism: */
   const checkoutHandler = async (amount, property_name) => {
     if (!user) {
@@ -148,14 +147,15 @@ const HotelInformation = () => {
 
     const {
       data: { key },
-    } = await axios.get("http://localhost:4000/payment/getkey");
+    } = await axios.get("http://localhost:5000/payment/getkey");
+
     const {
       data: { order },
-    } = await axios.post("http://localhost:4000/payment/pay", {
+    } = await axios.post("http://localhost:5000/payment/pay", {
       amount,
       property_name,
-      booking_details,
     });
+
     const options = {
       key, // Enter the Key ID generated from the Dashboard
       amount: order.amount, // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
@@ -165,11 +165,25 @@ const HotelInformation = () => {
       image:
         "https://res.cloudinary.com/additya/image/upload/v1678127598/Voyance/r9udien7vaenzecl8mmk.png",
       order_id: order.id, //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
-      callback_url: "http://localhost:4000/payment/paymentVerification",
+      handler: async function (response) {
+        await axios.post(
+          "http://localhost:5000/order",
+          {
+            ...bookingDetail,
+            razorpay_order_id: response.razorpay_order_id,
+            razorpay_payment_id: response.razorpay_payment_id,
+          },
+          {
+            withCredentials: true,
+          }
+        );
+
+        navigate("/order");
+      },
       prefill: {
-        name: booking_details.userName,
-        email: booking_details.userEmail,
-        contact: booking_details.userPhone,
+        name: user.name,
+        email: user.email,
+        contact: user.phone,
       },
       notes: {
         address: "Puri duniya apni h",
@@ -178,6 +192,7 @@ const HotelInformation = () => {
         color: "#008080",
       },
     };
+
     const razor = new window.Razorpay(options);
     razor.open();
   };

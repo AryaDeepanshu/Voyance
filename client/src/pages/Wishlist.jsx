@@ -20,8 +20,8 @@ const Wishlist = () => {
       <Wrapper>
         <Navbar scrollPosition={80} />
         <WishlistContainer />
-        <Footer />
       </Wrapper>
+      <Footer />
     </>
   );
 };

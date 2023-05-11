@@ -7,6 +7,7 @@ import useWindowDimensions from "../hooks/useWindowDimensions";
 import { useSelector } from "react-redux";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
+import TripCardLoader from "../components/Loaders/TripCardLoader";
 
 const Wrapper = styled.div`
   width: calc(100vw - 10%);
@@ -21,24 +22,22 @@ const Order = () => {
   const { isLoading, error, data, refetch } = useQuery(
     [`Order_${user._id}`],
     () =>
-      axios.get(`http://localhost:5000/payment/${user._id}`).then((order) => {
-        return order.data;
-      })
+      axios
+        .get(`http://localhost:5000/order/${user._id}`, {
+          withCredentials: true,
+        })
+        .then((order) => {
+          return order.data;
+        })
   );
 
   return (
     <>
-      {isLoading ? (
-        "Loading"
-      ) : (
-        <>
-          <Wrapper>
-            <Navbar scrollPosition={80} />
-            <TripCard data={data} />
-          </Wrapper>
-          <Footer />
-        </>
-      )}
+      <Wrapper>
+        <Navbar scrollPosition={80} />
+        {isLoading ? <TripCardLoader /> : <TripCard tripData={data} />}
+      </Wrapper>
+      <Footer />
     </>
   );
 };

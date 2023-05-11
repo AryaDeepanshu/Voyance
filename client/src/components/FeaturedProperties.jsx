@@ -1,12 +1,16 @@
 import axios from "axios";
 import { useState } from "react";
-import HotelCard from "./HotelCard";
-import styled from "styled-components";
-import CategorySlider from "./CategorySlider";
-import { useQuery } from "@tanstack/react-query";
-import useWindowDimensions from "../hooks/useWindowDimensions";
 import { useEffect } from "react";
 import { useSelector } from "react-redux";
+import { useQuery } from "@tanstack/react-query";
+
+import styled from "styled-components";
+import useWindowDimensions from "../hooks/useWindowDimensions";
+
+import HotelCard from "./HotelCard";
+import CategorySlider from "./CategorySlider";
+import FeaturedPropertiesLoader_X3 from "./Loaders/FeaturedPropertiesLoader_X3";
+import FeaturedPropertiesLoader_X4 from "./Loaders/FeaturedPropertiesLoader_X4";
 
 const Container = styled.div`
   height: max-content;
@@ -33,7 +37,7 @@ const Wrapper = styled.div`
 
 function FeaturedProperties() {
   const { width } = useWindowDimensions();
-  const visible = width > 980 && width < 1315;
+  const visible = width >= 980 && width < 1315;
 
   // Logic for handling the state of selection property type:
   // category -> cantain the type of property to be fetched from DB.
@@ -45,7 +49,7 @@ function FeaturedProperties() {
     error: hotelError,
     data: hotelData,
     refetch,
-  } = useQuery(["featured-hotel"], () =>
+  } = useQuery([`featured-hotel-${category}`], () =>
     axios
       .get(`http://localhost:5000/hotel/featured-hotel?category=${category}`)
       .then((featured_hotel) => {
@@ -67,31 +71,38 @@ function FeaturedProperties() {
 
   return (
     <Container>
-      <></>
       <Heading>Featured Properties</Heading>
       <CategorySlider category={category} setCategory={setCategory} />
 
       <Wrapper>
-        {!visible &&
-          hotelData?.map((hotelInfo, index) => (
-            <HotelCard
-              key={index}
-              hotelInfo={hotelInfo}
-              color={colorHandler(hotelInfo._id)}
-            />
-          ))}
-
-        {visible &&
-          hotelData?.map(
-            (hotelInfo, index) =>
-              index !== 3 && (
-                <HotelCard
-                  key={index}
-                  hotelInfo={hotelInfo}
-                  color={colorHandler(hotelInfo._id)}
-                />
-              )
-          )}
+        {hotelLoading ? (
+          visible ? (
+            <FeaturedPropertiesLoader_X3 />
+          ) : (
+            <FeaturedPropertiesLoader_X4 />
+          )
+        ) : (
+          <>
+            {visible
+              ? hotelData?.map(
+                  (hotelInfo, index) =>
+                    index !== 3 && (
+                      <HotelCard
+                        key={index}
+                        hotelInfo={hotelInfo}
+                        color={colorHandler(hotelInfo._id)}
+                      />
+                    )
+                )
+              : hotelData?.map((hotelInfo, index) => (
+                  <HotelCard
+                    key={index}
+                    hotelInfo={hotelInfo}
+                    color={colorHandler(hotelInfo._id)}
+                  />
+                ))}
+          </>
+        )}
       </Wrapper>
     </Container>
   );

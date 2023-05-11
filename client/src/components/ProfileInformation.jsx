@@ -7,6 +7,7 @@ import { individualUpload } from "../utils/fileUpload";
 import axios from "axios";
 import { updateUser } from "../redux/userSlice";
 import default_avatar from "../static/default_avatar.png";
+import { axiosBaseURL } from "../utils/axiosBaseURL";
 
 const Wrapper = styled.div`
   display: flex;
@@ -333,8 +334,8 @@ const ProfileInformation = () => {
   /* update profile information: */
   const update = async () => {
     /* upload the new profile information to the Mongodb Database: */
-    const updatedInfo = await axios.post(
-      `http://localhost:5000/user/updateInfo/${user._id}`,
+    const updatedInfo = await axiosBaseURL.post(
+      `user/updateInfo/${user._id}`,
       { name: name, email: email, country: country, phone: phone, bio: bio },
       { withCredentials: true }
     );

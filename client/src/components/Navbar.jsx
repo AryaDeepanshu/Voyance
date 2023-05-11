@@ -1,13 +1,13 @@
-import styled from "styled-components";
-import { Link } from "react-router-dom";
-import ProfileDashboard from "./ProfileDashboard";
-import useWindowDimensions from "../hooks/useWindowDimensions";
-import { useSelector } from "react-redux";
 import { useState } from "react";
-import SignIn from "./SignIn";
+import { Link } from "react-router-dom";
+import styled from "styled-components";
 
 import Modal from "./Modal";
 import SignUp from "./SignUp";
+import SignIn from "./SignIn";
+import ProfileDashboard from "./ProfileDashboard";
+
+import useWindowDimensions from "../hooks/useWindowDimensions";
 
 const Container = styled.div`
   padding: ${(props) => (props.isHome === true ? "0px 10px" : "")};
@@ -57,7 +57,6 @@ const ProfileContainer = styled.div`
 
 function Navbar({ isHome, scrollPosition }) {
   const { width } = useWindowDimensions();
-  // const { currentUser: user } = useSelector((store) => store.user);
 
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [showRegisterModal, setShowRegisterModal] = useState(false);
@@ -93,12 +92,10 @@ function Navbar({ isHome, scrollPosition }) {
             </LogoImgContainer>
           </Link>
 
-          {width > 660 ? (
+          {width > 660 && (
             <Link to="/" style={{ textDecoration: "none", color: "inherit" }}>
               <LogoHeading> Voyance </LogoHeading>
             </Link>
-          ) : (
-            <></>
           )}
         </LogoContainer>
 

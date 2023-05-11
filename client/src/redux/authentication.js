@@ -1,6 +1,6 @@
 import axios from "axios";
 import { loginStart, loginSuccess, loginFailure, logout } from "./userSlice";
-import { setWishlist } from "./wishlistSlice";
+import { clearWishlist, setWishlist } from "./wishlistSlice";
 
 /* Email and Password Authentication (Register): */
 export const auth_Register = async (Navigate, dispatch, data) => {
@@ -22,8 +22,6 @@ export const auth_Register = async (Navigate, dispatch, data) => {
     dispatch(setWishlist(user.data.wishlist));
     Navigate("");
   } catch (Error) {
-    // Failed Login Message:
-
     dispatch(loginFailure());
     console.log(`Register Failure Error: ${Error}`);
   }
@@ -86,7 +84,7 @@ export const auth_Google_Verification = async (Navigate, dispatch, data) => {
 
       dispatch(loginSuccess(user.data));
       dispatch(setWishlist(user.data.wishlist));
-      Navigate("/");
+      Navigate("");
     } catch (Error) {
       dispatch(loginFailure());
       console.log(`Google Login/Register Failure Error: ${Error}`);
@@ -95,4 +93,10 @@ export const auth_Google_Verification = async (Navigate, dispatch, data) => {
     dispatch(loginFailure());
     console.log(`Google Login/Register Failure Error: ${Error}`);
   }
+};
+
+export const loggingOut = (dispatch, Navigate) => {
+  dispatch(clearWishlist());
+  dispatch(logout());
+  // setLoggedOut(true);
 };

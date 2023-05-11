@@ -1,6 +1,9 @@
 const User = require("../models/User");
 
 module.exports.updateInfo = async (req, res) => {
+  if (req.params.id != req.payload.id)
+    return res.status(401).json("Not Authorized!");
+
   try {
     console.log(req.body);
     const user = await User.findById(req.params.id);

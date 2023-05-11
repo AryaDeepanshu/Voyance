@@ -43,7 +43,7 @@ module.exports.addReview = async (req, res) => {
       $push: { reviews: savedReview._id },
     });
 
-    return res.status(200).json("Successfully added the review");
+    return res.status(200).json("Successfully added the review.");
   } catch (Err) {
     console.log(`Can't add review: ${Err}`);
     return res.status(500).json(Err);
@@ -52,11 +52,13 @@ module.exports.addReview = async (req, res) => {
 
 module.exports.updateReview = async (req, res) => {
   if (!req.payload) return res.status(401).json("You are not authenticated.");
+  if (req.payload.id != req.body.userId)
+    return res.status(401).json("Not Authorized");
   if (req.payload.host)
     return res.status(403).json("Host cannot update review.");
 
   const existingReview = await Review.find({
-    userId: req.payload.id,
+    userId: req.body.userId,
     hotelId: req.body.hotelId,
   });
 
@@ -81,7 +83,7 @@ module.exports.updateReview = async (req, res) => {
       { new: true }
     );
 
-    return res.status(200).json("Successfully updated the review");
+    return res.status(200).json("Successfully updated the review.");
   } catch (Err) {
     console.log(`Can't update review: ${Err}`);
     return res.status(500).json(Err);
@@ -90,11 +92,13 @@ module.exports.updateReview = async (req, res) => {
 
 module.exports.deleteReview = async (req, res) => {
   if (!req.payload) return res.status(401).json("You are not authenticated.");
+  if (req.payload.id != req.body.userId)
+    return res.status(401).json("Not Authorized");
   if (req.payload.host)
     return res.status(403).json("Host cannot delete review.");
 
   const existingReview = await Review.find({
-    userId: req.payload.id,
+    userId: req.body.userId,
     hotelId: req.body.hotelId,
   });
 
@@ -124,7 +128,7 @@ module.exports.deleteReview = async (req, res) => {
     );
 
     await Review.findByIdAndDelete(existingReview[0]._id);
-    return res.status(200).json("Review Deleted");
+    return res.status(200).json("Successfully deleted the review.");
   } catch (Err) {
     console.log(`Can't delete review: ${Err}`);
     return res.status(500).json(Err);

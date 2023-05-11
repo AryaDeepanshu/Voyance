@@ -1,8 +1,8 @@
-import mongoose from "mongoose";
+const mongoose = require("mongoose");
 
 const OrderSchema = new mongoose.Schema(
   {
-    hotelId: {
+    hotel: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Hotel",
       required: true,
@@ -15,16 +15,16 @@ const OrderSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    cost: {
+    totalCost: {
       type: Number,
       required: true,
     },
-    hostId: {
+    host: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Host",
       required: true,
     },
-    userId: {
+    user: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
       required: true,
@@ -33,10 +33,18 @@ const OrderSchema = new mongoose.Schema(
       type: Number,
       required: true,
     },
+    razorpay_order_id: {
+      type: String,
+      required: true,
+    },
+    razorpay_payment_id: {
+      type: String,
+      required: true,
+    },
   },
   {
     timestamps: true,
   }
 );
 
-export default mongoose.model("Order", OrderSchema);
+module.exports = mongoose.model("Order", OrderSchema);

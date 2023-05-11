@@ -208,7 +208,6 @@ const Input = styled.input`
   }
 `;
 
-// Pending Task : handle the responsiveness of this element below 480px i.e for mobile view and for above 1024px i.e desktop view. --> only if time permits
 const Footer = ({ home }) => {
   return (
     <Container home={home}>
