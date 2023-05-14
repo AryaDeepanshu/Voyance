@@ -8,7 +8,7 @@ module.exports.addHotel = async (req, res) => {
 
   try {
     const hotelAdded = await hotel.save();
-    return res.status(200).json(hotelAdded.data);
+    return res.status(200).json(hotelAdded);
   } catch (Error) {
     return res.status(401).json(`can't Add Hotel: ${Error}`);
   }
@@ -16,9 +16,11 @@ module.exports.addHotel = async (req, res) => {
 
 module.exports.getHotel = async (req, res) => {
   const hotelId = req.params.id;
+  console.log(hotelId);
 
   try {
     const hotel = await Hotel.findById(hotelId);
+    console.log(hotel);
     return res.status(200).json(hotel);
   } catch (Error) {
     return res.status(401).json(`can't Get Hotel: ${Error}`);

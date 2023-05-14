@@ -3,7 +3,7 @@ import styled from "styled-components";
 
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
-import { desktop, largeMobile, mobile, tablet } from "../../responsive";
+import { desktop, largeMobile, mobile, tablet } from "../../utils/responsive";
 import useWindowDimensions from "../../hooks/useWindowDimensions";
 
 const Wrapper = styled.div`

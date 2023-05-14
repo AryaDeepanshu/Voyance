@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import styled from "styled-components";
-import { desktop, mobile } from "../responsive";
+import { desktop, mobile } from "../utils/responsive";
 
 import { amenityList } from "../data/amenityList";
 

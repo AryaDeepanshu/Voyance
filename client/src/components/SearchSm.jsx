@@ -1,7 +1,7 @@
 import { Search } from "@mui/icons-material";
 import React from "react";
 import styled from "styled-components";
-import { largeMobile, mobile, tablet } from "../responsive";
+import { largeMobile, mobile, tablet } from "../utils/responsive";
 
 const Wrapper = styled.div`
   width: 100%;

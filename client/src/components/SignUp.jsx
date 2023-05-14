@@ -17,7 +17,7 @@ import GitHubIcon from "@mui/icons-material/GitHub";
 import FacebookOutlinedIcon from "@mui/icons-material/FacebookOutlined";
 
 // Responsive.js:
-import { largeMobile, mobile, tablet } from "../responsive";
+import { largeMobile, mobile, tablet } from "../utils/responsive";
 import { Link, useNavigate } from "react-router-dom";
 import useWindowDimensions from "../hooks/useWindowDimensions";
 
@@ -82,7 +82,7 @@ const Input = styled.input`
 `;
 
 const Button = styled.button`
-  background-color: #ff4b2b;
+  background-color: #0ead69;
   color: white;
   cursor: pointer;
   font-size: 18px;
@@ -149,7 +149,16 @@ const OR = styled.div`
   font-family: "Noto Serif", serif;
 `;
 
-const Login = styled.span``;
+const Login = styled.span`
+  color: black;
+  font-weight: bold;
+`;
+
+const InputValidationError = styled.span`
+  font-size: 16px;
+  font-weight: bold;
+  color: red;
+`;
 
 const SignUp = ({ setShowLoginModal, setShowRegisterModal }) => {
   const [name, setName] = useState("");
@@ -163,23 +172,46 @@ const SignUp = ({ setShowLoginModal, setShowRegisterModal }) => {
   const auth_Google = useGoogleLogin({
     onSuccess: (token) => {
       dispatch(
-        auth_Google_Verification(navigate, dispatch, {
-          access_token: token.access_token,
-        })
+        auth_Google_Verification(
+          navigate,
+          dispatch,
+          {
+            access_token: token.access_token,
+          },
+          setShowLoginModal,
+          setShowRegisterModal
+        )
       );
     },
   });
 
+  /* State for handling invalidInput: */
+  const [required, setRequired] = useState(false);
+  const [invalidInput, setInvalidInput] = useState(false);
+
   // Email-Password Authentication:
   const auth = (event) => {
+    setRequired(false);
+    setInvalidInput(false);
+
     event.preventDefault();
     if (name === "" || email === "" || password === "") {
+      setRequired(true);
       return;
     }
 
-    auth_Register(navigate, dispatch, { name, email, password });
-    setShowLoginModal(false);
-    setShowRegisterModal(false);
+    if (!email.includes("@")) {
+      setInvalidInput(true);
+      return;
+    }
+
+    auth_Register(
+      navigate,
+      dispatch,
+      { name, email, password },
+      setShowLoginModal,
+      setShowRegisterModal
+    );
   };
 
   return (
@@ -220,6 +252,16 @@ const SignUp = ({ setShowLoginModal, setShowRegisterModal }) => {
             </Login>
           </ExistingAccount>
         </Form>
+
+        {required && (
+          <InputValidationError>
+            ** All Fields are required
+          </InputValidationError>
+        )}
+
+        {invalidInput && (
+          <InputValidationError>** Provide valid Email id</InputValidationError>
+        )}
 
         <Separator>
           <Line />

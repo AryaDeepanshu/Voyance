@@ -1,18 +1,6 @@
-// import { configureStore } from "@reduxjs/toolkit";
-// import userReducer from "./userSlice";
-// import searchReducer from "./SearchSlice";
-
-// export default configureStore({
-//   reducer: {
-//     user: userReducer,
-//     search: searchReducer,
-//   },
-// });
-
 import { combineReducers, configureStore } from "@reduxjs/toolkit";
 import userReducer from "./userSlice";
 import wishlistReducer from "./wishlistSlice";
-
 import filterAndSearchReducer from "./filterAndSearchSlice";
 
 import {

@@ -7,7 +7,7 @@ import {
   YouTube,
 } from "@mui/icons-material";
 import styled from "styled-components";
-import { mobile, largeMobile, tablet, desktop } from "../responsive";
+import { mobile, largeMobile, tablet, desktop } from "../utils/responsive";
 
 const Container = styled.div`
   margin-top: 10px;
@@ -259,8 +259,8 @@ const Footer = ({ home }) => {
           <Heading>Newsletter</Heading>
           <Title>Subscribe our newsletter and get exciting offers.</Title>
           <InputContainer>
-            <Input placeholder="Enter your email here." />
-            <Send style={{ cursor: "pointer", color: "#4ee2ec" }} />
+            <Input placeholder="Enter your email here." home={home} />
+            <Send style={{ cursor: "pointer", color: "#0ead69" }} />
           </InputContainer>
         </NewsletterContainer>
         <SocialIconsContainer>

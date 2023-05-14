@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-import { desktop } from "../responsive";
+import { desktop } from "../utils/responsive";
 
 const Wrapper = styled.div`
   display: flex;
@@ -62,7 +62,7 @@ const HotelHostDetail = ({ data }) => {
         <Detail>{`${data.guest} guests | ${data.bedrooms} bedrooms | ${data.beds} beds | ${data.bathrooms} bathrooms`}</Detail>
         <ContactContainer>
           <Contact>Contact: </Contact>
-          <ContactDetail>{`${"Phone Number"} | ${
+          <ContactDetail>{`${data?.hostId?.phone || "Phone Number"} | ${
             data.hostId.email
           }`}</ContactDetail>
         </ContactContainer>

@@ -3,10 +3,11 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import styled from "styled-components";
-import { largeMobile, mobile } from "../responsive";
+import { largeMobile, mobile } from "../utils/responsive";
 
 import HotelCard from "./HotelCard";
 import SearchHotelListLoader from "./Loaders/SearchHotelListLoader";
+import { axiosBaseURL } from "../utils/axiosBaseURL";
 
 const Container = styled.div``;
 
@@ -37,15 +38,12 @@ const WishlistContainer = () => {
   const { wishlist } = useSelector((store) => store.wishlist);
   const wishlisted = [...wishlist];
 
-  // IsLoading with promise.all;
   const [isLoading, setIsLoading] = useState(true);
   useEffect(() => {
     const getWishList = async () => {
       const data = await Promise.all(
         wishlisted.map(async (wish) => {
-          const response = await axios.get(
-            `http://localhost:5000/hotel/info/${wish}`
-          );
+          const response = await axiosBaseURL.get(`hotel/info/${wish}`);
           return response.data;
         })
       );

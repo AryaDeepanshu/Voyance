@@ -1,6 +1,6 @@
 import { Grade, Star } from "@mui/icons-material";
 import styled from "styled-components";
-import { desktop, largeMobile, mobile, tablet } from "../responsive";
+import { desktop, largeMobile, mobile, tablet } from "../utils/responsive";
 
 const Container = styled.div`
   width: 100%;
@@ -58,11 +58,7 @@ const HotelHeading = ({ data }) => {
       <DataWrapper>
         <RatingContainer>
           <Grade style={{ fontSize: "24px", color: "#E6B325" }} />
-          <Rating>
-            {data.starNumber === 0
-              ? 0
-              : (data.starNumber / data.totalStars).toFixed(1)}
-          </Rating>
+          <Rating>{data.rating}</Rating>
         </RatingContainer>
         <Data>{data.location}</Data>
       </DataWrapper>

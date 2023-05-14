@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import { GoogleMap, useLoadScript, Marker } from "@react-google-maps/api";
-import { desktop, mobile } from "../responsive";
+import { desktop, mobile } from "../utils/responsive";
 
 const Container = styled.div`
   width: 100%;

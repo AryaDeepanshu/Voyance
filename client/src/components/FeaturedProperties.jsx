@@ -1,8 +1,8 @@
-import axios from "axios";
 import { useState } from "react";
 import { useEffect } from "react";
 import { useSelector } from "react-redux";
 import { useQuery } from "@tanstack/react-query";
+import { axiosBaseURL } from "../utils/axiosBaseURL";
 
 import styled from "styled-components";
 import useWindowDimensions from "../hooks/useWindowDimensions";
@@ -35,7 +35,7 @@ const Wrapper = styled.div`
   padding-bottom: 20px;
 `;
 
-function FeaturedProperties() {
+function FeaturedProperties({ home }) {
   const { width } = useWindowDimensions();
   const visible = width >= 980 && width < 1315;
 
@@ -50,8 +50,8 @@ function FeaturedProperties() {
     data: hotelData,
     refetch,
   } = useQuery([`featured-hotel-${category}`], () =>
-    axios
-      .get(`http://localhost:5000/hotel/featured-hotel?category=${category}`)
+    axiosBaseURL
+      .get(`hotel/featured-hotel?category=${category}`)
       .then((featured_hotel) => {
         return featured_hotel.data;
       })
@@ -72,7 +72,11 @@ function FeaturedProperties() {
   return (
     <Container>
       <Heading>Featured Properties</Heading>
-      <CategorySlider category={category} setCategory={setCategory} />
+      <CategorySlider
+        category={category}
+        setCategory={setCategory}
+        home={home}
+      />
 
       <Wrapper>
         {hotelLoading ? (

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import styled from "styled-components";
-import { desktop, mobile } from "../responsive";
+import { desktop, mobile } from "../utils/responsive";
 import { mealList } from "../data/mealList";
 
 const Heading = styled.p`

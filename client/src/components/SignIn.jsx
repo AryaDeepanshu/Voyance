@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import styled from "styled-components";
 
 // Redux Imports:
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { auth_Login, auth_Google_Verification } from "../redux/authentication";
 
 // Google OAuth Import:
@@ -10,14 +10,10 @@ import { useGoogleLogin } from "@react-oauth/google";
 
 // Material-UI Imports:
 import GoogleIcon from "@mui/icons-material/Google";
-import GitHubIcon from "@mui/icons-material/GitHub";
-import FacebookOutlinedIcon from "@mui/icons-material/FacebookOutlined";
 
 // Responsive.js:
-import { largeMobile, mobile, tablet } from "../responsive";
-import { Link, useNavigate } from "react-router-dom";
-import useWindowDimensions from "../hooks/useWindowDimensions";
-import { setWishlist } from "../redux/wishlistSlice";
+import { largeMobile, mobile, tablet } from "../utils/responsive";
+import { useNavigate } from "react-router-dom";
 import { Close } from "@mui/icons-material";
 
 import { toast, ToastContainer } from "react-toastify";
@@ -149,7 +145,16 @@ const OR = styled.div`
   font-family: "Noto Serif", serif;
 `;
 
-const Register = styled.span``;
+const Register = styled.span`
+  color: black;
+  font-weight: bold;
+`;
+
+const ErrorMsg = styled.span`
+  font-size: 16px;
+  font-weight: bold;
+  color: red;
+`;
 
 const SignIn = ({ setShowLoginModal, setShowRegisterModal }) => {
   const [email, setEmail] = useState("");
@@ -162,24 +167,41 @@ const SignIn = ({ setShowLoginModal, setShowRegisterModal }) => {
   const auth_Google = useGoogleLogin({
     onSuccess: (token) => {
       dispatch(
-        auth_Google_Verification(navigate, dispatch, {
-          access_token: token.access_token,
-        })
+        auth_Google_Verification(
+          navigate,
+          dispatch,
+          {
+            access_token: token.access_token,
+          },
+          setShowLoginModal,
+          setShowRegisterModal
+        )
       );
     },
   });
 
+  /* State for handling Login Error: */
+  const [required, setRequired] = useState(false);
+  const [loginError, setLoginError] = useState(false);
+
   const auth = (event) => {
+    setRequired(false);
+    setLoginError(false);
+
     event.preventDefault();
-    if (email === "" || password === "") return;
+    if (email === "" || password === "") {
+      setRequired(true);
+      return;
+    }
 
-    auth_Login(navigate, dispatch, { email, password });
-    setShowLoginModal(false);
-    setShowRegisterModal(false);
-
-    toast.success("Successfully Logged In.", {
-      position: toast.POSITION.BOTTOM_LEFT,
-    });
+    auth_Login(
+      navigate,
+      dispatch,
+      { email, password },
+      setLoginError,
+      setShowLoginModal,
+      setShowRegisterModal
+    );
   };
 
   return (
@@ -203,6 +225,7 @@ const SignIn = ({ setShowLoginModal, setShowRegisterModal }) => {
             onChange={(event) => setPassword(event.target.value)}
           />
           <Button onClick={auth}>Continue</Button>
+
           <NewAccount>
             New to our website?{" "}
             <Register
@@ -215,6 +238,9 @@ const SignIn = ({ setShowLoginModal, setShowRegisterModal }) => {
             </Register>
           </NewAccount>
         </Form>
+
+        {required && <ErrorMsg> ** All Fields are required </ErrorMsg>}
+        {loginError && <ErrorMsg> ** Invalid username / password </ErrorMsg>}
 
         <Separator>
           <Line />

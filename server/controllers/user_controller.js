@@ -5,7 +5,6 @@ module.exports.updateInfo = async (req, res) => {
     return res.status(401).json("Not Authorized!");
 
   try {
-    console.log(req.body);
     const user = await User.findById(req.params.id);
 
     if (!user) return res.status(500).json("No user with given Id found.");

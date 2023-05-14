@@ -1,10 +1,9 @@
 import { Close, Edit } from "@mui/icons-material";
 import React, { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
-import { mobile, largeMobile } from "../responsive";
+import { mobile, largeMobile } from "../utils/responsive";
 import { useDispatch, useSelector } from "react-redux";
 import { individualUpload } from "../utils/fileUpload";
-import axios from "axios";
 import { updateUser } from "../redux/userSlice";
 import default_avatar from "../static/default_avatar.png";
 import { axiosBaseURL } from "../utils/axiosBaseURL";
@@ -88,7 +87,7 @@ const ImageOption = styled.button`
   border: none;
   border-radius: 5px;
   background-color: ${(props) =>
-    props.type === "upload" ? "#4ee2ec" : "black"};
+    props.type === "upload" ? "#0ead69" : "black"};
 
   :hover {
     opacity: 0.5;
@@ -230,7 +229,7 @@ const Button = styled.button`
   color: white;
   border: none;
   border-radius: 5px;
-  background-color: #4ee2ec;
+  background-color: #0ead69;
 
   :hover {
     opacity: 0.5;
@@ -292,27 +291,28 @@ const ProfileInformation = () => {
     const avatar = await individualUpload(file);
 
     /* upload the avatar url to the Mongodb Database: */
-    const updatedInfo = await axios.post(
-      `http://localhost:5000/user/updateInfo/${user._id}`,
+    const updatedInfo = await axiosBaseURL.post(
+      `user/updateInfo/${user._id}`,
       { avatar: avatar.url },
       { withCredentials: true }
     );
 
+    /* Display Avatar to user: */
+    setProfileImage(avatar.url);
+
     /* update the Global Redux State: */
     dispatch(updateUser(updatedInfo.data));
 
-    /* Display Avatar to user: */
-    setProfileImage(avatar.url);
     setUploading(false);
   };
 
   /* Remove profile photo: */
-  const removeProfilePhoto = async (file) => {
+  const removeProfilePhoto = async () => {
     setUploading(true);
 
     /* upload the avatar url to the Mongodb Database: */
-    const updatedInfo = await axios.post(
-      `http://localhost:5000/user/updateInfo/${user._id}`,
+    const updatedInfo = await axiosBaseURL.post(
+      `user/updateInfo/${user._id}`,
       { avatar: "default_avatar" },
       { withCredentials: true }
     );

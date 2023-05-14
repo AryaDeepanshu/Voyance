@@ -12,8 +12,8 @@ const FeaturedPropertiesLoader_X4 = () => {
   return (
     <Container>
       {Array(4)
-        .fill(null)
-        .map((index) => (
+        .fill(Math.random())
+        .map((val, index) => (
           <HotelCardLoader key={index} />
         ))}
     </Container>

@@ -1,7 +1,7 @@
 import axios from "axios";
 import styled from "styled-components";
 import { useState, useEffect } from "react";
-import { desktop, largeMobile, mobile, tablet } from "../responsive";
+import { desktop, largeMobile, mobile, tablet } from "../utils/responsive";
 import { ArrowBack } from "@mui/icons-material";
 
 const Wrapper = styled.div`

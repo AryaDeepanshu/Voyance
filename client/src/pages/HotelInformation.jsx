@@ -1,28 +1,27 @@
-import { useState } from "react";
+import dayjs from "dayjs";
 import styled from "styled-components";
-import HotelDetails from "../components/HotelDetails";
-import HotelImageSlider from "../components/HotelImageSlider";
-import ReservationCard from "../components/ReservationCard";
-import LightBox from "../components/LightBox";
+import Modal from "../components/Modal";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
-import HotelHeading from "../components/HotelHeading";
-import ReservationModal from "../components/ReservationModal";
-import ReservationStrip from "../components/RevervationStrip";
-import useWindowDimensions from "../hooks/useWindowDimensions";
-import HotelReview from "../components/HotelReview";
-import { useLocation, useNavigate } from "react-router-dom";
-import axios from "axios";
-import { useQuery } from "@tanstack/react-query";
-import Modal from "../components/Modal";
-import HotelInformationLoader from "../components/Loaders/HotelInformationLoader";
-import { useEffect } from "react";
-import { useSelector } from "react-redux";
-import dayjs from "dayjs";
-// import Modal from "../components/Modal";
 import SignIn from "../components/SignIn";
 import SignUp from "../components/SignUp";
+import LightBox from "../components/LightBox";
+import HotelReview from "../components/HotelReview";
+import HotelHeading from "../components/HotelHeading";
+import HotelDetails from "../components/HotelDetails";
+import ReservationCard from "../components/ReservationCard";
+import HotelImageSlider from "../components/HotelImageSlider";
+import ReservationStrip from "../components/RevervationStrip";
+import useWindowDimensions from "../hooks/useWindowDimensions";
+import HotelInformationLoader from "../components/Loaders/HotelInformationLoader";
+
+import axios from "axios";
+
+import { useSelector } from "react-redux";
+import { useState, useEffect } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { axiosBaseURL } from "../utils/axiosBaseURL";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const Wrapper = styled.div`
   width: calc(100vw - 10%);
@@ -147,11 +146,11 @@ const HotelInformation = () => {
 
     const {
       data: { key },
-    } = await axios.get("http://localhost:5000/payment/getkey");
+    } = await axiosBaseURL.get("payment/getkey");
 
     const {
       data: { order },
-    } = await axios.post("http://localhost:5000/payment/pay", {
+    } = await axiosBaseURL.post("payment/pay", {
       amount,
       property_name,
     });

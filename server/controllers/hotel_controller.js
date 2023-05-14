@@ -43,10 +43,9 @@ module.exports.search = async (req, res) => {
       ...(query.propertyType && {
         propertyType: query.propertyType,
       }),
-      /* rating is a revied property: */
-      // ...(query.rating && {
-      // rating: { $gt: query.rating },
-      // }),
+      ...(query.rating && {
+        rating: { $gte: query.rating },
+      }),
       ...(query.mealIncluded && {
         mealIncluded: { $all: query.mealIncluded.split(",") },
       }),

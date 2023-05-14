@@ -1,18 +1,12 @@
 import {
-  AddCircleOutline,
-  ArrowDownward,
-  Close,
-  CurrencyRupee,
   Grade,
+  CurrencyRupee,
+  AddCircleOutline,
   RemoveCircleOutline,
 } from "@mui/icons-material";
-import { useState } from "react";
-import { useSelector } from "react-redux";
 import styled from "styled-components";
 import useWindowDimensions from "../hooks/useWindowDimensions";
-import { tablet, desktop } from "../responsive";
 import DatePickerComponent from "./DatePickerComponent";
-import DatePickerMobileComponent from "./DatePickerMobileComponent";
 
 const Container = styled.div`
   flex: 1;
@@ -137,10 +131,9 @@ const GuestValueContainer = styled.div`
 
 const Button = styled.button`
   padding: 15px;
-  /* margin-b: 10px 0px; */
   border-radius: 10px;
   border: none;
-  background-color: #4ee2ec;
+  background-color: #0ead69;
   color: white;
   font-size: 16px;
   font-weight: 700;
@@ -171,15 +164,6 @@ const Data = styled.p`
 const Hr = styled.hr`
   color: lightgray;
   margin: 10px 0px;
-`;
-
-const CloseButton = styled.div`
-  width: max-content;
-  height: max-content;
-  position: absolute;
-  top: 0px;
-  right: -20px;
-  cursor: pointer;
 `;
 
 const ReservationCard = ({
@@ -214,11 +198,7 @@ const ReservationCard = ({
           </PriceContainer>
           <RatingContainer>
             <Grade style={{ fontSize: "24px", color: "#E6B325" }} />
-            <Rating>
-              {data.starNumber === 0
-                ? 0
-                : (data.starNumber / data.totalStars).toFixed(1)}
-            </Rating>
+            <Rating>{data.rating}</Rating>
           </RatingContainer>
         </TopContainer>
 
@@ -275,7 +255,7 @@ const ReservationCard = ({
                   cursor: "pointer",
                 }}
                 onClick={() => {
-                  setGuest(guest === 10 ? guest : guest + 1);
+                  setGuest(guest === data.guest ? guest : guest + 1);
                 }}
               />
             </GuestValueContainer>

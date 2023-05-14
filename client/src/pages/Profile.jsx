@@ -1,8 +1,9 @@
 import React from "react";
+import styled from "styled-components";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import ProfileInformation from "../components/ProfileInformation";
-import styled from "styled-components";
+
 import { useEffect } from "react";
 
 const Wrapper = styled.div`

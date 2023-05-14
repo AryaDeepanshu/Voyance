@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-import { desktop, largeMobile, mobile, tablet } from "../responsive";
+import { desktop, largeMobile, mobile, tablet } from "../utils/responsive";
 import {
   CalendarMonthOutlined,
   CurrencyRupee,

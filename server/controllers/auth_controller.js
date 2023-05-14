@@ -77,8 +77,6 @@ module.exports.google = async (req, res) => {
   const credentials = req.body;
   const user = await User.findOne({ email: credentials.email });
 
-  console.log(user);
-
   // No user found with provided Email, Create new user:
   if (!user) {
     const user_created = new User({

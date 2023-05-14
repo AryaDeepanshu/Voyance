@@ -17,18 +17,20 @@ import {
   OtherHousesOutlined,
   ApartmentOutlined,
   CastleOutlined,
+  HomeWork,
+  NightShelter,
 } from "@mui/icons-material";
 
 export const propertyList = [
-  {
-    label: "National parks",
-    icon: <ParkOutlined style={{ transform: "scale(1.5)", color: "gray" }} />,
-  },
   {
     label: "Cottage",
     icon: (
       <CottageOutlined style={{ transform: "scale(1.3)", color: "gray" }} />
     ),
+  },
+  {
+    label: "National parks",
+    icon: <ParkOutlined style={{ transform: "scale(1.5)", color: "gray" }} />,
   },
   {
     label: "Amazing views",
@@ -119,5 +121,13 @@ export const propertyList = [
   {
     label: "Raids",
     icon: <CastleOutlined style={{ transform: "scale(1.5)", color: "gray" }} />,
+  },
+  {
+    label: "Design",
+    icon: <HomeWork style={{ transform: "scale(1.5)", color: "gray" }} />,
+  },
+  {
+    label: "Domes",
+    icon: <NightShelter style={{ transform: "scale(1.5)", color: "gray" }} />,
   },
 ];

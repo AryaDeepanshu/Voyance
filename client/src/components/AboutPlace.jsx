@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { desktop, largeMobile, mobile } from "../responsive";
+import { desktop, largeMobile, mobile } from "../utils/responsive";
 import HotelHostDetail from "./HotelHostDetail";
 
 const Container = styled.div`

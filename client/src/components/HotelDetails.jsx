@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { desktop } from "../responsive";
+import { desktop } from "../utils/responsive";
 import AboutPlace from "./AboutPlace";
 import HotelAmenities from "./HotelAmenities";
 import HotelFeatures from "./HotelFeatures";

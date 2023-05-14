@@ -1,5 +1,4 @@
 import React from "react";
-import axios from "axios";
 import { useMutation } from "@tanstack/react-query";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
@@ -8,6 +7,7 @@ import styled from "styled-components";
 import { logout } from "../redux/userSlice";
 import { clearWishlist } from "../redux/wishlistSlice";
 import default_avatar from "../static/default_avatar.png";
+import { axiosBaseURL } from "../utils/axiosBaseURL";
 
 /* Material - UI imports: */
 import Box from "@mui/material/Box";
@@ -31,6 +31,9 @@ const ProfileImage = styled.img`
 const Option = styled.p`
   padding: 10px;
   cursor: pointer;
+  background-color: #0ead69;
+  color: white;
+  border-radius: 5px;
   font-family: "Roboto", sans-serif;
   :hover {
     background-color: lightgray;
@@ -47,8 +50,8 @@ const ProfileDashboard = ({ setShowLoginModal, setShowRegisterModal }) => {
 
   const mutation = useMutation({
     mutationFn: (wishlist) => {
-      return axios.post(
-        `http://localhost:5000/user/saveWishlist`,
+      return axiosBaseURL.post(
+        `user/saveWishlist`,
         { wishlist: wishlist },
         {
           withCredentials: true,

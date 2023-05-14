@@ -2,40 +2,38 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 import Home from "./pages/Home";
+import Order from "./pages/Order";
 import Profile from "./pages/Profile";
+import PlanTrip from "./pages/PlanTrip";
+import Wishlist from "./pages/Wishlist";
 import AddHotel from "./pages/AddHotel";
-import SignIn from "./components/SignIn";
-import SignUp from "./components/SignUp";
-import EditHotel from "./components/EditHotel";
+import EditHotel from "./pages/EditHotel";
 import SearchResult from "./pages/SearchResult";
 import HotelInformation from "./pages/HotelInformation";
-import PaymentSuccess from "./pages/PaymentSuccess";
-import Practice from "./components/Practice";
-import Wishlist from "./pages/Wishlist";
-import Order from "./pages/Order";
-import PlanTrip from "./pages/PlanTrip";
+import { useSelector } from "react-redux";
 
 export default function App() {
   const queryClient = new QueryClient();
+  const user = useSelector((store) => store.user.currentUser);
 
   return (
     <QueryClientProvider client={queryClient}>
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/practice" element={<Practice />} />
-          <Route path="/login" element={<SignIn />} />
-          <Route path="/register" element={<SignUp />} />
+          <Route path="/order" element={!user ? <Home /> : <Order />} />
+          <Route path="/profile" element={!user ? <Home /> : <Profile />} />
+          <Route path="/wishlist" element={!user ? <Home /> : <Wishlist />} />
           <Route path="/search" element={<SearchResult />} />
-          <Route path="/profile" element={<Profile />} />
           <Route path="/hotel-information/:id" element={<HotelInformation />} />
-          <Route path="/add-hotel/" element={<AddHotel />} />
-          <Route path="/edit-hotel/:id" element={<EditHotel />} />
-          <Route path="/become-host" element={<>host</>} />
-          <Route path="/order" element={<Order />} />
-          <Route path="/wishlist" element={<Wishlist />} />
-          <Route path="/paymentsuccess" element={<PaymentSuccess />} />
+
+          {/* Later Functionalities: */}
           <Route path="/plan" element={<PlanTrip />} />
+          <Route path="/add-hotel/" element={!user ? <Home /> : <AddHotel />} />
+          <Route
+            path="/edit-hotel/:id"
+            element={!user ? <Home /> : <EditHotel />}
+          />
         </Routes>
       </BrowserRouter>
     </QueryClientProvider>

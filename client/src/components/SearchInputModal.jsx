@@ -9,7 +9,7 @@ import {
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
-import { largeMobile, mobile, tablet } from "../responsive";
+import { largeMobile, mobile, tablet } from "../utils/responsive";
 import DatePickerComponent from "./DatePickerComponent";
 import { search } from "../redux/filterAndSearchSlice";
 import { useNavigate } from "react-router-dom";
@@ -72,7 +72,9 @@ const CloseButton = styled.div`
 const SearchButton = styled.button`
   padding: 16px 0px;
   color: white;
-  background-color: black;
+  font-size: 18px;
+  background-color: #0ead69;
+  border-radius: 10px;
   margin: 15px 0px;
   cursor: pointer;
   width: 80%;
@@ -139,18 +141,6 @@ const SearchInputModal = ({ setModal }) => {
       })
     );
     navigate(`/search?location=${location}`);
-
-    // if (location === "") return;
-    // dispatch(
-    //   search({
-    //     location: location,
-    //     beginDate: beginDate,
-    //     endDate: endDate,
-    //     stay: datediff(parseDate(beginDate), parseDate(endDate)),
-    //     guest: guest,
-    //   })
-    // );
-    // navigate(`/search?location=${location}`);
   };
 
   const handleGuest = (operation) => {
@@ -201,7 +191,7 @@ const SearchInputModal = ({ setModal }) => {
         </InputContainer>
 
         <InputContainer>
-          <Input placeholder={"Add Guest"} value={guest} />
+          <Input placeholder={"Add Guest"} value={guest} readOnly />
 
           <ButtonWrapper>
             <Remove

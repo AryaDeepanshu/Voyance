@@ -1,10 +1,6 @@
-import { useQuery } from "@tanstack/react-query";
-import axios from "axios";
-import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
-import styled from "styled-components";
-import { HotelListData } from "../data/HotelListData";
 import HotelCard from "./HotelCard";
+import styled from "styled-components";
+import { useSelector } from "react-redux";
 
 const Container = styled.div`
   display: grid;
@@ -23,15 +19,13 @@ const HotelList = ({ hotel_data }) => {
 
   return (
     <Container>
-      <>
-        {hotel_data.map((hotelInfo, index) => (
-          <HotelCard
-            hotelInfo={hotelInfo}
-            key={index}
-            color={colorHandler(hotelInfo._id)}
-          />
-        ))}
-      </>
+      {hotel_data.map((hotelInfo, index) => (
+        <HotelCard
+          hotelInfo={hotelInfo}
+          key={index}
+          color={colorHandler(hotelInfo._id)}
+        />
+      ))}
     </Container>
   );
 };

@@ -1,4 +1,5 @@
 import { ChairAlt, EventNote, LocationOn } from "@mui/icons-material";
+import dayjs from "dayjs";
 import styled from "styled-components";
 
 const Container = styled.div`
@@ -70,7 +71,9 @@ const HotelFeatures = () => {
           }}
         />
         <FeatureDetail>
-          <FeatureHeading>Free cancellation before 17 Nov.</FeatureHeading>
+          <FeatureHeading>
+            Free cancellation before {dayjs().add(7, "day").format("DD MMM")}
+          </FeatureHeading>
         </FeatureDetail>
       </FeatureContainer>
     </Container>

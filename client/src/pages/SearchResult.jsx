@@ -1,13 +1,14 @@
-import axios from "axios";
 import Filter from "../components/Filter";
 import Footer from "../components/Footer";
 import Navbar from "../components/Navbar";
+import styled from "styled-components";
+import SearchHotelList from "../components/SearchHotelList";
+import SearchHotelListLoader from "../components/Loaders/SearchHotelListLoader";
+
 import { useSelector } from "react-redux";
 import { useQuery } from "@tanstack/react-query";
 import React, { useEffect, useState } from "react";
-import SearchHotelList from "../components/SearchHotelList";
-import styled from "styled-components";
-import SearchHotelListLoader from "../components/Loaders/SearchHotelListLoader";
+import { axiosBaseURL } from "../utils/axiosBaseURL";
 
 const Wrapper = styled.div`
   width: calc(100vw - 10%);
@@ -24,9 +25,9 @@ const SearchResult = () => {
     searchInfo;
 
   const { isLoading, error, data, refetch } = useQuery([location], () =>
-    axios
+    axiosBaseURL
       .get(
-        `http://localhost:5000/hotel/search?location=${location}&propertyType=${category}&min=${minPrice}&max=${maxPrice}&amenities=${essentials}&mealIncluded=${mealIncluded}&rating=${rating} `
+        `hotel/search?location=${location}&propertyType=${category}&min=${minPrice}&max=${maxPrice}&amenities=${essentials}&mealIncluded=${mealIncluded}&rating=${rating} `
       )
       .then((hotels) => {
         return hotels.data;
@@ -54,8 +55,6 @@ const SearchResult = () => {
         {isLoading ? (
           <SearchHotelListLoader />
         ) : (
-          // <SearchHotelListLoader />
-
           <SearchHotelList hotel_data={data} />
         )}
       </Wrapper>

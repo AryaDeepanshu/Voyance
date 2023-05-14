@@ -61,7 +61,7 @@ const SearchButton = styled.button`
   margin-bottom: 4px;
   margin-left: 10px;
   border-radius: 5px;
-  background-color: teal;
+  background-color: #0ead69;
   cursor: pointer;
 `;
 
@@ -134,7 +134,7 @@ const SearchLgMd = () => {
         <InputWrapper>
           <Label>Guest</Label>
           <ButtonWrapper>
-            <Input type="guest" value={guest} />
+            <Input type="guest" value={guest} readOnly />
             <Remove
               onClick={() => handleGuest("decrease")}
               style={{

@@ -1,6 +1,6 @@
 import { ArrowBackIosNew, ArrowForwardIos, Close } from "@mui/icons-material";
 import styled from "styled-components";
-import { mobile, largeMobile, desktop } from "../responsive";
+import { mobile, largeMobile, desktop } from "../utils/responsive";
 
 const Container = styled.div`
   height: 100vh;

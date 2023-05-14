@@ -1,6 +1,8 @@
 import styled from "styled-components";
 import { ArrowForwardIos } from "@mui/icons-material";
-import { largeMobile, desktop, mobile, tablet } from "../responsive";
+import { largeMobile, desktop, mobile, tablet } from "../utils/responsive";
+
+import Location_Map from "../static/Location_Map5.png";
 
 const Container = styled.div`
   width: 100%;
@@ -166,7 +168,8 @@ const PopularDestinations = () => {
 
       <Wrapper>
         <LeftSection>
-          <LeftImg src="https://i.postimg.cc/tCjN5bsQ/Whats-App-Image-2022-10-26-at-8-27-54-PM.jpg" />
+          {/* <LeftImg src="https://i.postimg.cc/tCjN5bsQ/Whats-App-Image-2022-10-26-at-8-27-54-PM.jpg" /> */}
+          <LeftImg src={Location_Map} />
         </LeftSection>
         <RightSection>
           <DestinationContainer>

@@ -33,12 +33,6 @@ const generatePrompt = (req) => {
     .replace("FFFF", country);
 };
 
-/* "Plan a AAAA days detailed trip iternary to BBBB for CCCC people, " +
-    "the budget for the trip is EEEE INR, also provide" +
-    "tourist attractions, dining options, and activities for each day of the trip and also provide the cost for each activity." +
-    "Provide a list of prominent places in FFFF in a list." +
-    "give me the response in markdown format"; */
-
 module.exports.plan = async (req, res) => {
   try {
     const completion = await openai.createCompletion({

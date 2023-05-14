@@ -31,13 +31,10 @@ const FilterButton = styled.button`
 const Filter = ({ category, setCategory, modal, setModal }) => {
   return (
     <>
-      {modal ? (
+      {modal && (
         <Modal>
-          {/* need some modifications for smaller screen size */}
           <FilterProperties modal={modal} setModal={setModal} />
         </Modal>
-      ) : (
-        <> </>
       )}
 
       <Container>

@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { mobile, tablet, desktop } from "../responsive";
+import { mobile, tablet, desktop } from "../utils/responsive";
 
 import {
   MapsHomeWorkOutlined,

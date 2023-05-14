@@ -1,9 +1,8 @@
-import React from "react";
+import styled from "styled-components";
+import React, { useEffect } from "react";
 import Footer from "../components/Footer";
 import Navbar from "../components/Navbar";
 import WishlistContainer from "../components/WishlistContainer";
-import styled from "styled-components";
-import { useEffect } from "react";
 
 const Wrapper = styled.div`
   width: calc(100vw - 10%);

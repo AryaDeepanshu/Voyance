@@ -7,11 +7,11 @@ const HotelSchema = new mongoose.Schema(
       required: true,
       unique: true,
     },
-    totalStars: {
+    rating: {
       type: Number,
       default: 0,
     },
-    starNumber: {
+    peopleRated: {
       type: Number,
       default: 0,
     },
@@ -36,6 +36,14 @@ const HotelSchema = new mongoose.Schema(
       required: true,
     },
     guest: {
+      type: Number,
+      default: 0,
+    },
+    lat: {
+      type: Number,
+      default: 0,
+    },
+    long: {
       type: Number,
       default: 0,
     },

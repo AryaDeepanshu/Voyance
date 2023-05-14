@@ -17,6 +17,7 @@ const Container = styled.div`
 
 const Wrapper = styled.div`
   width: 92%;
+  margin-left: 5%;
   translate: -0px;
   height: max-content;
   display: flex;
@@ -30,6 +31,7 @@ const Wrapper = styled.div`
 `;
 
 const ButtonContainer = styled.div`
+  background-color: ${(props) => (props.home === true ? "#f7f7f7" : "white")};
   position: absolute;
   left: ${(props) => (props.dir === "left" ? "0px" : "")};
   right: ${(props) => (props.dir === "right" ? "0px" : "")};
@@ -70,7 +72,7 @@ const CategoryContainer = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  border-bottom: ${(props) => (props.selected ? "2px solid black" : "")};
+  box-shadow: ${(props) => (props.selected ? "0 -1px 0 #000 inset" : "")};
 `;
 
 const CategoryIcon = styled.div`
@@ -87,7 +89,7 @@ const CategoryHeading = styled.div`
   cursor: pointer;
 `;
 
-const CategorySlider = ({ category, setCategory }) => {
+const CategorySlider = ({ category, setCategory, home }) => {
   // useRef hook;
   const ref = useRef(null);
 
@@ -109,7 +111,7 @@ const CategorySlider = ({ category, setCategory }) => {
         setTranslate(translate + 200);
       } else {
         const diff = scrollWidth - (width + translate);
-        setTranslate(translate + diff);
+        setTranslate(translate + diff + 20);
       }
     } else {
       if (translate >= 200) {
@@ -127,7 +129,7 @@ const CategorySlider = ({ category, setCategory }) => {
 
   return (
     <Container>
-      <ButtonContainer dir="left">
+      <ButtonContainer dir="left" home={home}>
         <Button onClick={() => handleMove("left")}>
           <ArrowBackIosNew style={{ transform: "scale(0.7)" }} />
         </Button>
@@ -146,7 +148,7 @@ const CategorySlider = ({ category, setCategory }) => {
           );
         })}
       </Wrapper>
-      <ButtonContainer dir="right">
+      <ButtonContainer dir="right" home={home}>
         <Button onClick={() => handleMove("right")}>
           <ArrowForwardIos style={{ transform: "scale(0.7)" }} />
         </Button>

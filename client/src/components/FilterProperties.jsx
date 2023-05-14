@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import styled from "styled-components";
 import { Close, CurrencyRupee, Tune } from "@mui/icons-material";
-import { desktop, largeMobile, mobile, tablet } from "../responsive";
+import { desktop, largeMobile, mobile, tablet } from "../utils/responsive";
 import { useDispatch, useSelector } from "react-redux";
 import { clear, clearFilters, search } from "../redux/filterAndSearchSlice";
 
@@ -177,7 +177,8 @@ const Button = styled.button`
   padding: 15px;
   margin: 5px 10px;
   color: white;
-  background-color: black;
+  background-color: #0ead69;
+  border-radius: 5px;
   font-weight: bold;
   cursor: pointer;
   border: none;

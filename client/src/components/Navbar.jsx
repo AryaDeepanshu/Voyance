@@ -8,6 +8,7 @@ import SignIn from "./SignIn";
 import ProfileDashboard from "./ProfileDashboard";
 
 import useWindowDimensions from "../hooks/useWindowDimensions";
+import Logo_Black from "../static/Logo_Black.png";
 
 const Container = styled.div`
   padding: ${(props) => (props.isHome === true ? "0px 10px" : "")};
@@ -85,10 +86,7 @@ function Navbar({ isHome, scrollPosition }) {
         <LogoContainer>
           <Link to="/" style={{ textDecoration: "none", color: "inherit" }}>
             <LogoImgContainer>
-              <Img
-                alt="voyance"
-                src="https://res.cloudinary.com/additya/image/upload/v1678127598/Voyance/r9udien7vaenzecl8mmk.png"
-              />
+              <Img alt="voyance" src={Logo_Black} />
             </LogoImgContainer>
           </Link>
 

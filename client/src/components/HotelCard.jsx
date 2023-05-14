@@ -8,6 +8,7 @@ import {
   Favorite,
   ArrowBackIos,
   ArrowForwardIos,
+  CurrencyRupee,
 } from "@mui/icons-material";
 import { wishlisthandler } from "../redux/wishlistSlice";
 
@@ -136,6 +137,8 @@ const Date = styled.div`
 
 const PriceDetails = styled.div`
   margin-top: 12px;
+  display: flex;
+  align-items: center;
 `;
 
 const Price = styled.span`
@@ -143,6 +146,8 @@ const Price = styled.span`
   margin-right: 5px;
   font-weight: 600;
   font-family: "Montserrat", sans-serif;
+  display: flex;
+  align-items: center;
 `;
 
 const Duration = styled.span`
@@ -270,17 +275,16 @@ const HotelCard = ({ hotelInfo, color }) => {
                     fontFamily: "Montserrat",
                   }}
                 />
-                <Rating>
-                  {hotelInfo.starNumber === 0
-                    ? 0
-                    : (hotelInfo.starNumber / hotelInfo.totalStars).toFixed(1)}
-                </Rating>
+                <Rating>{hotelInfo.rating}</Rating>
               </RatingContainer>
             </HeaderContainer>
             <Info> {trimTitle(hotelInfo.name)} </Info>
             <Date> date here </Date>
             <PriceDetails>
-              <Price>${hotelInfo.cost}</Price>
+              <Price>
+                <CurrencyRupee style={{ transform: "scale(0.7)" }} />
+                {hotelInfo.cost}
+              </Price>
               <Duration>night</Duration>
             </PriceDetails>
           </InformationContainer>

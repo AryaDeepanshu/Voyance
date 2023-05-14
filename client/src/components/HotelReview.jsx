@@ -1,19 +1,18 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import dayjs from "dayjs";
+import Modal from "./Modal";
+import HoverRating from "./StarRating";
+import styled from "styled-components";
+import "react-toastify/dist/ReactToastify.css";
+import default_avatar from "../static/default_avatar.png";
+
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import { useLocation } from "react-router-dom";
-import styled from "styled-components";
-import { desktop, largeMobile, mobile, tablet } from "../responsive";
-import HoverRating from "./StarRating";
-import axios from "axios";
-import { Edit, Delete, Close } from "@mui/icons-material";
-import Modal from "./Modal";
-import default_avatar from "../static/default_avatar.png";
-import { Rating } from "@mui/material";
-import dayjs from "dayjs";
-
+import { largeMobile, mobile } from "../utils/responsive";
+import { axiosBaseURL } from "../utils/axiosBaseURL";
 import { toast, ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import { Edit, Delete, Close } from "@mui/icons-material";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 const Container = styled.div`
   display: grid;
@@ -179,12 +178,12 @@ const Button = styled.button`
   font-family: "Roboto", sans-serif;
   font-size: 16px;
   width: 150px;
-  padding: 10px 0px;
+  padding: 15px 0px;
   cursor: pointer;
   color: white;
   border: none;
   border-radius: 5px;
-  background-color: #4ee2ec;
+  background-color: #0ead69;
 
   :hover {
     opacity: 0.5;
@@ -213,11 +212,9 @@ const HotelReview = () => {
 
   /* React Query to fetch hotel review: */
   const { isLoading, error, data } = useQuery([`review-${hotelId}`], () =>
-    axios
-      .get(`http://localhost:5000/review/${hotelId}`)
-      .then((hotel_review) => {
-        return hotel_review.data;
-      })
+    axiosBaseURL.get(`review/${hotelId}`).then((hotel_review) => {
+      return hotel_review.data;
+    })
   );
 
   /* queryClient Object: */
@@ -226,7 +223,7 @@ const HotelReview = () => {
   /* React Query for add-review Post Request: */
   const addReviewMutation = useMutation({
     mutationFn: (review) => {
-      return axios.post(`http://localhost:5000/review/add`, review, {
+      return axiosBaseURL.post(`review/add`, review, {
         withCredentials: true,
       });
     },
@@ -238,7 +235,7 @@ const HotelReview = () => {
   /* React Query for update-review Post Request: */
   const updateReviewMutation = useMutation({
     mutationFn: (review) => {
-      return axios.post(`http://localhost:5000/review/update`, review, {
+      return axiosBaseURL.post(`review/update`, review, {
         withCredentials: true,
       });
     },
@@ -250,7 +247,7 @@ const HotelReview = () => {
   /* React Query for delete-review Post Request: */
   const deleteReviewMutation = useMutation({
     mutationFn: (hotelId) => {
-      return axios.post(`http://localhost:5000/review/delete`, hotelId, {
+      return axiosBaseURL.post(`review/delete`, hotelId, {
         withCredentials: true,
       });
     },
@@ -348,38 +345,37 @@ const HotelReview = () => {
     <>
       <Hr />
       <Container>
-        {isLoading
-          ? "loading"
-          : data.map((data) => (
-              <ReviewContainer key={data._id}>
-                <AuthorDetails>
-                  <ImageContainer>
-                    <Image
-                      src={
-                        data.userId.avatar === "default_avatar"
-                          ? default_avatar
-                          : data.userId.avatar
-                      }
-                    />
-                  </ImageContainer>
-                  <DetailContainer>
-                    <Name>{data.userId.name}</Name>
-                    <Date>{dayjs(data.updatedAt).format("MMMM YYYY")}</Date>
-                  </DetailContainer>
-                </AuthorDetails>
-                <AuthorReview>{data.review}</AuthorReview>
-                {data?.userId?._id === user?._id && (
-                  <OptionWrapper>
-                    <OptionContainer>
-                      <Edit onClick={() => setModal(true)} />
-                    </OptionContainer>
-                    <OptionContainer>
-                      <Delete onClick={deleteReview} />
-                    </OptionContainer>
-                  </OptionWrapper>
-                )}
-              </ReviewContainer>
-            ))}
+        {!isLoading &&
+          data.map((data) => (
+            <ReviewContainer key={data._id}>
+              <AuthorDetails>
+                <ImageContainer>
+                  <Image
+                    src={
+                      data.userId.avatar === "default_avatar"
+                        ? default_avatar
+                        : data.userId.avatar
+                    }
+                  />
+                </ImageContainer>
+                <DetailContainer>
+                  <Name>{data.userId.name}</Name>
+                  <Date>{dayjs(data.updatedAt).format("MMMM YYYY")}</Date>
+                </DetailContainer>
+              </AuthorDetails>
+              <AuthorReview>{data.review}</AuthorReview>
+              {data?.userId?._id === user?._id && (
+                <OptionWrapper>
+                  <OptionContainer>
+                    <Edit onClick={() => setModal(true)} />
+                  </OptionContainer>
+                  <OptionContainer>
+                    <Delete onClick={deleteReview} />
+                  </OptionContainer>
+                </OptionWrapper>
+              )}
+            </ReviewContainer>
+          ))}
       </Container>
 
       {modal && (
@@ -409,7 +405,7 @@ const HotelReview = () => {
         </Modal>
       )}
 
-      {user && (
+      {user && !user.host && (
         <>
           <TakeReviewContainer>
             <Heading> Add Review: </Heading>

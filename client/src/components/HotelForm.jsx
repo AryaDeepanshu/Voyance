@@ -4,11 +4,13 @@ import CostAndSpaces from "./CostAndSpaces";
 import MealType from "./MealType";
 import AmenityType from "./AmenityType";
 import PropertyType from "./PropertyType";
+import Location from "./Location";
 import fileUpload from "../utils/fileUpload";
 import axios from "axios";
 import { Upload } from "@mui/icons-material";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
+import { axiosBaseURL } from "../utils/axiosBaseURL";
 
 const Wrapper = styled.div`
   flex: 1;
@@ -119,6 +121,13 @@ const ErrorMessage = styled.p`
   font-family: "Josefin Sans", sans-serif;
 `;
 
+const ProgressMessage = styled.p`
+  width: 100%;
+  color: green;
+  font-size: 18px;
+  font-family: "Josefin Sans", sans-serif;
+`;
+
 const HotelForm = () => {
   /* State for taking input from user: */
   const [name, setName] = useState("");
@@ -137,6 +146,9 @@ const HotelForm = () => {
   const [beds, setBeds] = useState(1);
   const [bathrooms, setBathrooms] = useState(1);
 
+  const [lat, setLat] = useState(0);
+  const [long, setLong] = useState(0);
+
   const [file, setFile] = useState({});
 
   /* State for Handling form Error: */
@@ -151,13 +163,13 @@ const HotelForm = () => {
   const [propertyTypeListError, setPropertyTypeListError] = useState(false);
 
   const [priceError, setPriceError] = useState(false);
-
   const [fileError, setFileError] = useState(false);
 
   // -> will be used in Edit route -> to store links from cloudinary.
+  const [uploadedImages, setUploadedImages] = useState([]);
   const [existingImages, setExistingImages] = useState([]);
 
-  // ref for input icon
+  // ref for input icon:
   const hiddenFileInput = useRef();
   const handleClick = (event) => {
     event.preventDefault();
@@ -174,9 +186,12 @@ const HotelForm = () => {
     // if we are in the edit hotel route -> prefetch the required data from the db.
     if (edit) {
       const getHotel = async () => {
-        const hotel = await axios.get(
+        const hotel = await axiosBaseURL.get(
           `http://localhost:5000/host/getHotel/${hotelId}`
         );
+
+        console.log(hotelId);
+        console.log(hotel);
 
         const location = hotel.data.location.split(", ");
         setName(hotel.data.name);
@@ -194,6 +209,9 @@ const HotelForm = () => {
         setBedrooms(hotel.data.bedrooms);
         setBeds(hotel.data.beds);
         setBathrooms(hotel.data.bathrooms);
+
+        setLat(hotel.data.lat);
+        setLong(hotel.data.long);
 
         setExistingImages(hotel.data.images);
       };
@@ -226,9 +244,9 @@ const HotelForm = () => {
       validated = false;
     }
 
-    if (file.length === undefined || file.length < 5) {
+    if (uploadedImages.length === undefined || uploadedImages.length < 5) {
       if (edit) {
-        if (file.length < 5) {
+        if (uploadedImages.length < 5) {
           setFileError(true);
           validated = false;
         }
@@ -269,12 +287,29 @@ const HotelForm = () => {
   const user = useSelector((store) => store.user.currentUser);
   const navigate = useNavigate();
 
+  /* State to handle uploading Error: */
+  const [uploadInProgress, setUploadInProgress] = useState(false);
+
+  /* upload images to Cloudinary: */
+  const ImageUpload = async (event) => {
+    setFileError(false);
+    setUploadInProgress(true);
+    const urls = await fileUpload(event.target.files);
+    setUploadedImages(urls);
+    setUploadInProgress(false);
+
+    console.log(urls);
+    console.log(uploadedImages);
+  };
+
   // Final Function to be called: -> working fine
   const createOrUpdateHotel = async () => {
     if (!validate()) return;
 
+    // setUploadInProgress(true);
+
     /* upload images to Cloudinary: */
-    const urls = await fileUpload(file);
+    // const urls = await fileUpload(file);
 
     /* upload data in the db: */
     const data = {
@@ -282,7 +317,7 @@ const HotelForm = () => {
       location: `${city}, ${state}, ${country}`,
       cost: price,
       about: description,
-      images: urls.length === 0 ? existingImages : urls,
+      images: uploadedImages.length === 0 ? existingImages : uploadedImages,
       guest: guest,
       beds: beds,
       bedrooms: bedrooms,
@@ -291,21 +326,27 @@ const HotelForm = () => {
       propertyType: propertyTypeList,
       mealIncluded: mealTypeList,
       hostId: user._id,
+      lat: lat,
+      long: long,
     };
 
+    // setUploadInProgress(false);
+
     if (edit) {
-      const hotel_updated = await axios.post(
+      const hotel_updated = await axiosBaseURL.post(
         `http://localhost:5000/host/updateHotel/${hotelId}`,
-        data
+        data,
+        { withCredentials: true }
       );
 
-      console.log(hotel_updated);
       navigate(`/hotel-information/${hotel_updated.data._id}`);
     } else {
-      const hotel_created = await axios.post(
+      const hotel_created = await axiosBaseURL.post(
         "http://localhost:5000/host/addHotel",
-        data
+        data,
+        { withCredentials: true }
       );
+
       navigate(`/hotel-information/${hotel_created.data._id}`);
     }
   };
@@ -415,6 +456,11 @@ const HotelForm = () => {
 
         <Hr />
 
+        <SectionHeading>Location </SectionHeading>
+        <Location lat={lat} setLat={setLat} long={long} setLong={setLong} />
+
+        <Hr />
+
         {/* Property Type: */}
         <SectionHeading>
           property type
@@ -487,19 +533,16 @@ const HotelForm = () => {
 
         <FileWrapper>
           <ImageContainer>
-            <ImageWrapper>
-              <Image src="https://images.unsplash.com/photo-1611892440504-42a792e24d32?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MTZ8fGhvdGVsfGVufDB8fDB8fA%3D%3D&w=1000&q=80" />
-              {/* <Image src={URL.createObjectURL(file)} /> */}
-            </ImageWrapper>
-            <ImageWrapper>
-              <Image src="https://images.unsplash.com/photo-1611892440504-42a792e24d32?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MTZ8fGhvdGVsfGVufDB8fDB8fA%3D%3D&w=1000&q=80" />
-              {/* <Image src={URL.createObjectURL(file)} /> */}
-            </ImageWrapper>
-            <ImageWrapper>
-              <Image src="https://images.unsplash.com/photo-1611892440504-42a792e24d32?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MTZ8fGhvdGVsfGVufDB8fDB8fA%3D%3D&w=1000&q=80" />
-              {/* <Image src={URL.createObjectURL(file)} /> */}
-            </ImageWrapper>
+            {uploadedImages.map((upload, index) => (
+              <ImageWrapper key={index}>
+                <Image src={upload} />
+              </ImageWrapper>
+            ))}
           </ImageContainer>
+
+          {uploadInProgress && (
+            <ProgressMessage> uploading images, please wait! </ProgressMessage>
+          )}
 
           <Upload
             style={{
@@ -515,10 +558,8 @@ const HotelForm = () => {
             multiple
             ref={hiddenFileInput}
             style={{ display: "none" }}
-            onChange={(event) => {
-              setFileError(false);
-              setFile(event.target.files);
-            }}
+            disabled={uploadInProgress}
+            onChange={(event) => ImageUpload(event)}
           />
         </FileWrapper>
 

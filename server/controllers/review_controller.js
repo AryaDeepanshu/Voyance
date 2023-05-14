@@ -38,8 +38,15 @@ module.exports.addReview = async (req, res) => {
       $push: { reviews: savedReview._id },
     });
 
+    const hotel = await Hotel.findById(req.body.hotelId);
+
     await Hotel.findByIdAndUpdate(req.body.hotelId, {
-      $inc: { totalStars: 1, starNumber: req.body.star },
+      $set: {
+        rating:
+          (hotel.rating * hotel.peopleRated + savedReview.star) /
+          (hotel.peopleRated + 1),
+      },
+      $inc: { peopleRated: 1 },
       $push: { reviews: savedReview._id },
     });
 
@@ -66,9 +73,15 @@ module.exports.updateReview = async (req, res) => {
     return res.status(406).json("No Existing review found.");
 
   try {
+    const hotel = await Hotel.findById(req.body.hotelId);
+
     await Hotel.findByIdAndUpdate(req.body.hotelId, {
-      $inc: {
-        starNumber: req.body.star - existingReview[0].star,
+      $set: {
+        rating:
+          (hotel.rating * hotel.peopleRated -
+            existingReview[0].star +
+            req.body.star) /
+          hotel.peopleRated,
       },
     });
 
@@ -116,16 +129,21 @@ module.exports.deleteReview = async (req, res) => {
       { new: true }
     );
 
-    await Hotel.findByIdAndUpdate(
-      req.body.hotelId,
-      {
-        $inc: { totalStars: -1, starNumber: -existingReview[0].star },
-        $pull: {
-          reviews: existingReview[0]._id,
-        },
+    const hotel = await Hotel.findById(req.body.hotelId);
+
+    await Hotel.findByIdAndUpdate(req.body.hotelId, {
+      $set: {
+        rating:
+          hotel.peopleRated === 1
+            ? 0
+            : (hotel.rating * hotel.peopleRated - existingReview[0].star) /
+              (hotel.peopleRated - 1),
       },
-      { new: true }
-    );
+      $inc: { peopleRated: -1 },
+      $pull: {
+        reviews: existingReview[0]._id,
+      },
+    });
 
     await Review.findByIdAndDelete(existingReview[0]._id);
     return res.status(200).json("Successfully deleted the review.");
