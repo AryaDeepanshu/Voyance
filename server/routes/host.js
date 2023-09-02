@@ -3,7 +3,7 @@ const router = express.Router();
 const { verifyToken } = require("../config/JWT_auth");
 const host_controller = require("../controllers/host_controller");
 
-// Register/Create host:
+// Register/Create hotel:
 router.post("/addHotel", verifyToken, host_controller.addHotel);
 
 // get Hotel details -> based upon the ID:

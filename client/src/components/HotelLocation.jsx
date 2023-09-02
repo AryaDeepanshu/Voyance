@@ -29,6 +29,17 @@ const Heading = styled.p`
   })}
 `;
 
+const LocationMapWrapper = styled.div`
+  width: 100%;
+  aspect-ratio: 1.8;
+`;
+
+const LocationMap = styled.img`
+  height: 100%;
+  width: 100%;
+  object-fit: cover;
+`;
+
 const Location = styled.p`
   padding: 30px 0px 0px 0px;
   color: #2a2a2a;
@@ -42,17 +53,16 @@ const HotelLocation = ({ data }) => {
     googleMapsApiKey: "AIzaSyB2gvJVECkYt6yUc1iDtZVnJ4LpWFqmbNM",
   });
 
+  const url = `https://api.mapbox.com/styles/v1/mapbox/streets-v11/static/pin-l+ff0000(${data.long},${data.lat})/${data.long},${data.lat},16,0/1080x720?access_token=pk.eyJ1IjoidGVzdDEwMDAwMSIsImEiOiJjbGhteTRyaHUxZ3htM25xcHBpejloOWk1In0.YlBuIItEABfwbfSweXLFuQ`;
+
   if (!isLoaded) return <div>Add styles</div>;
   return (
     <Container>
       <Wrapper>
         <Heading>Where you will stay:</Heading>
-        <GoogleMap
-          zoom={10}
-          center={{ lat: 44, lng: -80 }}
-          mapContainerStyle={{ width: "100%", aspectRatio: "5/3" }}>
-          <Marker position={{ lat: 44, lng: -80 }} />
-        </GoogleMap>
+        <LocationMapWrapper>
+          <LocationMap src={url} />
+        </LocationMapWrapper>
         <Location>{data.location}</Location>
       </Wrapper>
     </Container>

@@ -2,31 +2,37 @@ const express = require("express");
 const mongoose = require("mongoose");
 const dotenv = require("dotenv");
 const cors = require("cors");
-const passport = require("passport");
-const session = require("express-session");
 const cookieParser = require("cookie-parser");
 const Razorpay = require("razorpay");
 require("./config/Passport_auth");
 
 const app = express();
-
-app.use(
-  session({
-    secret: "somethingsecretgoeshere",
-    resave: false,
-    saveUninitialized: true,
-    cookie: { secure: true },
-  })
-);
-
-app.use(passport.initialize());
-app.use(passport.session());
-
 dotenv.config();
+
+/* CORS Header: */
+app.use((req, res, next) => {
+  res.setHeader(
+    "Access-Control-Allow-Origin",
+    "https://explore-voyance.onrender.com"
+  );
+  res.setHeader(
+    "Access-Control-Allow-Methods",
+    "GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS,CONNECT,TRACE"
+  );
+  res.setHeader(
+    "Access-Control-Allow-Headers",
+    "Content-Type, Authorization, X-Content-Type-Options, Accept, X-Requested-With, Origin, Access-Control-Request-Method, Access-Control-Request-Headers"
+  );
+  res.setHeader("Access-Control-Allow-Credentials", true);
+  res.setHeader("Access-Control-Allow-Private-Network", true);
+  res.setHeader("Access-Control-Max-Age", 7200);
+
+  next();
+});
 
 app.use(
   cors({
-    origin: "http://localhost:3000",
+    origin: ["http://localhost:3000", "https://explore-voyance.onrender.com"],
     credentials: true,
   })
 );
@@ -38,9 +44,9 @@ mongoose
   .catch((error) => console.log(error));
 
 app.use(express.json()); // -> allows the app to take json as post request input.
-
 app.use(cookieParser());
 app.use(express.urlencoded({ extended: true }));
+
 // use express router: -> all the request will be handled by the index.js file in the routes folder.
 app.use("/", require("./routes/index"));
 

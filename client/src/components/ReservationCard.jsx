@@ -109,6 +109,7 @@ const Input = styled.input`
   font-size: 14px;
   outline: none;
   border: none;
+  background-color: white;
   border-bottom: 1px solid lightgray;
   font-family: "Roboto", sans-serif;
 
@@ -193,12 +194,12 @@ const ReservationCard = ({
         <TopContainer>
           <PriceContainer>
             <CurrencyRupee style={{ fontSize: "22px", padding: "2px" }} />
-            <Price>{data.cost}</Price>
+            <Price>{data?.cost}</Price>
             <Duration>night</Duration>
           </PriceContainer>
           <RatingContainer>
             <Grade style={{ fontSize: "24px", color: "#E6B325" }} />
-            <Rating>{data.rating}</Rating>
+            <Rating>{data?.rating}</Rating>
           </RatingContainer>
         </TopContainer>
 
@@ -255,7 +256,7 @@ const ReservationCard = ({
                   cursor: "pointer",
                 }}
                 onClick={() => {
-                  setGuest(guest === data.guest ? guest : guest + 1);
+                  setGuest(guest === data?.guest ? guest : guest + 1);
                 }}
               />
             </GuestValueContainer>
@@ -265,16 +266,16 @@ const ReservationCard = ({
         <Hr />
 
         <DataWrapper>
-          <Data>{`${data.cost} x ${stay} nights`}</Data>
+          <Data>{`${data?.cost} x ${stay} nights`}</Data>
           <PriceContainer>
             <CurrencyRupee
               style={{ fontSize: "18px", padding: "2px", color: "#7f8487" }}
             />
-            <Price type="cost">{data.cost * stay}</Price>
+            <Price type="cost">{data?.cost * stay}</Price>
           </PriceContainer>
         </DataWrapper>
 
-        <Button onClick={() => checkoutHandler(data.cost * stay, data.name)}>
+        <Button onClick={() => checkoutHandler(data?.cost * stay, data?.name)}>
           Reserve
         </Button>
 

@@ -31,7 +31,7 @@ const Wrapper = styled.div`
 `;
 
 const ButtonContainer = styled.div`
-  background-color: ${(props) => (props.home === true ? "#f7f7f7" : "white")};
+  background-color: #f7f7f7;
   position: absolute;
   left: ${(props) => (props.dir === "left" ? "0px" : "")};
   right: ${(props) => (props.dir === "right" ? "0px" : "")};
@@ -72,7 +72,7 @@ const CategoryContainer = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  box-shadow: ${(props) => (props.selected ? "0 -1px 0 #000 inset" : "")};
+  box-shadow: ${(props) => (props.selected ? "0px 15px 10px -15px #000 " : "")};
 `;
 
 const CategoryIcon = styled.div`
@@ -89,7 +89,7 @@ const CategoryHeading = styled.div`
   cursor: pointer;
 `;
 
-const CategorySlider = ({ category, setCategory, home }) => {
+const CategorySlider = ({ category, setCategory }) => {
   // useRef hook;
   const ref = useRef(null);
 
@@ -129,7 +129,7 @@ const CategorySlider = ({ category, setCategory, home }) => {
 
   return (
     <Container>
-      <ButtonContainer dir="left" home={home}>
+      <ButtonContainer dir="left">
         <Button onClick={() => handleMove("left")}>
           <ArrowBackIosNew style={{ transform: "scale(0.7)" }} />
         </Button>
@@ -148,7 +148,7 @@ const CategorySlider = ({ category, setCategory, home }) => {
           );
         })}
       </Wrapper>
-      <ButtonContainer dir="right" home={home}>
+      <ButtonContainer dir="right">
         <Button onClick={() => handleMove("right")}>
           <ArrowForwardIos style={{ transform: "scale(0.7)" }} />
         </Button>

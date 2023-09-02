@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import styled from "styled-components";
 
 // Redux Imports:
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { auth_Login, auth_Google_Verification } from "../redux/authentication";
 
 // Google OAuth Import:
@@ -12,12 +12,12 @@ import { useGoogleLogin } from "@react-oauth/google";
 import GoogleIcon from "@mui/icons-material/Google";
 
 // Responsive.js:
-import { largeMobile, mobile, tablet } from "../utils/responsive";
+import { largeMobile, mobile } from "../utils/responsive";
 import { useNavigate } from "react-router-dom";
 import { Close } from "@mui/icons-material";
 
-import { toast, ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import { Toaster } from "react-hot-toast";
+import { Required } from "../utils/notification";
 
 const Wrapper = styled.div`
   display: flex;
@@ -35,6 +35,7 @@ const Card = styled.div`
   background-color: white;
   width: 400px;
   position: relative;
+  padding-bottom: 40px;
 
   ${largeMobile({
     width: "70vw",
@@ -150,12 +151,6 @@ const Register = styled.span`
   font-weight: bold;
 `;
 
-const ErrorMsg = styled.span`
-  font-size: 16px;
-  font-weight: bold;
-  color: red;
-`;
-
 const SignIn = ({ setShowLoginModal, setShowRegisterModal }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -180,17 +175,11 @@ const SignIn = ({ setShowLoginModal, setShowRegisterModal }) => {
     },
   });
 
-  /* State for handling Login Error: */
-  const [required, setRequired] = useState(false);
-  const [loginError, setLoginError] = useState(false);
-
+  // Email Password Authentication:
   const auth = (event) => {
-    setRequired(false);
-    setLoginError(false);
-
     event.preventDefault();
     if (email === "" || password === "") {
-      setRequired(true);
+      Required();
       return;
     }
 
@@ -198,7 +187,6 @@ const SignIn = ({ setShowLoginModal, setShowRegisterModal }) => {
       navigate,
       dispatch,
       { email, password },
-      setLoginError,
       setShowLoginModal,
       setShowRegisterModal
     );
@@ -239,20 +227,17 @@ const SignIn = ({ setShowLoginModal, setShowRegisterModal }) => {
           </NewAccount>
         </Form>
 
-        {required && <ErrorMsg> ** All Fields are required </ErrorMsg>}
-        {loginError && <ErrorMsg> ** Invalid username / password </ErrorMsg>}
-
-        <Separator>
+        {/* <Separator>
           <Line />
           <OR> OR </OR>
-        </Separator>
+        </Separator> */}
 
-        <GoogleAuthWrapper onClick={auth_Google}>
+        {/* <GoogleAuthWrapper onClick={auth_Google}>
           <GoogleIcon />
           <GoogleAuthTextField>Continue with Google</GoogleAuthTextField>
-        </GoogleAuthWrapper>
+        </GoogleAuthWrapper> */}
       </Card>
-      <ToastContainer />
+      <Toaster />
     </Wrapper>
   );
 };

@@ -11,13 +11,17 @@ import { axiosBaseURL } from "../utils/axiosBaseURL";
 
 /* Material - UI imports: */
 import Box from "@mui/material/Box";
-import Avatar from "@mui/material/Avatar";
 import Menu from "@mui/material/Menu";
+import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
 import IconButton from "@mui/material/IconButton";
-import Tooltip from "@mui/material/Tooltip";
 
-const Container = styled.div``;
+import { Person } from "@mui/icons-material";
+import { Logout } from "../utils/notification";
+
+const Container = styled.div`
+  width: 200px;
+`;
 
 const ProfileImage = styled.img`
   height: 100%;
@@ -41,42 +45,34 @@ const Option = styled.p`
 `;
 
 const ProfileDashboard = ({ setShowLoginModal, setShowRegisterModal }) => {
-  const user = useSelector((store) => store.user.currentUser);
-
   const dispatch = useDispatch();
   const navigate = useNavigate();
-
+  const user = useSelector((store) => store.user.currentUser);
   const { wishlist } = useSelector((store) => store.wishlist);
 
+  /* Handler to save the wishlist from redux-store to the mongodb: */
   const mutation = useMutation({
     mutationFn: (wishlist) => {
-      return axiosBaseURL.post(
-        `user/saveWishlist`,
-        { wishlist: wishlist },
-        {
-          withCredentials: true,
-        }
-      );
+      return axiosBaseURL.post(`user/saveWishlist`, { wishlist: wishlist });
     },
   });
 
+  /* Logout Handler: */
   const handleLogout = () => {
-    /* Save the wishlist from redux-store to the mongodb: */
     mutation.mutate(wishlist);
     dispatch(clearWishlist());
     dispatch(logout());
+
+    Logout();
     navigate("/");
   };
 
   /* Material-UI defined state and Functions: */
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
-  const handleClick = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
+
+  const handleClick = (event) => setAnchorEl(event.currentTarget);
+  const handleClose = () => setAnchorEl(null);
 
   return (
     <>
@@ -91,7 +87,7 @@ const ProfileDashboard = ({ setShowLoginModal, setShowRegisterModal }) => {
             aria-controls={open ? "account-menu" : undefined}
             aria-haspopup="true"
             aria-expanded={open ? "true" : undefined}>
-            <Avatar sx={{ width: 40, height: 40 }}>
+            <Person sx={{ width: 40, height: 40 }}>
               <ProfileImage
                 src={
                   user
@@ -101,7 +97,7 @@ const ProfileDashboard = ({ setShowLoginModal, setShowRegisterModal }) => {
                     : default_avatar
                 }
               />
-            </Avatar>
+            </Person>
           </IconButton>
         </Tooltip>
       </Box>
@@ -146,7 +142,7 @@ const ProfileDashboard = ({ setShowLoginModal, setShowRegisterModal }) => {
               style={{ textDecoration: "none", color: "inherit" }}
               to="/profile">
               <MenuItem onClick={handleClose}>
-                <Avatar /> Profile
+                <Person /> Profile
               </MenuItem>
             </Link>
             <Link
@@ -158,9 +154,6 @@ const ProfileDashboard = ({ setShowLoginModal, setShowRegisterModal }) => {
               style={{ textDecoration: "none", color: "inherit" }}
               to={`/wishlist`}>
               <MenuItem onClick={handleClose}>Your Wishlist</MenuItem>
-            </Link>
-            <Link style={{ textDecoration: "none", color: "inherit" }}>
-              <MenuItem onClick={handleClose}>Become Host</MenuItem>
             </Link>
           </Container>
         ) : (

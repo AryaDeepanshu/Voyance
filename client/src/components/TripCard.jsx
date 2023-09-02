@@ -150,9 +150,7 @@ const TripCard = ({ tripData }) => {
                     <Star style={{ transform: "scale(0.7)" }} />
                     {trip?.hotel.starNumber === 0
                       ? 0
-                      : (
-                          trip?.hotel?.starNumber / trip?.hotel?.totalStars
-                        ).toFixed(1)}
+                      : (trip?.hotel?.rating).toFixed(1)}
                   </HotelRating>
                 </HotelDetailWrapper>
               </HotelNameWrapper>

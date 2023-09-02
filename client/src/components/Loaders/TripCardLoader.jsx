@@ -125,51 +125,49 @@ const TripCardLoader = () => {
   const { width } = useWindowDimensions();
   return (
     <Wrapper>
-      {Array(4)
-        .fill(null)
-        .map((index) => (
-          <TripCardWrapper key={index}>
-            {width > 660 && (
-              <TripCardImg>
-                <Skeleton height={"100%"} width={"100%"} />
-              </TripCardImg>
-            )}
-            <TripCardContainer>
-              <HotelNameWrapper>
-                <HotelName>
-                  <Skeleton width={"70%"} />
-                </HotelName>
-                <HotelDetailWrapper>
-                  <HotelAddress>
-                    <Skeleton width={"250px"} height={"25px"} />
-                  </HotelAddress>
-                  <HotelRating>
-                    <Skeleton width={"50px"} height={"25px"} />
-                  </HotelRating>
-                </HotelDetailWrapper>
-              </HotelNameWrapper>
+      {Array.from({ length: 8 }, (_, i) => i).map((index) => (
+        <TripCardWrapper key={index}>
+          {width > 660 && (
+            <TripCardImg>
+              <Skeleton height={"100%"} width={"100%"} />
+            </TripCardImg>
+          )}
+          <TripCardContainer>
+            <HotelNameWrapper>
+              <HotelName>
+                <Skeleton width={"70%"} />
+              </HotelName>
+              <HotelDetailWrapper>
+                <HotelAddress>
+                  <Skeleton width={"250px"} height={"25px"} />
+                </HotelAddress>
+                <HotelRating>
+                  <Skeleton width={"50px"} height={"25px"} />
+                </HotelRating>
+              </HotelDetailWrapper>
+            </HotelNameWrapper>
 
-              <BottomWrapper>
-                <OrderDetailContainer>
-                  <Detail>
-                    <Skeleton width={"150px"} height={"25px"} />
-                  </Detail>
-                  <Detail>
-                    <Skeleton width={"150px"} height={"25px"} />
-                  </Detail>
-                </OrderDetailContainer>
-                <DetailContainer>
-                  <Detail>
-                    <Skeleton width={"150px"} height={"25px"} />
-                  </Detail>
-                  <Detail>
-                    <Skeleton width={"100px"} height={"25px"} />
-                  </Detail>
-                </DetailContainer>
-              </BottomWrapper>
-            </TripCardContainer>
-          </TripCardWrapper>
-        ))}
+            <BottomWrapper>
+              <OrderDetailContainer>
+                <Detail>
+                  <Skeleton width={"150px"} height={"25px"} />
+                </Detail>
+                <Detail>
+                  <Skeleton width={"150px"} height={"25px"} />
+                </Detail>
+              </OrderDetailContainer>
+              <DetailContainer>
+                <Detail>
+                  <Skeleton width={"150px"} height={"25px"} />
+                </Detail>
+                <Detail>
+                  <Skeleton width={"100px"} height={"25px"} />
+                </Detail>
+              </DetailContainer>
+            </BottomWrapper>
+          </TripCardContainer>
+        </TripCardWrapper>
+      ))}
     </Wrapper>
   );
 };

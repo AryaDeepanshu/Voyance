@@ -12,16 +12,16 @@ import {
 import { useGoogleLogin } from "@react-oauth/google";
 
 // Material-UI Imports:
-import GoogleIcon from "@mui/icons-material/Google";
-import GitHubIcon from "@mui/icons-material/GitHub";
-import FacebookOutlinedIcon from "@mui/icons-material/FacebookOutlined";
-
-// Responsive.js:
-import { largeMobile, mobile, tablet } from "../utils/responsive";
-import { Link, useNavigate } from "react-router-dom";
-import useWindowDimensions from "../hooks/useWindowDimensions";
 
 import { Close } from "@mui/icons-material";
+import GoogleIcon from "@mui/icons-material/Google";
+
+// Responsive.js:
+import { largeMobile, mobile } from "../utils/responsive";
+import { useNavigate } from "react-router-dom";
+
+import { Toaster } from "react-hot-toast";
+import { InvalidEmail, Required } from "../utils/notification";
 
 const Wrapper = styled.div`
   display: flex;
@@ -39,6 +39,7 @@ const Card = styled.div`
   background-color: white;
   width: 400px;
   position: relative;
+  padding-bottom: 40px;
 
   ${largeMobile({
     width: "70vw",
@@ -154,13 +155,8 @@ const Login = styled.span`
   font-weight: bold;
 `;
 
-const InputValidationError = styled.span`
-  font-size: 16px;
-  font-weight: bold;
-  color: red;
-`;
-
 const SignUp = ({ setShowLoginModal, setShowRegisterModal }) => {
+  /* State for Handling Input: */
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -185,23 +181,16 @@ const SignUp = ({ setShowLoginModal, setShowRegisterModal }) => {
     },
   });
 
-  /* State for handling invalidInput: */
-  const [required, setRequired] = useState(false);
-  const [invalidInput, setInvalidInput] = useState(false);
-
   // Email-Password Authentication:
   const auth = (event) => {
-    setRequired(false);
-    setInvalidInput(false);
-
     event.preventDefault();
     if (name === "" || email === "" || password === "") {
-      setRequired(true);
+      Required();
       return;
     }
 
     if (!email.includes("@")) {
-      setInvalidInput(true);
+      InvalidEmail();
       return;
     }
 
@@ -253,17 +242,7 @@ const SignUp = ({ setShowLoginModal, setShowRegisterModal }) => {
           </ExistingAccount>
         </Form>
 
-        {required && (
-          <InputValidationError>
-            ** All Fields are required
-          </InputValidationError>
-        )}
-
-        {invalidInput && (
-          <InputValidationError>** Provide valid Email id</InputValidationError>
-        )}
-
-        <Separator>
+        {/* <Separator>
           <Line />
           <OR> OR </OR>
         </Separator>
@@ -271,8 +250,9 @@ const SignUp = ({ setShowLoginModal, setShowRegisterModal }) => {
         <GoogleAuthWrapper onClick={auth_Google}>
           <GoogleIcon />
           <GoogleAuthTextField>Continue with Google</GoogleAuthTextField>
-        </GoogleAuthWrapper>
+        </GoogleAuthWrapper> */}
       </Card>
+      <Toaster />
     </Wrapper>
   );
 };

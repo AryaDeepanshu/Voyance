@@ -3,7 +3,7 @@ const router = express.Router();
 const { verifyToken } = require("../config/JWT_auth");
 const auth_controller = require("../controllers/auth_controller");
 
-// Register/Create user:
+// Register / Create user:
 router.post("/register", auth_controller.register);
 
 // Login user:

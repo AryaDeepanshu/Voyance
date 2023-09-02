@@ -28,7 +28,8 @@ module.exports.register = async (req, res) => {
     /* Return the required data */
     return res
       .cookie("accessToken", accessToken, {
-        httpOnly: true,
+        sameSite: "none",
+        secure: true,
       })
       .status(200)
       .send(userDetails);
@@ -40,7 +41,9 @@ module.exports.register = async (req, res) => {
 // Login:
 module.exports.login = async (req, res) => {
   const credentials = req.body;
-  const user = await User.findOne({ email: credentials.email });
+  const user = await User.findOne({ email: credentials.email }).populate({
+    path: "wishlist",
+  });
 
   /* No matching user found: */
   if (!user)
@@ -66,7 +69,8 @@ module.exports.login = async (req, res) => {
   /* Return the required data */
   return res
     .cookie("accessToken", accessToken, {
-      httpOnly: true,
+      sameSite: "none",
+      secure: true,
     })
     .status(200)
     .send(userDetails);
@@ -75,7 +79,9 @@ module.exports.login = async (req, res) => {
 // Google:
 module.exports.google = async (req, res) => {
   const credentials = req.body;
-  const user = await User.findOne({ email: credentials.email });
+  const user = await User.findOne({ email: credentials.email }).populate({
+    path: "wishlist",
+  });
 
   // No user found with provided Email, Create new user:
   if (!user) {
@@ -100,7 +106,8 @@ module.exports.google = async (req, res) => {
       /* Return the required data */
       return res
         .cookie("accessToken", accessToken, {
-          httpOnly: true,
+          sameSite: "none",
+          secure: true,
         })
         .status(200)
         .send(userDetails);
@@ -130,7 +137,8 @@ module.exports.google = async (req, res) => {
     /* Return the required data */
     return res
       .cookie("accessToken", accessToken, {
-        httpOnly: true,
+        sameSite: "none",
+        secure: true,
       })
       .status(200)
       .send(userDetails);

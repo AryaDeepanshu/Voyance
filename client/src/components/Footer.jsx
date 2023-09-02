@@ -10,18 +10,18 @@ import styled from "styled-components";
 import { mobile, largeMobile, tablet, desktop } from "../utils/responsive";
 
 const Container = styled.div`
-  margin-top: 10px;
   display: flex;
   flex-wrap: wrap;
+  margin-top: 10px;
+  padding: 40px 0px;
   align-items: flex-start;
-  padding: 80px 0px;
-  background-color: ${(props) => (props.home === true ? "white" : "#f5f5f5")};
+  background-color: ${(props) => (props.home === "home" ? "white" : "#f5f5f5")};
 
   ${mobile({
     gap: "20px",
     padding: "40px 0px",
-    flexDirection: "column",
     alignItems: "center",
+    flexDirection: "column",
   })}
 
   ${largeMobile({
@@ -31,11 +31,11 @@ const Container = styled.div`
 
 const LeftWrapper = styled.div`
   flex: 1;
+  width: 100%;
+  height: auto;
   display: flex;
   justify-content: center;
   align-items: flex-start;
-  height: auto;
-  width: 100%;
 
   ${largeMobile({
     marginBottom: "25px",
@@ -43,13 +43,13 @@ const LeftWrapper = styled.div`
 `;
 
 const AddressContainer = styled.div`
-  height: max-content;
-  display: flex;
-  flex-direction: column;
   gap: 10px;
+  display: flex;
   min-width: 142px;
   max-width: 300px;
   padding: 0px 15px;
+  height: max-content;
+  flex-direction: column;
 
   ${tablet({
     maxWidth: "250px",
@@ -62,8 +62,8 @@ const HeadingContainer = styled.div`
 
 const Heading = styled.h2`
   display: flex;
-  align-items: center;
   font-size: 20px;
+  align-items: center;
   font-family: "Bree Serif", serif;
 `;
 
@@ -78,9 +78,9 @@ const Address = styled.p`
 `;
 
 const SocialIconsContainer = styled.div`
+  gap: 10px;
   display: flex;
   padding: 0px 15px;
-  gap: 10px;
   align-items: flex-start;
 `;
 
@@ -118,9 +118,9 @@ const LinkWrapper = styled.div`
 `;
 
 const LinkContainer = styled.div`
+  gap: 15px;
   display: flex;
   flex-direction: column;
-  gap: 15px;
   align-items: flex-start;
   justify-content: center;
 `;
@@ -131,9 +131,9 @@ const SubHeader = styled.h2`
 `;
 
 const LinkDesc = styled.p`
+  color: gray;
   cursor: pointer;
   font-size: 13px;
-  color: gray;
   font-family: "Noto Serif", serif;
 
   ${desktop({
@@ -143,11 +143,11 @@ const LinkDesc = styled.p`
 
 const RightWrapper = styled.div`
   flex: 1;
-  display: flex;
-  flex-direction: column;
   gap: 20px;
-  justify-content: center;
+  display: flex;
   align-items: center;
+  flex-direction: column;
+  justify-content: center;
 
   ${mobile({
     alignItems: "center",
@@ -163,12 +163,12 @@ const RightWrapper = styled.div`
 `;
 
 const NewsletterContainer = styled.div`
-  display: flex;
-  flex-direction: column;
   gap: 10px;
-  padding: 0px 15px;
+  display: flex;
   min-width: 210px;
   max-width: 250px;
+  padding: 0px 15px;
+  flex-direction: column;
 `;
 
 const Title = styled.p`
@@ -182,13 +182,14 @@ const Title = styled.p`
 `;
 
 const InputContainer = styled.div`
-  border-radius: 25px;
-  box-shadow: rgba(0, 0, 0, 0.15) 0px 2px 8px;
-  display: flex;
-  align-items: center;
-  width: max-content;
-  padding: 10px;
   width: 90%;
+  display: flex;
+  padding: 10px;
+  width: max-content;
+  border-radius: 25px;
+  align-items: center;
+  box-shadow: rgba(0, 0, 0, 0.15) 0px 2px 8px;
+
   ${desktop({
     borderRadius: "25px",
     padding: "10px",
@@ -199,8 +200,8 @@ const Input = styled.input`
   border: none;
   outline: none;
   width: 100%;
-  background-color: ${(props) => (props.home === true ? "white" : "#f5f5f5")};
   font-family: "Noto Serif", serif;
+  background-color: ${(props) => (props.home === "home" ? "white" : "#f5f5f5")};
 
   ::placeholder {
     color: gray;
@@ -218,7 +219,7 @@ const Footer = ({ home }) => {
           </HeadingContainer>
           <Address>
             The website ends here, but your journey to the Amazing destinations
-            begins with Zostel. Explore with our social hostels, homestays, and
+            begins with Voyance. Explore with our social hostels, homestays, and
             luxury stays on your next holiday.
           </Address>
         </AddressContainer>

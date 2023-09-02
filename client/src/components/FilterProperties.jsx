@@ -136,6 +136,8 @@ const SelectContainer = styled.div`
         return "repeat(auto-fill, minmax(100px, 1fr))";
       case "rating":
         return "repeat(auto-fill, minmax(50px, 1fr))";
+      default:
+        return "";
     }
   }};
 `;

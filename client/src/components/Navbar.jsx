@@ -1,24 +1,33 @@
-import { useState } from "react";
-import { Link } from "react-router-dom";
 import styled from "styled-components";
+import { Link } from "react-router-dom";
+import { useEffect, useState } from "react";
 
 import Modal from "./Modal";
 import SignUp from "./SignUp";
 import SignIn from "./SignIn";
 import ProfileDashboard from "./ProfileDashboard";
 
-import useWindowDimensions from "../hooks/useWindowDimensions";
 import Logo_Black from "../static/Logo_Black.png";
+import useWindowDimensions from "../hooks/useWindowDimensions";
+
+const Wrapper = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  top: 0px;
+  width: 100vw;
+  z-index: 10;
+  position: fixed;
+  transition: background-color 0.2s;
+  background-color: ${(props) =>
+    props.home ? (props.scrolled >= 80 ? "white" : "transparent") : "white"};
+`;
 
 const Container = styled.div`
-  padding: ${(props) => (props.isHome === true ? "0px 10px" : "")};
-  height: 80px;
   display: flex;
-  position: sticky;
-  top: 0px;
-  z-index: 10000;
-  background-color: ${(props) => (props.scrolled >= 80 ? "white" : "")};
-  transition: all 3 ease-in-out;
+  height: 80px;
+  width: ${(props) =>
+    props.home === "home" ? "calc(100% - 50px)" : "calc(100% - 10%)"};
 `;
 
 const LogoContainer = styled.div`
@@ -56,11 +65,23 @@ const ProfileContainer = styled.div`
   justify-content: flex-end;
 `;
 
-function Navbar({ isHome, scrollPosition }) {
+const Navbar = ({ home }) => {
   const { width } = useWindowDimensions();
 
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [showRegisterModal, setShowRegisterModal] = useState(false);
+
+  /* Logic to handle Navbar Background and Animation: */
+  const [scrollPosition, setScrollPosition] = useState(0);
+  const handleScroll = () => {
+    const position = window.pageYOffset;
+    setScrollPosition(position);
+  };
+
+  useEffect(() => {
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   return (
     <>
@@ -82,30 +103,34 @@ function Navbar({ isHome, scrollPosition }) {
         </Modal>
       )}
 
-      <Container isHome={isHome} scrolled={scrollPosition}>
-        <LogoContainer>
-          <Link to="/" style={{ textDecoration: "none", color: "inherit" }}>
-            <LogoImgContainer>
-              <Img alt="voyance" src={Logo_Black} />
-            </LogoImgContainer>
-          </Link>
-
-          {width > 660 && (
+      <Wrapper scrolled={scrollPosition} home={home}>
+        <Container home={home}>
+          {/* Logo Section: */}
+          <LogoContainer>
             <Link to="/" style={{ textDecoration: "none", color: "inherit" }}>
-              <LogoHeading> Voyance </LogoHeading>
+              <LogoImgContainer>
+                <Img alt="voyance" src={Logo_Black} />
+              </LogoImgContainer>
             </Link>
-          )}
-        </LogoContainer>
 
-        <ProfileContainer>
-          <ProfileDashboard
-            setShowLoginModal={setShowLoginModal}
-            setShowRegisterModal={setShowRegisterModal}
-          />
-        </ProfileContainer>
-      </Container>
+            {width > 660 && (
+              <Link to="/" style={{ textDecoration: "none", color: "inherit" }}>
+                <LogoHeading> Voyance </LogoHeading>
+              </Link>
+            )}
+          </LogoContainer>
+
+          {/* Profile Section: */}
+          <ProfileContainer>
+            <ProfileDashboard
+              setShowLoginModal={setShowLoginModal}
+              setShowRegisterModal={setShowRegisterModal}
+            />
+          </ProfileContainer>
+        </Container>
+      </Wrapper>
     </>
   );
-}
+};
 
 export default Navbar;

@@ -1,6 +1,6 @@
-import { Grade, Star } from "@mui/icons-material";
+import { Grade } from "@mui/icons-material";
 import styled from "styled-components";
-import { desktop, largeMobile, mobile, tablet } from "../utils/responsive";
+import { desktop, largeMobile, mobile } from "../utils/responsive";
 
 const Container = styled.div`
   width: 100%;
@@ -54,13 +54,13 @@ const Data = styled.p`
 const HotelHeading = ({ data }) => {
   return (
     <Container>
-      <Header>{data.name}</Header>
+      <Header>{data?.name}</Header>
       <DataWrapper>
         <RatingContainer>
           <Grade style={{ fontSize: "24px", color: "#E6B325" }} />
-          <Rating>{data.rating}</Rating>
+          <Rating>{data?.rating}</Rating>
         </RatingContainer>
-        <Data>{data.location}</Data>
+        <Data>{data?.location}</Data>
       </DataWrapper>
     </Container>
   );

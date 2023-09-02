@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-import CategorySlider from "./CategorySlider";
+import OptionSlider from "./OptionSlider";
 import { Tune } from "@mui/icons-material";
 import Modal from "./Modal";
 import FilterProperties from "./FilterProperties";
@@ -31,14 +31,17 @@ const FilterButton = styled.button`
 const Filter = ({ category, setCategory, modal, setModal }) => {
   return (
     <>
-      {modal && (
+      {modal ? (
         <Modal>
           <FilterProperties modal={modal} setModal={setModal} />
         </Modal>
+      ) : (
+        <></>
       )}
 
       <Container>
-        <CategorySlider category={category} setCategory={setCategory} />
+        {/* <CategorySlider category={category} setCategory={setCategory} /> */}
+        <OptionSlider category={category} setCategory={setCategory} />
         <FilterButton onClick={() => setModal(true)}>
           <Tune style={{ paddingRight: "5px", transform: "scale(0.9)" }} />
           Filters

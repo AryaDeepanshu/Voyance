@@ -1,33 +1,29 @@
-import {
-  Add,
-  CalendarMonth,
-  Close,
-  PersonAdd,
-  Remove,
-  Search,
-} from "@mui/icons-material";
-import React, { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useState } from "react";
 import styled from "styled-components";
-import { largeMobile, mobile, tablet } from "../utils/responsive";
-import DatePickerComponent from "./DatePickerComponent";
-import { search } from "../redux/filterAndSearchSlice";
+import { useDispatch } from "react-redux";
+import { mobile } from "../utils/responsive";
 import { useNavigate } from "react-router-dom";
-import dayjs from "dayjs";
+import { search } from "../redux/filterAndSearchSlice";
+import { Add, Close, Remove, Search } from "@mui/icons-material";
+import {
+  datediff,
+  decode,
+  parseDate,
+  today,
+  tomorrow,
+} from "../utils/dateManipulation";
 
 const Wrapper = styled.div`
-  height: max-content;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
-  background-color: #f9f9f9f4;
-  padding: 50px 0px 25px 0px;
-  -webkit-box-shadow: 0px 0px 3px 0px rgba(0, 0, 0, 1);
-  -moz-box-shadow: 0px 0px 3px 0px rgba(0, 0, 0, 1);
-  box-shadow: 0px 0px 3px 0px rgba(0, 0, 0, 1);
-  position: relative;
   width: 350px;
+  display: flex;
+  border-radius: 4px;
+  position: relative;
+  height: max-content;
+  align-items: center;
+  flex-direction: column;
+  justify-content: center;
+  background-color: white;
+  padding: 50px 0px 25px 0px;
 
   ${mobile({
     width: "85%",
@@ -35,101 +31,71 @@ const Wrapper = styled.div`
 `;
 
 const Container = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 10px;
+  gap: 20px;
   width: 100%;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
 `;
 
 const InputContainer = styled.div`
-  display: flex;
-  align-items: center;
-  border: 1px solid #b2b2b2;
   width: 80%;
-  border-radius: 3px;
-  background-color: white;
+  display: flex;
   position: relative;
+  align-items: center;
+  background-color: #f4f4f4;
 `;
 
 const Input = styled.input`
   width: 100%;
-  padding: 20px 10px;
   border: none;
   outline: none;
-  font-family: "Montserrat", sans-serif;
+  cursor: pointer;
   font-size: 0.9rem;
   margin-left: 10px;
+  padding: 20px 10px;
+  background-color: #f4f4f4;
+  font-family: "Montserrat", sans-serif;
 `;
 
 const CloseButton = styled.div`
-  position: absolute;
   top: 10px;
   right: 10px;
   cursor: pointer;
+  position: absolute;
 `;
 
 const SearchButton = styled.button`
-  padding: 16px 0px;
-  color: white;
-  font-size: 18px;
-  background-color: #0ead69;
-  border-radius: 10px;
-  margin: 15px 0px;
-  cursor: pointer;
   width: 80%;
   border: none;
+  cursor: pointer;
+  color: white;
+  font-size: 18px;
+  margin: 15px 0px;
+  padding: 16px 0px;
+  border-radius: 10px;
+  background-color: #0ead69;
   font-family: "Noto Serif", serif;
 `;
 
 const ButtonWrapper = styled.div`
-  display: flex;
   gap: 10px;
+  display: flex;
   align-items: center;
   padding-right: 12px;
 `;
 
 const SearchInputModal = ({ setModal }) => {
-  // today's Date:
-  const date = new Date();
-  const day = String(date.getDate()).padStart(2, "0");
-  const month = String(date.getMonth() + 1).padStart(2, "0");
-  const today = date.getFullYear() + "-" + month + "-" + day;
-
-  // tomorrow's Date:
-  var nextDate = new Date();
-  nextDate.setDate(nextDate.getDate() + 1);
-  const tomorrowDay = String(nextDate.getDate()).padStart(2, "0");
-  const tomorrowMonth = String(nextDate.getMonth() + 1).padStart(2, "0");
-  const tomorrow =
-    nextDate.getFullYear() + "-" + tomorrowMonth + "-" + tomorrowDay;
-
   const [guest, setGuest] = useState(1);
   const [location, setLocation] = useState("");
   const [beginDate, setBeginDate] = useState(today);
   const [endDate, setEndDate] = useState(tomorrow);
 
-  /* Calculate difference b/w date in case of "string" format: */
-  function datediff(first, second) {
-    return Math.round((second - first) / (1000 * 60 * 60 * 24));
-  }
-
-  function parseDate(str) {
-    var ydm = str.split("-");
-    return new Date(Number(ydm[0]), Number(ydm[1]) - 1, Number(ydm[2])); // year month day
-  }
-
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const decode = (date) => {
-    const ymd = date.split("-");
-    return `${ymd[1]}/${ymd[2]}/${ymd[0]} `;
-  };
-
   const handleSearch = () => {
     if (location === "") return;
-    console.log(location);
 
     dispatch(
       search({
@@ -144,11 +110,8 @@ const SearchInputModal = ({ setModal }) => {
   };
 
   const handleGuest = (operation) => {
-    if (operation === "increase" && guest < 10) {
-      setGuest(guest + 1);
-    } else if (operation === "decrease" && guest > 1) {
-      setGuest(guest - 1);
-    }
+    if (operation === "increase" && guest < 10) setGuest(guest + 1);
+    else if (operation === "decrease" && guest > 1) setGuest(guest - 1);
   };
 
   return (

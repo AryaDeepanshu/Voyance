@@ -4,7 +4,6 @@ import useWindowDimensions from "../hooks/useWindowDimensions";
 import { desktop, largeMobile, mobile, tablet } from "../utils/responsive";
 
 import Modal from "./Modal";
-import Navbar from "./Navbar";
 import SearchSm from "./SearchSm";
 import SearchLgMd from "./SearchLgMd";
 import SearchInputModal from "./SearchInputModal";
@@ -15,7 +14,7 @@ const Container = styled.div`
   position: relative;
   background-size: 100%;
   background-repeat: no-repeat;
-  background-image: url(https://res.cloudinary.com/additya/image/upload/v1677858373/Voyance/res9w03fpeen2ti8gei1.jpg); // Desktop
+  background-image: url(https://res.cloudinary.com/additya/image/upload/v1684524276/Voyance/n61tp31zw3dt9uujuybg.jpg);
   ${tablet({
     aspectRatio: "1.3",
     backgroundImage:
@@ -26,19 +25,19 @@ const Container = styled.div`
     backgroundImage:
       "url(https://res.cloudinary.com/additya/image/upload/v1677857028/Voyance/qdjsmuzcmsd5e9fzgld6.jpg)", // 660px
   })}
-    ${mobile({
+      ${mobile({
     aspectRatio: "0.9",
     backgroundImage:
       "url(https://res.cloudinary.com/additya/image/upload/v1677856888/Voyance/oq013kx6jpifopxsxzph.jpg)", // 480px
   })}
-    ${desktop({
-    aspectRatio: "2.15",
+      ${desktop({
+    aspectRatio: "2.04",
     backgroundImage:
-      "url(https://res.cloudinary.com/additya/image/upload/v1677850468/Voyance/dkcuw15iilwx7j4cvr5p.jpg)", // 1024px onwards
+      "url(https://res.cloudinary.com/additya/image/upload/v1684524276/Voyance/lfiyfnpzrksnyxab6d4n.jpg)", // 1024px onwards
   })};
 `;
 
-const Search = ({ scrollPosition }) => {
+const Search = () => {
   const { width } = useWindowDimensions();
   const [modal, setModal] = useState(false);
 
@@ -50,7 +49,6 @@ const Search = ({ scrollPosition }) => {
         </Modal>
       )}
 
-      {scrollPosition < 80 && <Navbar isHome={true} />}
       {width > 850 ? (
         <SearchLgMd />
       ) : (

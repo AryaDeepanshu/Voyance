@@ -1,29 +1,42 @@
-import React from "react";
 import styled from "styled-components";
-import Navbar from "../components/Navbar";
-import Footer from "../components/Footer";
-import ProfileInformation from "../components/ProfileInformation";
-
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import ProfileAvatar from "../components/ProfileAvatar";
+import { mobile, largeMobile } from "../utils/responsive";
+import ProfileInfo from "../components/ProfileInfo";
 
 const Wrapper = styled.div`
-  width: calc(100vw - 10%);
+  display: flex;
   margin: 0% 5%;
+  padding: 100px 0px 50px;
+  width: calc(100vw - 10%);
+
+  ${largeMobile({
+    gap: "20px",
+    flexDirection: "column",
+  })}
+
+  ${mobile({
+    gap: "20px",
+    flexDirection: "column",
+  })}
 `;
 
 const Profile = () => {
+  const [profileImage, setProfileImage] = useState(null);
+
+  /* Scrolling to top of page whenever page reloads: */
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
 
   return (
-    <>
-      <Wrapper>
-        <Navbar scrollPosition={80} />
-        <ProfileInformation />
-      </Wrapper>
-      <Footer />
-    </>
+    <Wrapper>
+      <ProfileAvatar
+        profileImage={profileImage}
+        setProfileImage={setProfileImage}
+      />
+      <ProfileInfo setProfileImage={setProfileImage} />
+    </Wrapper>
   );
 };
 

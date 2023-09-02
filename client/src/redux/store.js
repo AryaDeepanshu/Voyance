@@ -1,7 +1,7 @@
-import { combineReducers, configureStore } from "@reduxjs/toolkit";
 import userReducer from "./userSlice";
 import wishlistReducer from "./wishlistSlice";
 import filterAndSearchReducer from "./filterAndSearchSlice";
+import { combineReducers, configureStore } from "@reduxjs/toolkit";
 
 import {
   persistStore,
@@ -40,3 +40,8 @@ export const store = configureStore({
 });
 
 export let persistor = persistStore(store);
+
+/* Without persist: */
+// export const store = configureStore({
+//   reducer: rootReducer,
+// });
