@@ -3,6 +3,7 @@ import { loginStart, loginSuccess, loginFailure } from "./userSlice";
 import { setWishlist } from "./wishlistSlice";
 import { axiosBaseURL } from "../utils/axiosBaseURL";
 import {
+  AlreadyExist,
   InvalidCredentials,
   LoginError,
   LoginSuccess,
@@ -28,6 +29,8 @@ export const auth_Register = async (
       password,
     });
 
+    console.log(user);
+
     RegisterSuccess();
     dispatch(loginSuccess(user.data));
     dispatch(setWishlist(user.data.wishlist));
@@ -37,7 +40,8 @@ export const auth_Register = async (
     Navigate("");
   } catch (Error) {
     dispatch(loginFailure());
-    RegisterError();
+
+    Error?.code === "ERR_BAD_REQUEST" ? AlreadyExist() : RegisterError();
     console.log(`Register Failure Error: ${Error}`);
   }
 };

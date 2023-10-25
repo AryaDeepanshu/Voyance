@@ -4,6 +4,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 import Home from "./pages/Home";
+import PlanTrip from "./pages/PlanTrip";
 import Wrapper from "./components/Wrapper";
 import HotelInformationLoader from "./components/Loaders/HotelInformationLoader";
 import styled from "styled-components";
@@ -122,7 +123,7 @@ export default function App() {
               </Wrapper>
             }
           />
-
+          <Route path="/plan" element={<PlanTrip />} />
           <Route
             path="/hotel-information/:id"
             element={

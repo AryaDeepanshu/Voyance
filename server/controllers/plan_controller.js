@@ -1,21 +1,14 @@
-const { Configuration, OpenAIApi } = require("openai");
-const { calculateDateDiff } = require("../config/Date_Formatting");
+const { TextServiceClient } =
+  require("@google-ai/generativelanguage").v1beta2;
 
-const paces = [
-  { label: "Slow & Easy", value: "slowAndEasy" },
-  { label: "Medium", value: "medium" },
-  { label: "Fast-paced", value: "fastPaced" },
-];
+const { GoogleAuth } = require("google-auth-library");
 
-const getPaceLabel = (currentPaceValue) => {
-  paces.find((pace) => pace === currentPaceValue);
-};
+const MODEL_NAME = "models/text-bison-001";
 
-const configuration = new Configuration({
-  apiKey: process.env.OPENAI_API_KEY,
+const client = new TextServiceClient({
+  authClient: new GoogleAuth().fromAPIKey("AIzaSyDBVVxi5MOOZ9aWHYtGq6LlKJESShtYX1g"),
 });
 
-const openai = new OpenAIApi(configuration);
 
 const generatePrompt = (req) => {
   const { country, days, travelers, budget } = req.body;
@@ -35,19 +28,20 @@ const generatePrompt = (req) => {
 
 module.exports.plan = async (req, res) => {
   try {
-    const completion = await openai.createCompletion({
-      model: "text-davinci-003",
-      prompt: generatePrompt(req),
-      temperature: 0.6,
-      max_tokens: 2048,
-    });
+    client
+      .generateText({
+        model: MODEL_NAME,
+        prompt: {
+          text: generatePrompt(req),
+        },
+      })
+      .then((result) => {
+        return res.status(200).json(result);
 
-    res.status(200).json({
-      result: completion.data.choices[0].text,
-    });
-  } catch (Err) {
-    console.log(`Error while preparing trip plan: ${Err}`);
-    return res.status(500).json(Err);
+      });
+  }catch (Err) {
+      console.log(`Error while preparing trip plan: ${Err}`);
+      return res.status(500).json(Err);
   }
 };
 

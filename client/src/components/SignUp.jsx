@@ -164,23 +164,6 @@ const SignUp = ({ setShowLoginModal, setShowRegisterModal }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  // Google Authentication:
-  const auth_Google = useGoogleLogin({
-    onSuccess: (token) => {
-      dispatch(
-        auth_Google_Verification(
-          navigate,
-          dispatch,
-          {
-            access_token: token.access_token,
-          },
-          setShowLoginModal,
-          setShowRegisterModal
-        )
-      );
-    },
-  });
-
   // Email-Password Authentication:
   const auth = (event) => {
     event.preventDefault();
@@ -241,16 +224,6 @@ const SignUp = ({ setShowLoginModal, setShowRegisterModal }) => {
             </Login>
           </ExistingAccount>
         </Form>
-
-        {/* <Separator>
-          <Line />
-          <OR> OR </OR>
-        </Separator>
-
-        <GoogleAuthWrapper onClick={auth_Google}>
-          <GoogleIcon />
-          <GoogleAuthTextField>Continue with Google</GoogleAuthTextField>
-        </GoogleAuthWrapper> */}
       </Card>
       <Toaster />
     </Wrapper>

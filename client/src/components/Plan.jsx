@@ -98,6 +98,17 @@ const IternaryWrapper = styled.div`
   flex-direction: column;
   align-items: flex-start;
   width: 100%;
+  align-items: center;
+  margin-top: 35px;
+
+  padding: 25px 0px 50px 0px;
+  gap: 20px;
+  box-shadow: rgba(0, 0, 0, 0.15) 0px 2px 8px;
+  align-items: center;
+  height: max-content;
+  
+
+
 `;
 
 const IternaryHeading = styled.p`
@@ -128,18 +139,17 @@ const Plan = () => {
   const [response, setResponse] = useState(null);
 
   const fetchData = async (input) => {
-    const response = await axios.post(
-      "https://api.openai.com/v1/completions",
+    const response = await axios.get(
+      "https://voyance.azurewebsites.net/plan",
       {
         prompt: `${input}`,
-        model: "text-davinci-003",
+        model: "gaurangSnak",
         max_tokens: 2048,
       },
       {
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer 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`,
-        },
+        }
       }
     );
 
@@ -186,7 +196,7 @@ const Plan = () => {
       ) : (
         <IternaryWrapper>
           <IternaryHeading>{`${day} day trip iternary for ${location}:`}</IternaryHeading>
-          <Container>{response && response.data.choices[0].text}</Container>
+          <Container>{response && response.data[0]["candidates"][0]["output"]}</Container>
           <PlanAgainWrapper>
             <Button
               plan="planAgain"

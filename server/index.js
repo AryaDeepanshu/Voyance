@@ -13,7 +13,7 @@ dotenv.config();
 app.use((req, res, next) => {
   res.setHeader(
     "Access-Control-Allow-Origin",
-    "https://explore-voyance.onrender.com"
+    "https://voyance.azurewebsites.net"
   );
   res.setHeader(
     "Access-Control-Allow-Methods",
@@ -32,7 +32,7 @@ app.use((req, res, next) => {
 
 app.use(
   cors({
-    origin: ["http://localhost:3000", "https://explore-voyance.onrender.com"],
+    origin: ["http://localhost:3000", "https://voyance.azurewebsites.net"],
     credentials: true,
   })
 );

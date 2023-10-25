@@ -7,6 +7,13 @@ const jwt = require("jsonwebtoken");
 module.exports.register = async (req, res) => {
   const credentials = req.body;
 
+  try {
+    const alreadyExist = User.findOne({ email: credentials.email });
+    if (alreadyExist) return res.status(403).json();
+  } catch (err) {
+    return res.status(500).json(err);
+  }
+
   const user_created = new User({
     ...credentials,
     password: CryptoJS.AES.encrypt(

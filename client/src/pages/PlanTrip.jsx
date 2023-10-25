@@ -7,7 +7,7 @@ import { useEffect } from "react";
 
 const Wrapper = styled.div`
   width: calc(100vw - 10%);
-  margin: 0% 5%;
+  margin: 5% 5%;
   position: relative;
 `;
 
