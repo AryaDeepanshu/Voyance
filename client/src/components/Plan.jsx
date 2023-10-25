@@ -140,7 +140,7 @@ const Plan = () => {
 
   const fetchData = async (input) => {
     const response = await axios.get(
-      "https://voyanceapi.azurewebsites.netplan",
+      "https://voyanceapi.azurewebsites.net/plan",
       {
         prompt: `${input}`,
         model: "gaurangSnak",
