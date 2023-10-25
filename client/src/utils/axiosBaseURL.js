@@ -1,7 +1,7 @@
 import axios from "axios";
 
 export const axiosBaseURL = axios.create({
-  baseURL: "https://voyance.azurewebsites.net/",
+  baseURL: "https://voyanceapi.azurewebsites.net",
 });
 
 axiosBaseURL.defaults.withCredentials = true;
